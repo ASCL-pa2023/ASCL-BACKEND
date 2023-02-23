@@ -11,3 +11,11 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 .idea/
+/.idea/codeStyles/codeStyleConfig.xml
+/.idea/discord.xml
+/.idea/encodings.xml
+/.idea/jarRepositories.xml
+/.mvn/wrapper/maven-wrapper.properties
+/.idea/misc.xml
+/.idea/codeStyles/Project.xml
+/.idea/vcs.xml
