@@ -20,7 +20,7 @@ public class User {
     private String email;
 
     @Column(name = "phone", unique = true)
-    private int phone;
+    private String phone;
 
     @Column(name = "firstname")
     private String firstname;
@@ -42,7 +42,7 @@ public class User {
         return this;
     }
 
-    public User setPhone(int phone) {
+    public User setPhone(String phone) {
         this.phone = phone;
         return this;
     }
