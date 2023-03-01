@@ -1,56 +1,43 @@
 package esgi.ascl.news.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import esgi.ascl.User.Entitie.User;
 import jakarta.persistence.*;
 
 import java.util.Date;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "news_image")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class CommentEntity {
+public class NewsImageEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "news_id")
     private NewsEntity news;
-    private String content;
+    private String url;
     private Date creationDate;
 
     public Long getId() {
         return id;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public CommentEntity setUser(User user) {
-        this.user = user;
-        return this;
-    }
-
     public NewsEntity getNews() {
         return news;
     }
 
-    public CommentEntity setNews(NewsEntity news) {
+    public void setNews(NewsEntity news) {
         this.news = news;
-        return this;
     }
 
-    public String getContent() {
-        return content;
+    public String getUrl() {
+        return url;
     }
 
-    public CommentEntity setContent(String content) {
-        this.content = content;
+    public NewsImageEntity setUrl(String url) {
+        this.url = url;
         return this;
     }
 
@@ -58,7 +45,7 @@ public class CommentEntity {
         return creationDate;
     }
 
-    public CommentEntity setCreationDate(Date creationDate) {
+    public NewsImageEntity setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
         return this;
     }
