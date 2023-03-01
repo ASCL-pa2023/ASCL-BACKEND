@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Getter
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
     @Id
