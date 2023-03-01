@@ -1,11 +1,9 @@
 package esgi.ascl.news.infrastructure.web.requests;
 
-import java.util.Date;
 
 public class NewsRequest {
     public String title;
     public String content;
-    public Date creationDate;
 
 
     public String getTitle() {
@@ -26,12 +24,4 @@ public class NewsRequest {
         return this;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public NewsRequest setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-        return this;
-    }
 }
