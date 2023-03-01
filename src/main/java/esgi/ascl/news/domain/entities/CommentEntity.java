@@ -7,45 +7,41 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "news")
+@Table(name = "comment")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class NewsEntity {
+public class CommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private String title;
+    @ManyToOne
+    @JoinColumn(name = "news_id")
+    private NewsEntity news;
     private String content;
     private Date creationDate;
 
-
     public Long getId() {
         return id;
-    }
-
-    public NewsEntity setId(Long id) {
-        this.id = id;
-        return this;
     }
 
     public User getUser() {
         return user;
     }
 
-    public NewsEntity setUser(User user) {
+    public CommentEntity setUser(User user) {
         this.user = user;
         return this;
     }
 
-    public String getTitle() {
-        return title;
+    public NewsEntity getNews() {
+        return news;
     }
 
-    public NewsEntity setTitle(String title) {
-        this.title = title;
+    public CommentEntity setNews(NewsEntity news) {
+        this.news = news;
         return this;
     }
 
@@ -53,7 +49,7 @@ public class NewsEntity {
         return content;
     }
 
-    public NewsEntity setContent(String content) {
+    public CommentEntity setContent(String content) {
         this.content = content;
         return this;
     }
@@ -62,19 +58,8 @@ public class NewsEntity {
         return creationDate;
     }
 
-    public NewsEntity setCreationDate(Date creationDate) {
+    public CommentEntity setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "NewsEntity{" +
-                "id=" + id +
-                ", user=" + user +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", creationDate=" + creationDate +
-                '}';
     }
 }
