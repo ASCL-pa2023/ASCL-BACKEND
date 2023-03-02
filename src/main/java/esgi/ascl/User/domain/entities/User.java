@@ -14,7 +14,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
-    private int id;
+    private Long id;
 
     @Column(name = "email", unique = true)
     private String email;
@@ -52,7 +52,7 @@ public class User {
         return this;
     }
 
-    public User setId(int id) {
+    public User setId(Long id) {
         this.id = id;
         return this;
     }

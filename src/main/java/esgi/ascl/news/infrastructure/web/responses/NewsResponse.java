@@ -6,10 +6,20 @@ import java.util.Date;
 
 public class NewsResponse {
 
+    public Long id;
     public User user;
     public String title;
     public String content;
     public Date creationDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public NewsResponse setId(Long id) {
+        this.id = id;
+        return this;
+    }
 
     public User getUser() {
         return user;

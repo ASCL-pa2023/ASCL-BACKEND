@@ -1,21 +1,49 @@
 package esgi.ascl.news.domain.services;
 
 import esgi.ascl.news.domain.entities.NewsEntity;
+import esgi.ascl.news.domain.mapper.NewsMapper;
 import esgi.ascl.news.infrastructure.repositories.NewsRepository;
 import esgi.ascl.news.infrastructure.web.requests.NewsRequest;
-import jdk.jshell.spi.ExecutionControl;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class NewsService {
     private final NewsRepository newsRepository;
+    private final NewsMapper newsMapper;
 
-    public NewsService(NewsRepository newsRepository) {
+    public NewsService(NewsRepository newsRepository, NewsMapper newsMapper) {
         this.newsRepository = newsRepository;
+        this.newsMapper = newsMapper;
     }
 
     public NewsEntity create(NewsRequest newsRequest) {
-        throw new NotYetImplementedException();
+        var user = newsMapper.requestToEntity(newsRequest);
+        return newsRepository.save(user);
+    }
+
+    public NewsEntity getById(Long id) {
+        return newsRepository.findById(id).orElse(null);
+    }
+
+    public List<NewsEntity> getAll() {
+        return newsRepository.findAll();
+    }
+
+    public List<NewsEntity> getAllByUserId(Long userId) {
+        return newsRepository.findAllByUserId(userId);
+    }
+
+    public NewsEntity update(Long newsId, NewsRequest newsRequest) {
+        var news = getById(newsId);
+        var newsUpdated = getById(newsId)
+                .setTitle(newsRequest.getTitle() == null ? news.getTitle() : newsRequest.getTitle())
+                .setContent(newsRequest.getContent() == null ? news.getContent() : newsRequest.getContent());
+        return newsRepository.save(newsUpdated);
+    }
+
+    public void delete(Long id) {
+        newsRepository.deleteById(id);
     }
 }
