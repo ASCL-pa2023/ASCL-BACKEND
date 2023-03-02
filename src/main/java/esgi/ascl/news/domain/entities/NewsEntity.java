@@ -1,7 +1,7 @@
 package esgi.ascl.news.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import esgi.ascl.User.Entitie.User;
+import esgi.ascl.User.domain.entities.User;
 import jakarta.persistence.*;
 
 import java.util.Date;

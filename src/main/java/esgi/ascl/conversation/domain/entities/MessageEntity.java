@@ -1,6 +1,6 @@
 package esgi.ascl.conversation.domain.entities;
 
-import esgi.ascl.User.Entitie.User;
+import esgi.ascl.User.domain.entities.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 

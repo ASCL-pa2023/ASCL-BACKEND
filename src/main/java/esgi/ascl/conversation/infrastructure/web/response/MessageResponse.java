@@ -1,6 +1,6 @@
 package esgi.ascl.conversation.infrastructure.web.response;
 
-import esgi.ascl.User.Entitie.User;
+import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.conversation.domain.entities.ConversationEntity;
 
 import java.util.Date;

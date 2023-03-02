@@ -1,6 +1,6 @@
 package esgi.ascl.news.infrastructure.web.responses;
 
-import esgi.ascl.User.Entitie.User;
+import esgi.ascl.User.domain.entities.User;
 
 import java.util.Date;
 

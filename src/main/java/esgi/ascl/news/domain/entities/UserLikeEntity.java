@@ -1,6 +1,6 @@
 package esgi.ascl.news.domain.entities;
 
-import esgi.ascl.User.Entitie.User;
+import esgi.ascl.User.domain.entities.User;
 import jakarta.persistence.*;
 
 @Entity
