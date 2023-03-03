@@ -1,9 +1,12 @@
 package esgi.ascl.news.infrastructure.web.controllers;
 
+import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.news.domain.mapper.NewsMapper;
 import esgi.ascl.news.domain.services.NewsService;
+import esgi.ascl.news.domain.services.UserLikeService;
 import esgi.ascl.news.infrastructure.web.requests.NewsRequest;
+import esgi.ascl.news.infrastructure.web.requests.UserLikeRequest;
 import esgi.ascl.news.infrastructure.web.responses.NewsResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +22,12 @@ import static java.util.stream.Collectors.toList;
 public class NewsController {
     private final NewsService newsService;
     private final UserService userService;
+    private final UserLikeService userLikeService;
 
-    public NewsController(NewsService newsService, UserService userService) {
+    public NewsController(NewsService newsService, UserService userService, UserLikeService userLikeService) {
         this.newsService = newsService;
         this.userService = userService;
+        this.userLikeService = userLikeService;
     }
 
 
@@ -89,6 +94,49 @@ public class NewsController {
         }
         newsService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/like")
+    public ResponseEntity<?> like(UserLikeRequest userLikeRequest) {
+        if(userLikeRequest.getUserId() == null || userLikeRequest.getNewsId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (userService.getById(userLikeRequest.userId) == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        if (newsService.getById(userLikeRequest.newsId) == null) return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
+
+        var userAlreadyLike = userLikeService.getByUserIdAndNewsId(userLikeRequest);
+        if(userAlreadyLike == null) return new ResponseEntity<>("User already like this news", HttpStatus.BAD_REQUEST);
+
+        userLikeService.like(userLikeRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/dislike")
+    public ResponseEntity<?> dislike(UserLikeRequest userLikeRequest) {
+        if(userLikeRequest.getUserId() == null || userLikeRequest.getNewsId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (userService.getById(userLikeRequest.userId) == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        if (newsService.getById(userLikeRequest.newsId) == null) return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
+
+        userLikeService.dislike(userLikeRequest);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("/{newsId}/userLiked)")
+    public ResponseEntity<?> userLiked(@PathVariable Long newsId) {
+        var news = newsService.getById(newsId);
+        if(news == null) {
+            return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
+        }
+        var userLiked = newsService.getUserLiked(newsId)
+                .stream()
+                .map(UserMapper::entityToResponse)
+                .collect(toList());
+        return new ResponseEntity<>(userLiked, HttpStatus.OK);
     }
 
 }
