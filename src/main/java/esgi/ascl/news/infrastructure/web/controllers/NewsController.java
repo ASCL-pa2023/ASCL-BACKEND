@@ -102,13 +102,16 @@ public class NewsController {
             return ResponseEntity.badRequest().build();
         }
 
-        if (userService.getById(userLikeRequest.userId) == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        if (newsService.getById(userLikeRequest.newsId) == null) return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
+        var user = userService.getById(userLikeRequest.userId);
+        if (user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+
+        var news = newsService.getById(userLikeRequest.newsId);
+        if (news == null) return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
 
         var userAlreadyLike = userLikeService.getByUserIdAndNewsId(userLikeRequest);
         if(userAlreadyLike == null) return new ResponseEntity<>("User already like this news", HttpStatus.BAD_REQUEST);
 
-        userLikeService.like(userLikeRequest);
+        userLikeService.like(user, news);
         return ResponseEntity.ok().build();
     }
 
