@@ -31,7 +31,7 @@ public class NewsController {
     }
 
 
-    @PostMapping()
+    @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody NewsRequest newsRequest) {
         var user = userService.getById(newsRequest.userId);
         if(user == null) {
@@ -74,7 +74,7 @@ public class NewsController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/{newsId}")
     public ResponseEntity<?> update(@PathVariable Long newsId, @RequestBody NewsRequest newsRequest, @PathVariable String id) {
         var news = newsService.getById(newsId);
         if(news == null) return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
@@ -129,7 +129,7 @@ public class NewsController {
     }
 
 
-    @GetMapping("/{newsId}/userLiked)")
+    @GetMapping("/{newsId}/userLiked")
     public ResponseEntity<?> userLiked(@PathVariable Long newsId) {
         var news = newsService.getById(newsId);
         if(news == null) {
