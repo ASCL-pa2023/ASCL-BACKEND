@@ -37,6 +37,9 @@ public class User {
     @Column(name = "birthday")
     private Date birthday;
 
+    @Column(name = "profile_picture")
+    private String profilePicture;
+
     public User setBirthday(Date birthday) {
         this.birthday = birthday;
         return this;
@@ -74,6 +77,15 @@ public class User {
 
     public User setPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public User setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
         return this;
     }
 }
