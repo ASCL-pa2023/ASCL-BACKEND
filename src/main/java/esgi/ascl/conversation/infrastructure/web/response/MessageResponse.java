@@ -6,27 +6,35 @@ import esgi.ascl.conversation.domain.entities.ConversationEntity;
 import java.util.Date;
 
 public class MessageResponse {
-    public User user;
-    public ConversationEntity conversation;
+    public Long id;
+    public Long userId;
+    public Long conversationId;
     public String content;
     public String imageUrl;
     public Date creationDate;
 
-    public User getUser() {
-        return user;
+    public Long getId() {
+        return id;
+    }
+    public MessageResponse setId(Long id) {
+        this.id = id;
+        return this;
+    }
+    public Long getUserId() {
+        return userId;
     }
 
-    public MessageResponse setUser(User user) {
-        this.user = user;
+    public MessageResponse setUserId(Long userId) {
+        this.userId = userId;
         return this;
     }
 
-    public ConversationEntity getConversation() {
-        return conversation;
+    public Long getConversationId() {
+        return conversationId;
     }
 
-    public MessageResponse setConversation(ConversationEntity conversation) {
-        this.conversation = conversation;
+    public MessageResponse setConversationId(Long conversationId) {
+        this.conversationId = conversationId;
         return this;
     }
 
