@@ -1,6 +1,7 @@
 package esgi.ascl.conversation.domain.services;
 
 import esgi.ascl.User.domain.service.UserService;
+import esgi.ascl.conversation.domain.entities.ConversationEntity;
 import esgi.ascl.conversation.domain.entities.MessageEntity;
 import esgi.ascl.conversation.infrastructure.repositories.MessageRepository;
 import esgi.ascl.conversation.infrastructure.web.requests.MessageRequest;
@@ -12,17 +13,14 @@ import java.util.List;
 @Service
 public class MessageService {
     private final MessageRepository messageRepository;
-    private final ConversationService conversationService;
     private final UserService userService;
 
-    public MessageService(MessageRepository messageRepository, ConversationService conversationService, UserService userService) {
+    public MessageService(MessageRepository messageRepository, UserService userService) {
         this.messageRepository = messageRepository;
-        this.conversationService = conversationService;
         this.userService = userService;
     }
 
-    public MessageEntity create(MessageRequest messageRequest) {
-        var conversation = conversationService.getById(messageRequest.conversationId);
+    public MessageEntity create(MessageRequest messageRequest, ConversationEntity conversation) {
         var user = userService.getById(messageRequest.userId);
 
         var message = new MessageEntity()

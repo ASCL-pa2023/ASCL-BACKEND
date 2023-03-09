@@ -26,7 +26,9 @@ public class MessageController {
      */
     @PostMapping("/create")
     public ResponseEntity<?> create(MessageRequest messageRequest) {
-        return ResponseEntity.ok(messageService.create(messageRequest));
+        var conversation = conversationService.getById(messageRequest.conversationId);
+        if (conversation == null) return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(messageService.create(messageRequest, conversation));
     }
 
     /**
