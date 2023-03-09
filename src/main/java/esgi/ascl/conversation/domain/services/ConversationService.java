@@ -13,10 +13,12 @@ import java.util.List;
 public class ConversationService {
     private final ConversationRepository conversationRepository;
     public final UserConversationService userConversationService;
+    private final MessageService messageService;
 
-    public ConversationService(ConversationRepository conversationRepository, UserConversationService userConversationService) {
+    public ConversationService(ConversationRepository conversationRepository, UserConversationService userConversationService, MessageService messageService) {
         this.conversationRepository = conversationRepository;
         this.userConversationService = userConversationService;
+        this.messageService = messageService;
     }
 
     public ConversationEntity create(ConversationRequest conversationRequest) {
@@ -57,6 +59,7 @@ public class ConversationService {
     }
 
     public void deleteById(Long id) {
+        messageService.deleteAllByConversationId(id);
         conversationRepository.deleteById(id);
     }
 
