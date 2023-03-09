@@ -28,8 +28,9 @@ public class NewsImageEntity {
         return news;
     }
 
-    public void setNews(NewsEntity news) {
+    public NewsImageEntity setNews(NewsEntity news) {
         this.news = news;
+        return this;
     }
 
     public String getUrl() {
