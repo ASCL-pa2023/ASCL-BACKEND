@@ -150,9 +150,4 @@ public class ConversationController {
         //TODO : map to user response
         return new ResponseEntity<>(persons, HttpStatus.OK);
     }
-
-
-
-    //TODO : récupérer les messages d'une conversation
-    //TODO : récupérer le dernier message d'une conversation
 }
