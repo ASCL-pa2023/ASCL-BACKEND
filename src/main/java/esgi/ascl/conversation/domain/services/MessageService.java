@@ -8,6 +8,7 @@ import esgi.ascl.conversation.infrastructure.web.requests.MessageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +39,10 @@ public class MessageService {
     }
 
     public List<MessageEntity> getAllByConversationId(Long conversationId) {
-        return messageRepository.findAllByConversationId(conversationId);
+        return messageRepository.findAllByConversationId(conversationId)
+                .stream()
+                .sorted(Comparator.comparing(MessageEntity::getCreationDate))
+                .toList();
     }
 
     public MessageEntity getLastMessageByConversationId(Long conversationId) {
