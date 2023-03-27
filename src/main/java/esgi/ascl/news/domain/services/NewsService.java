@@ -7,6 +7,7 @@ import esgi.ascl.news.domain.mapper.NewsMapper;
 import esgi.ascl.news.infrastructure.repositories.NewsRepository;
 import esgi.ascl.news.infrastructure.web.requests.NewsRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,9 @@ public class NewsService {
         return newsRepository.save(newsUpdated);
     }
 
-    public void delete(Long id) {
-        newsRepository.deleteById(id);
+    @Transactional
+    public void delete(NewsEntity newsEntity) {
+        newsEntity.setUser(null);
+        newsRepository.delete(newsEntity);
     }
 }
