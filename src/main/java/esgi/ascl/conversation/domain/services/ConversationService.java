@@ -61,7 +61,7 @@ public class ConversationService {
     }
 
     public void deleteById(Long id) {
-        messageService.deleteAllByConversationId(id);
+        messageService.removeAllByConversationId(id);
         conversationRepository.deleteById(id);
     }
 

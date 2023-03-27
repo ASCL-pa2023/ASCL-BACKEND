@@ -6,6 +6,7 @@ import esgi.ascl.conversation.domain.entities.MessageEntity;
 import esgi.ascl.conversation.infrastructure.repositories.MessageRepository;
 import esgi.ascl.conversation.infrastructure.web.requests.MessageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -44,11 +45,16 @@ public class MessageService {
         return messageRepository.findLastMessageByConversationId(conversationId);
     }
 
-    public void deleteById(Long id) {
-        messageRepository.deleteById(id);
+    @Transactional
+    public void delete(MessageEntity messageEntity) {
+        messageEntity.setUser(null);
+        messageEntity.setConversation(null);
+        messageRepository.delete(messageEntity);
     }
 
-    public void deleteAllByConversationId(Long conversationId) {
+    public void removeAllByConversationId(Long conversationId) {
+        List<MessageEntity> messages = messageRepository.findAllByConversationId(conversationId);
+        messages.forEach(this::delete);
         messageRepository.deleteAllByConversationId(conversationId);
     }
 

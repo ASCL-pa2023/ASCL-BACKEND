@@ -25,7 +25,7 @@ public class MessageController {
      * @param messageRequest
      */
     @PostMapping("/create")
-    public ResponseEntity<?> create(MessageRequest messageRequest) {
+    public ResponseEntity<?> create(@RequestBody MessageRequest messageRequest) {
         var conversation = conversationService.getById(messageRequest.conversationId);
         if (conversation == null) return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
         return ResponseEntity.ok(messageService.create(messageRequest, conversation));
@@ -85,7 +85,7 @@ public class MessageController {
         var message = messageService.getById(id);
         if(message == null) return new ResponseEntity<>("Message not found", HttpStatus.NOT_FOUND);
 
-        messageService.deleteById(id);
+        messageService.delete(message);
         return ResponseEntity.ok("Message deleted");
     }
 
@@ -98,7 +98,7 @@ public class MessageController {
         var conversation = conversationService.getById(conversationId);
         if (conversation == null) return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
 
-        messageService.deleteAllByConversationId(conversationId);
+        messageService.removeAllByConversationId(conversationId);
         return ResponseEntity.ok("Messages deleted");
     }
 
