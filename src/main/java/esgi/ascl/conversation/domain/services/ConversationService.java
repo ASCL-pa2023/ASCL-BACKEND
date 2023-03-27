@@ -7,6 +7,7 @@ import esgi.ascl.conversation.infrastructure.web.requests.ConversationRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,7 +24,8 @@ public class ConversationService {
 
     public ConversationEntity create(ConversationRequest conversationRequest) {
         var conversation = new ConversationEntity()
-                .setTitle(conversationRequest.title);
+                .setTitle(conversationRequest.title)
+                .setCreationDate(new Date());
         return conversationRepository.save(conversation);
     }
 
