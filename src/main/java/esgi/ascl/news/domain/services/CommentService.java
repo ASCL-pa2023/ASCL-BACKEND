@@ -5,6 +5,7 @@ import esgi.ascl.news.domain.mapper.CommentMapper;
 import esgi.ascl.news.infrastructure.repositories.CommentRepository;
 import esgi.ascl.news.infrastructure.web.requests.CommentRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,7 +39,10 @@ public class CommentService {
         return commentRepository.findByNewsId(newsId);
     }
 
-    public void delete(Long commentId){
-        commentRepository.deleteById(commentId);
+    @Transactional
+    public void delete(CommentEntity commentEntity){
+        commentEntity.setNews(null);
+        commentEntity.setUser(null);
+        commentRepository.delete(commentEntity);
     }
 }

@@ -96,7 +96,7 @@ public class CommentController {
         var comment = commentService.getById(id);
         if(comment == null) return new ResponseEntity<>("Comment not found", HttpStatus.NOT_FOUND);
 
-        commentService.delete(id);
+        commentService.delete(comment);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
