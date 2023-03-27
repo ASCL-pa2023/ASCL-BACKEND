@@ -75,7 +75,7 @@ public class NewsController {
 
 
     @PutMapping("/{newsId}")
-    public ResponseEntity<?> update(@PathVariable Long newsId, @RequestBody NewsRequest newsRequest, @PathVariable String id) {
+    public ResponseEntity<?> update(@PathVariable Long newsId, @RequestBody NewsRequest newsRequest) {
         var news = newsService.getById(newsId);
         if(news == null) return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
 
