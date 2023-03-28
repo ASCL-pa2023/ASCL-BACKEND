@@ -5,6 +5,15 @@ public class TagResponse {
     private String name;
     public Long postId;
 
+    public Long getId() {
+        return id;
+    }
+
+    public TagResponse setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
         return name;
     }

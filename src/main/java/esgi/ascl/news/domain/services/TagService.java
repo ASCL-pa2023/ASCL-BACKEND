@@ -3,9 +3,11 @@ package esgi.ascl.news.domain.services;
 import esgi.ascl.news.domain.entities.NewsEntity;
 import esgi.ascl.news.domain.entities.TagEntity;
 import esgi.ascl.news.infrastructure.repositories.TagRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class TagService {
 
     private final TagRepository tagRepository;
