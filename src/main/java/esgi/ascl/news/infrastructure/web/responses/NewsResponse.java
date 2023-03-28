@@ -3,6 +3,7 @@ package esgi.ascl.news.infrastructure.web.responses;
 import esgi.ascl.User.domain.entities.User;
 
 import java.util.Date;
+import java.util.List;
 
 public class NewsResponse {
 
@@ -10,6 +11,7 @@ public class NewsResponse {
     public User user;
     public String title;
     public String content;
+    public List<TagResponse> tags;
     public Date creationDate;
 
     public Long getId() {
@@ -45,6 +47,15 @@ public class NewsResponse {
 
     public NewsResponse setContent(String content) {
         this.content = content;
+        return this;
+    }
+
+    public List<TagResponse> getTags() {
+        return tags;
+    }
+
+    public NewsResponse setTags(List<TagResponse> tags) {
+        this.tags = tags;
         return this;
     }
 

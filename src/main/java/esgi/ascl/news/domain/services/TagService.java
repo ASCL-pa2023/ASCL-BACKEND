@@ -5,6 +5,7 @@ import esgi.ascl.news.domain.entities.TagEntity;
 import esgi.ascl.news.infrastructure.repositories.TagRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,6 +22,16 @@ public class TagService {
                 .setName(name)
                 .setNews(newsEntity);
         return tagRepository.save(tagEntity);
+    }
+
+    public List<TagEntity> createAll(List<String> names, NewsEntity newsEntity){
+        List<TagEntity> tagEntities = new ArrayList<>();
+        names.forEach(name -> {
+            var tagToSave = new TagEntity().setName(name).setNews(newsEntity);
+            tagRepository.save(tagToSave);
+            tagEntities.add(tagToSave); // For testing
+        });
+        return tagEntities;
     }
 
     public List<TagEntity> getAll(){

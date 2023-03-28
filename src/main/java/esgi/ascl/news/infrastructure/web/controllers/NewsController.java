@@ -2,6 +2,7 @@ package esgi.ascl.news.infrastructure.web.controllers;
 
 import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.domain.service.UserService;
+import esgi.ascl.news.domain.exceptions.TagExceptions;
 import esgi.ascl.news.domain.mapper.NewsMapper;
 import esgi.ascl.news.domain.services.NewsService;
 import esgi.ascl.news.domain.services.UserLikeService;
@@ -32,7 +33,7 @@ public class NewsController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody NewsRequest newsRequest) {
+    public ResponseEntity<?> create(@RequestBody NewsRequest newsRequest) throws TagExceptions {
         var user = userService.getById(newsRequest.userId);
         if(user == null) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);

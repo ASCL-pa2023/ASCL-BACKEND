@@ -2,12 +2,15 @@ package esgi.ascl.news.domain.mapper;
 
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.news.domain.entities.NewsEntity;
+import esgi.ascl.news.domain.entities.TagEntity;
 import esgi.ascl.news.infrastructure.web.requests.NewsRequest;
 import esgi.ascl.news.infrastructure.web.responses.NewsResponse;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class NewsMapper {
@@ -24,10 +27,6 @@ public class NewsMapper {
                 .setTitle(newsRequest.title)
                 .setContent(newsRequest.content)
                 .setCreationDate(new Date());
-    }
-
-    public static NewsRequest entityToRequest(NewsEntity newsEntity) {
-        throw new NotYetImplementedException();
     }
 
     public static NewsResponse entityToResponse(NewsEntity newsEntity) {
