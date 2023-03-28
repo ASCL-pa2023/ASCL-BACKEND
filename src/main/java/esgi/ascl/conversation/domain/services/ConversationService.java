@@ -7,21 +7,25 @@ import esgi.ascl.conversation.infrastructure.web.requests.ConversationRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class ConversationService {
     private final ConversationRepository conversationRepository;
     public final UserConversationService userConversationService;
+    private final MessageService messageService;
 
-    public ConversationService(ConversationRepository conversationRepository, UserConversationService userConversationService) {
+    public ConversationService(ConversationRepository conversationRepository, UserConversationService userConversationService, MessageService messageService) {
         this.conversationRepository = conversationRepository;
         this.userConversationService = userConversationService;
+        this.messageService = messageService;
     }
 
     public ConversationEntity create(ConversationRequest conversationRequest) {
         var conversation = new ConversationEntity()
-                .setTitle(conversationRequest.title);
+                .setTitle(conversationRequest.title)
+                .setCreationDate(new Date());
         return conversationRepository.save(conversation);
     }
 
@@ -57,6 +61,7 @@ public class ConversationService {
     }
 
     public void deleteById(Long id) {
+        messageService.removeAllByConversationId(id);
         conversationRepository.deleteById(id);
     }
 

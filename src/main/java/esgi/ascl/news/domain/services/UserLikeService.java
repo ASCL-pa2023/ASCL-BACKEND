@@ -39,6 +39,8 @@ public class UserLikeService {
 
     public void dislike(UserLikeRequest userLikeRequest) {
         var userLikeEntity = userLikeRepository.findByUserIdAndNewsId(userLikeRequest.userId, userLikeRequest.newsId);
+        userLikeEntity.setNews(null);
+        userLikeEntity.setUser(null);
         userLikeRepository.delete(userLikeEntity);
     }
 }

@@ -75,7 +75,7 @@ public class NewsController {
 
 
     @PutMapping("/{newsId}")
-    public ResponseEntity<?> update(@PathVariable Long newsId, @RequestBody NewsRequest newsRequest, @PathVariable String id) {
+    public ResponseEntity<?> update(@PathVariable Long newsId, @RequestBody NewsRequest newsRequest) {
         var news = newsService.getById(newsId);
         if(news == null) return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
 
@@ -92,12 +92,12 @@ public class NewsController {
         if(news == null) {
             return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
         }
-        newsService.delete(id);
+        newsService.delete(news);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/like")
-    public ResponseEntity<?> like(UserLikeRequest userLikeRequest) {
+    public ResponseEntity<?> like(@RequestBody UserLikeRequest userLikeRequest) {
         if(userLikeRequest.getUserId() == null || userLikeRequest.getNewsId() == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -109,14 +109,14 @@ public class NewsController {
         if (news == null) return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
 
         var userAlreadyLike = userLikeService.getByUserIdAndNewsId(userLikeRequest);
-        if(userAlreadyLike == null) return new ResponseEntity<>("User already like this news", HttpStatus.BAD_REQUEST);
+        if(userAlreadyLike != null) return new ResponseEntity<>("User already like this news", HttpStatus.BAD_REQUEST);
 
         userLikeService.like(user, news);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/dislike")
-    public ResponseEntity<?> dislike(UserLikeRequest userLikeRequest) {
+    public ResponseEntity<?> dislike(@RequestBody UserLikeRequest userLikeRequest) {
         if(userLikeRequest.getUserId() == null || userLikeRequest.getNewsId() == null) {
             return ResponseEntity.badRequest().build();
         }

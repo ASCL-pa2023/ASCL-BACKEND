@@ -34,7 +34,7 @@ public class CommentController {
 
 
     @PostMapping()
-    public ResponseEntity<?> comment(CommentRequest commentRequest){
+    public ResponseEntity<?> comment(@RequestBody CommentRequest commentRequest){
         var user = userService.getById(commentRequest.getUserId());
         if (user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
 
@@ -96,7 +96,7 @@ public class CommentController {
         var comment = commentService.getById(id);
         if(comment == null) return new ResponseEntity<>("Comment not found", HttpStatus.NOT_FOUND);
 
-        commentService.delete(id);
+        commentService.delete(comment);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
