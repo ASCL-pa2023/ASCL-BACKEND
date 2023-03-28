@@ -86,6 +86,7 @@ public class NewsService {
     @Transactional
     public void delete(NewsEntity newsEntity) {
         newsEntity.setUser(null);
+        tagService.deleteAllByNewsId(newsEntity.getId());
         newsRepository.delete(newsEntity);
     }
 }

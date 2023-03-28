@@ -24,11 +24,13 @@ public class NewsController {
     private final NewsService newsService;
     private final UserService userService;
     private final UserLikeService userLikeService;
+    private final NewsMapper newsMapper;
 
-    public NewsController(NewsService newsService, UserService userService, UserLikeService userLikeService) {
+    public NewsController(NewsService newsService, UserService userService, UserLikeService userLikeService, NewsMapper newsMapper) {
         this.newsService = newsService;
         this.userService = userService;
         this.userLikeService = userLikeService;
+        this.newsMapper = newsMapper;
     }
 
 
@@ -39,7 +41,7 @@ public class NewsController {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
         var news = newsService.create(newsRequest);
-        return new ResponseEntity<>(NewsMapper.entityToResponse(news), HttpStatus.CREATED);
+        return new ResponseEntity<>(newsMapper.entityToResponse(news), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -48,16 +50,13 @@ public class NewsController {
         if(news == null) {
             return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(NewsMapper.entityToResponse(news), HttpStatus.OK);
+        return new ResponseEntity<>(newsMapper.entityToResponse(news), HttpStatus.OK);
     }
 
 
     @GetMapping("/all")
     public ResponseEntity<List<NewsResponse>> getAll() {
-        var newsResponses = newsService.getAll()
-                .stream()
-                .map(NewsMapper::entityToResponse)
-                .collect(toList());
+        var newsResponses = newsMapper.entitiesToResponses(newsService.getAll());
         return new ResponseEntity<>(newsResponses, HttpStatus.OK);
     }
 
@@ -67,16 +66,14 @@ public class NewsController {
         if(user == null) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
-        var newsResponses = newsService.getAllByUserId(userId)
-                .stream()
-                .map(NewsMapper::entityToResponse)
-                .collect(toList());
+        var newsResponses = newsMapper.entitiesToResponses(newsService.getAllByUserId(userId));
         return new ResponseEntity<>(newsResponses, HttpStatus.OK);
     }
 
 
     @PutMapping("/{newsId}")
     public ResponseEntity<?> update(@PathVariable Long newsId, @RequestBody NewsRequest newsRequest) {
+        //TODO : update tags
         var news = newsService.getById(newsId);
         if(news == null) return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
 
@@ -84,7 +81,7 @@ public class NewsController {
         if(user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
 
         var newsUpdated = newsService.update(newsId, newsRequest);
-        return new ResponseEntity<>(NewsMapper.entityToResponse(newsUpdated), HttpStatus.OK);
+        return new ResponseEntity<>(newsMapper.entityToResponse(newsUpdated), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
