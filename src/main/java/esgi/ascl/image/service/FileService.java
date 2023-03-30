@@ -57,6 +57,14 @@ public class FileService {
     }
 
 
+    /**
+     * Convert MultipartFile to File
+     * <br>
+     * Post n°24 from : https://stackoverflow.com/questions/24339990/how-to-convert-a-multipart-file-to-file
+     * @param multipartFile
+     * @return File
+     * @throws IOException
+     */
     private File multipartToFile(MultipartFile multipartFile) throws IOException {
         File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + Objects.requireNonNull(multipartFile.getOriginalFilename()));
         multipartFile.transferTo(convFile);
