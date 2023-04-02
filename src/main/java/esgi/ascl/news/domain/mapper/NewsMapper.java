@@ -45,26 +45,4 @@ public class NewsMapper {
                 .setCreationDate(newsEntity.getCreationDate());
     }
 
-    public List<NewsResponse> entitiesToResponses(List<NewsEntity> newsEntities) {
-        if (newsEntities.isEmpty()) return new ArrayList<>();
-        List<NewsResponse> newsResponses = new ArrayList<>();
-        newsEntities.forEach(newsEntity -> {
-
-            var tags = tagService.getAllByNewsId(newsEntity.getId());
-            newsResponses.add(
-                    new NewsResponse()
-                        .setId(newsEntity.getId())
-                        .setUser(newsEntity.getUser())
-                        .setTitle(newsEntity.getTitle())
-                        .setContent(newsEntity.getContent())
-                        .setTags(
-                                tags == null ?
-                                        new ArrayList<>() :
-                                        tags.stream().map(TagMapper::entityToResponse).toList()
-                        )
-                        .setCreationDate(newsEntity.getCreationDate())
-            );
-        });
-        return newsResponses;
-    }
 }
