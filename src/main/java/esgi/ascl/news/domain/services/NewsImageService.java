@@ -38,6 +38,9 @@ public class NewsImageService {
     public void uploadImage(Long newsId, MultipartFile file) {
         var uri = fileService.putFile(file);
 
+        //TODO : Une fos le bucket passer sur un compte payant ->
+        //        Vérifier que l'URI mène bien à l'image
+
         var newsImageRequest = new NewsImageRequest()
                 .setNewsId(newsId)
                 .setUrl(uri.toString());
