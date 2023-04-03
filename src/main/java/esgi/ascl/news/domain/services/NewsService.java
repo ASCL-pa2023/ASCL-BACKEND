@@ -64,6 +64,16 @@ public class NewsService {
         return newsRepository.findAllByUserId(userId);
     }
 
+    public List<NewsEntity> getAllLikedByUserId(Long userId) {
+        var userLikes = userLikeService.getAllByUserId(userId);
+        var news = new ArrayList<NewsEntity>();
+        userLikes.forEach(userLikeEntity -> {
+            var newsEntity = getById(userLikeEntity.getNews().getId());
+            news.add(newsEntity);
+        });
+        return news;
+    }
+
     public List<User> getUserLiked(Long newsId){
         var userLikes = userLikeService.getAllByNewsId(newsId);
         

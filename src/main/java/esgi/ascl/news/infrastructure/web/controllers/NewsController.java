@@ -74,6 +74,18 @@ public class NewsController {
         return new ResponseEntity<>(newsResponses, HttpStatus.OK);
     }
 
+    @GetMapping("/user/{userId}/liked")
+    public ResponseEntity<?> getAllLikedByUserId(@PathVariable Long userId) {
+        var user = userService.getById(userId);
+        if(user == null) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+        var newsResponses = newsService.getAllLikedByUserId(userId)
+                .stream()
+                .map(newsMapper::entityToResponse);
+        return new ResponseEntity<>(newsResponses, HttpStatus.OK);
+    }
+
 
     @PutMapping("/{newsId}")
     public ResponseEntity<?> update(@PathVariable Long newsId, @RequestBody NewsRequest newsRequest) {
