@@ -129,7 +129,7 @@ public class NewsController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/dislike")
+    @PostMapping("/dislike")
     public ResponseEntity<?> dislike(@RequestBody UserLikeRequest userLikeRequest) {
         if(userLikeRequest.getUserId() == null || userLikeRequest.getNewsId() == null) {
             return ResponseEntity.badRequest().build();
