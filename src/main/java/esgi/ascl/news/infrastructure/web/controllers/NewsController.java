@@ -2,6 +2,7 @@ package esgi.ascl.news.infrastructure.web.controllers;
 
 import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.domain.service.UserService;
+import esgi.ascl.news.domain.exceptions.TagExceptions;
 import esgi.ascl.news.domain.mapper.NewsMapper;
 import esgi.ascl.news.domain.services.NewsService;
 import esgi.ascl.news.domain.services.UserLikeService;
@@ -23,22 +24,24 @@ public class NewsController {
     private final NewsService newsService;
     private final UserService userService;
     private final UserLikeService userLikeService;
+    private final NewsMapper newsMapper;
 
-    public NewsController(NewsService newsService, UserService userService, UserLikeService userLikeService) {
+    public NewsController(NewsService newsService, UserService userService, UserLikeService userLikeService, NewsMapper newsMapper) {
         this.newsService = newsService;
         this.userService = userService;
         this.userLikeService = userLikeService;
+        this.newsMapper = newsMapper;
     }
 
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody NewsRequest newsRequest) {
+    public ResponseEntity<?> create(@RequestBody NewsRequest newsRequest) throws TagExceptions {
         var user = userService.getById(newsRequest.userId);
         if(user == null) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
         var news = newsService.create(newsRequest);
-        return new ResponseEntity<>(NewsMapper.entityToResponse(news), HttpStatus.CREATED);
+        return new ResponseEntity<>(newsMapper.entityToResponse(news), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -47,7 +50,7 @@ public class NewsController {
         if(news == null) {
             return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(NewsMapper.entityToResponse(news), HttpStatus.OK);
+        return new ResponseEntity<>(newsMapper.entityToResponse(news), HttpStatus.OK);
     }
 
 
@@ -55,8 +58,8 @@ public class NewsController {
     public ResponseEntity<List<NewsResponse>> getAll() {
         var newsResponses = newsService.getAll()
                 .stream()
-                .map(NewsMapper::entityToResponse)
-                .collect(toList());
+                .map(newsMapper::entityToResponse)
+                .toList();
         return new ResponseEntity<>(newsResponses, HttpStatus.OK);
     }
 
@@ -67,15 +70,26 @@ public class NewsController {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
         var newsResponses = newsService.getAllByUserId(userId)
+                .stream().map(newsMapper::entityToResponse);
+        return new ResponseEntity<>(newsResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{userId}/liked")
+    public ResponseEntity<?> getAllLikedByUserId(@PathVariable Long userId) {
+        var user = userService.getById(userId);
+        if(user == null) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+        var newsResponses = newsService.getAllLikedByUserId(userId)
                 .stream()
-                .map(NewsMapper::entityToResponse)
-                .collect(toList());
+                .map(newsMapper::entityToResponse);
         return new ResponseEntity<>(newsResponses, HttpStatus.OK);
     }
 
 
     @PutMapping("/{newsId}")
     public ResponseEntity<?> update(@PathVariable Long newsId, @RequestBody NewsRequest newsRequest) {
+        //TODO : update tags
         var news = newsService.getById(newsId);
         if(news == null) return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
 
@@ -83,7 +97,7 @@ public class NewsController {
         if(user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
 
         var newsUpdated = newsService.update(newsId, newsRequest);
-        return new ResponseEntity<>(NewsMapper.entityToResponse(newsUpdated), HttpStatus.OK);
+        return new ResponseEntity<>(newsMapper.entityToResponse(newsUpdated), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -115,7 +129,7 @@ public class NewsController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/dislike")
+    @PostMapping("/dislike")
     public ResponseEntity<?> dislike(@RequestBody UserLikeRequest userLikeRequest) {
         if(userLikeRequest.getUserId() == null || userLikeRequest.getNewsId() == null) {
             return ResponseEntity.badRequest().build();

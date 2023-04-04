@@ -17,6 +17,7 @@ public class NewsImageEntity {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "news_id")
     private NewsEntity news;
+    private String filename;
     private String url;
     private Date creationDate;
 
@@ -30,6 +31,15 @@ public class NewsImageEntity {
 
     public NewsImageEntity setNews(NewsEntity news) {
         this.news = news;
+        return this;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public NewsImageEntity setFilename(String filename) {
+        this.filename = filename;
         return this;
     }
 

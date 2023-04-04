@@ -3,6 +3,7 @@ package esgi.ascl.news.domain.services;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.news.domain.entities.NewsEntity;
+import esgi.ascl.news.domain.exceptions.TagExceptions;
 import esgi.ascl.news.domain.mapper.NewsMapper;
 import esgi.ascl.news.infrastructure.repositories.NewsRepository;
 import esgi.ascl.news.infrastructure.web.requests.NewsRequest;
@@ -18,17 +19,39 @@ public class NewsService {
     private final NewsMapper newsMapper;
     private final UserLikeService userLikeService;
     private final UserService userService;
+    private final TagService tagService;
+    private final NewsImageService newsImageService;
 
-    public NewsService(NewsRepository newsRepository, NewsMapper newsMapper, UserLikeService userLikeService, UserService userService) {
+    public NewsService(NewsRepository newsRepository, NewsMapper newsMapper, UserLikeService userLikeService, UserService userService, TagService tagService, NewsImageService newsImageService) {
         this.newsRepository = newsRepository;
         this.newsMapper = newsMapper;
         this.userLikeService = userLikeService;
         this.userService = userService;
+        this.tagService = tagService;
+        this.newsImageService = newsImageService;
     }
 
-    public NewsEntity create(NewsRequest newsRequest) {
-        var user = newsMapper.requestToEntity(newsRequest);
-        return newsRepository.save(user);
+    public NewsEntity create(NewsRequest newsRequest) throws TagExceptions {
+        var news = new NewsEntity();
+
+        var tagNames = newsRequest.tagNames;
+
+        if(!tagNames.isEmpty()){
+            if (tagNames.size() > 3) throw new TagExceptions("You can't add more than 3 tags");
+            tagNames.forEach(tagName -> {
+                if (tagName.length() > 20) try {
+                    throw new TagExceptions("Tag name can't be longer than 20 characters");
+                } catch (TagExceptions e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            news = newsRepository.save(newsMapper.requestToEntity(newsRequest));
+            tagService.createAll(tagNames, news);
+        } else {
+            news = newsRepository.save(newsMapper.requestToEntity(newsRequest));
+        }
+        return news;
     }
 
     public NewsEntity getById(Long id) {
@@ -41,6 +64,16 @@ public class NewsService {
 
     public List<NewsEntity> getAllByUserId(Long userId) {
         return newsRepository.findAllByUserId(userId);
+    }
+
+    public List<NewsEntity> getAllLikedByUserId(Long userId) {
+        var userLikes = userLikeService.getAllByUserId(userId);
+        var news = new ArrayList<NewsEntity>();
+        userLikes.forEach(userLikeEntity -> {
+            var newsEntity = getById(userLikeEntity.getNews().getId());
+            news.add(newsEntity);
+        });
+        return news;
     }
 
     public List<User> getUserLiked(Long newsId){
@@ -65,6 +98,8 @@ public class NewsService {
     @Transactional
     public void delete(NewsEntity newsEntity) {
         newsEntity.setUser(null);
+        tagService.deleteAllByNewsId(newsEntity.getId());
+        newsImageService.deleteAllByNewsId(newsEntity.getId());
         newsRepository.delete(newsEntity);
     }
 }

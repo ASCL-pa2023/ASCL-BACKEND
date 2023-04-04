@@ -72,6 +72,32 @@
             <artifactId>spring-boot-autoconfigure</artifactId>
             <version>3.0.2</version>
         </dependency>
+
+        <!-- ___________________________________________________________ -->
+        <!-- AWS  https://wasabi-support.zendesk.com/hc/en-us/articles/360021962192-How-do-I-use-AWS-SDK-for-Java-v2-with-Wasabi- -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-bom</artifactId>
+            <version>1.12.436</version>
+            <type>pom</type>
+        </dependency>
+
+        <!--S3 Dependency-->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>1.12.232</version>
+        </dependency>
+        <!--IAM Dependency-->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-iam</artifactId>
+            <version>1.12.429</version>
+        </dependency>
+
+        <!-- FIN AWS -->
+        <!-- ___________________________________________________________ -->
+
     </dependencies>
 
     <build>
