@@ -19,6 +19,7 @@ public class NewsImageMapper {
     public NewsImageEntity requestToEntity(NewsImageRequest newsImageRequest) {
         return new NewsImageEntity()
                 .setNews(newsService.getById(newsImageRequest.getNewsId()))
+                .setFilename(newsImageRequest.getFilename())
                 .setUrl(newsImageRequest.getUrl())
                 .setCreationDate(new Date());
     }

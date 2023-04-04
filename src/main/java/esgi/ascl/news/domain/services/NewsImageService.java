@@ -32,18 +32,20 @@ public class NewsImageService {
     }
 
     public void deleteAllByNewsId(Long newsId) {
+        //TODO : Supprimer les images du bucket
         newsImageRepository.removeAllByNewsId(newsId);
     }
 
     public void uploadImage(Long newsId, MultipartFile file) {
-        var uri = fileService.putFile(file);
+        var s3Object = fileService.putFile(file);
 
-        //TODO : Une fos le bucket passer sur un compte payant ->
+        //TODO : Une fois le bucket passer sur un compte payant ->
         //        Vérifier que l'URI mène bien à l'image
 
         var newsImageRequest = new NewsImageRequest()
                 .setNewsId(newsId)
-                .setUrl(uri.toString());
+                .setFilename(s3Object.getKey())
+                .setUrl(s3Object.getObjectContent().getHttpRequest().getURI().toString());
 
         create(newsImageRequest);
     }

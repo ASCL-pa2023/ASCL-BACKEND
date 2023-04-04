@@ -7,7 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -40,7 +39,7 @@ public class FileService {
         return s3Object;
     }
 
-    public URI putFile(MultipartFile multipartFile) {
+    public S3Object putFile(MultipartFile multipartFile) {
         //Envoyer le fichier sur S3
         UUID uuid = UUID.randomUUID();
         try {
@@ -51,9 +50,7 @@ public class FileService {
         }
 
         //  Aller chercher l'image avec l'uuid
-        S3Object s3Object = awsService.getObject(String.valueOf(uuid));
-        //Retourner l'URI
-        return s3Object.getObjectContent().getHttpRequest().getURI();
+        return awsService.getObject(String.valueOf(uuid));
     }
 
 

@@ -2,6 +2,7 @@ package esgi.ascl.news.infrastructure.web.requests;
 
 public class NewsImageRequest {
     public Long newsId;
+    public String filename;
     public String url;
 
     public Long getNewsId() {
@@ -10,6 +11,15 @@ public class NewsImageRequest {
 
     public NewsImageRequest setNewsId(Long newsId) {
         this.newsId = newsId;
+        return this;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public NewsImageRequest setFilename(String filename) {
+        this.filename = filename;
         return this;
     }
 
