@@ -1,23 +1,25 @@
 package esgi.ascl.news.domain.services;
 
 import esgi.ascl.news.domain.entities.CommentEntity;
-import esgi.ascl.news.domain.exceptions.CommentException;
 import esgi.ascl.news.domain.mapper.CommentMapper;
 import esgi.ascl.news.infrastructure.repositories.CommentRepository;
 import esgi.ascl.news.infrastructure.web.requests.CommentRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
+    private final UserLikeCommentService userLikeCommentService;
 
-    public CommentService(CommentRepository commentRepository, CommentMapper commentMapper) {
+    public CommentService(CommentRepository commentRepository, CommentMapper commentMapper, UserLikeCommentService userLikeCommentService) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
+        this.userLikeCommentService = userLikeCommentService;
     }
 
     public CommentEntity create(CommentRequest commentRequest){
@@ -49,6 +51,15 @@ public class CommentService {
         return commentRepository.findByNewsId(newsId);
     }
 
+    public List<CommentEntity> getAllLikedByUserId(Long userId){
+        var userLikeCommentEntities = userLikeCommentService.getAllByUserId(userId);
+        var comments = new ArrayList<CommentEntity>();
+        userLikeCommentEntities.forEach(userLike -> {
+            var comment = commentRepository.findById(userLike.getComment().getId());
+            comment.ifPresent(comments::add);
+        });
+        return comments;
+    }
     @Transactional
     public void delete(CommentEntity commentEntity){
         commentEntity.setNews(null);

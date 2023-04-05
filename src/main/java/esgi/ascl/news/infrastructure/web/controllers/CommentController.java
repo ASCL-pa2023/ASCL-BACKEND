@@ -102,6 +102,18 @@ public class CommentController {
         return new ResponseEntity<>(commentResponses, HttpStatus.OK);
     }
 
+    @GetMapping("/user/{userId}/liked")
+    public ResponseEntity<?> getAllLikedByUserId(@PathVariable Long userId) {
+        var user = userService.getById(userId);
+        if(user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+
+        var commentResponses = commentService.getAllLikedByUserId(userId)
+                .stream()
+                .map(CommentMapper::entityToResponse)
+                .collect(toList());
+        return new ResponseEntity<>(commentResponses, HttpStatus.OK);
+    }
+
     @PostMapping("/like")
     public ResponseEntity<?> like(@RequestBody UserLikeCommentRequest userLikeCommentRequest) {
         var user = userService.getById(userLikeCommentRequest.getUserId());
