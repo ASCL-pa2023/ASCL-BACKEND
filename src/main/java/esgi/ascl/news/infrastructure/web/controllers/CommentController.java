@@ -2,12 +2,12 @@ package esgi.ascl.news.infrastructure.web.controllers;
 
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.news.domain.mapper.CommentMapper;
-import esgi.ascl.news.domain.mapper.NewsMapper;
 import esgi.ascl.news.domain.services.CommentService;
 import esgi.ascl.news.domain.services.NewsService;
+import esgi.ascl.news.domain.services.UserLikeCommentService;
 import esgi.ascl.news.infrastructure.web.requests.CommentRequest;
+import esgi.ascl.news.infrastructure.web.requests.UserLikeCommentRequest;
 import esgi.ascl.news.infrastructure.web.responses.CommentResponse;
-import esgi.ascl.news.infrastructure.web.responses.NewsResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +21,13 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/api/v1/comment")
 public class CommentController {
     private final CommentService commentService;
-    private final CommentMapper commentMapper;
+    private final UserLikeCommentService userLikeCommentService;
     private final NewsService newsService;
     private final UserService userService;
 
-    public CommentController(CommentService commentService, CommentMapper commentMapper, NewsService newsService, UserService userService) {
+    public CommentController(CommentService commentService, UserLikeCommentService userLikeCommentService, NewsService newsService, UserService userService) {
         this.commentService = commentService;
-        this.commentMapper = commentMapper;
+        this.userLikeCommentService = userLikeCommentService;
         this.newsService = newsService;
         this.userService = userService;
     }
@@ -46,6 +46,8 @@ public class CommentController {
 
         return new ResponseEntity<>(CommentMapper.entityToResponse(comment), HttpStatus.OK);
     }
+
+    //TODO : update comment
 
 
     @GetMapping("/{id}")
@@ -89,6 +91,38 @@ public class CommentController {
                 .map(CommentMapper::entityToResponse)
                 .collect(toList());
         return new ResponseEntity<>(commentResponses, HttpStatus.OK);
+    }
+
+    @PostMapping("/like")
+    public ResponseEntity<?> like(@RequestBody UserLikeCommentRequest userLikeCommentRequest) {
+        var user = userService.getById(userLikeCommentRequest.getUserId());
+        if(user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+
+        var comment = commentService.getById(userLikeCommentRequest.getCommentId());
+        if(comment == null) return new ResponseEntity<>("Comment not found", HttpStatus.NOT_FOUND);
+
+        var userLike = userLikeCommentService.getByUserIdAndCommentId(userLikeCommentRequest);
+        if(userLike != null) return new ResponseEntity<>("User already like this news", HttpStatus.BAD_REQUEST);
+
+        userLikeCommentService.like(user, comment);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/dislike")
+    public ResponseEntity<?> dislike(@RequestBody UserLikeCommentRequest userLikeCommentRequest) {
+        var user = userService.getById(userLikeCommentRequest.getUserId());
+        if(user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+
+        var comment = commentService.getById(userLikeCommentRequest.getCommentId());
+        if(comment == null) return new ResponseEntity<>("Comment not found", HttpStatus.NOT_FOUND);
+
+        var userLike = userLikeCommentService.getByUserIdAndCommentId(userLikeCommentRequest);
+        if(userLike == null) return new ResponseEntity<>("User already dislike this comment", HttpStatus.BAD_REQUEST);
+
+        userLikeCommentService.dislike(userLikeCommentRequest);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
