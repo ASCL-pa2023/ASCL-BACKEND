@@ -30,7 +30,7 @@ public class CommentMapper {
     public static CommentResponse entityToResponse(CommentEntity commentEntity){
         return new CommentResponse()
                 .setId(commentEntity.getId())
-                .setUserId(commentEntity.getUser().getId())
+                .setUser(commentEntity.getUser())
                 .setNewsId(commentEntity.getNews().getId())
                 .setContent(commentEntity.getContent());
     }

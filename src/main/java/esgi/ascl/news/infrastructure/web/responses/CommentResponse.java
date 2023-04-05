@@ -1,9 +1,11 @@
 package esgi.ascl.news.infrastructure.web.responses;
 
+import esgi.ascl.User.domain.entities.User;
+
 public class CommentResponse {
     public Long id;
     public String content;
-    public Long userId;
+    public User user;
     public Long newsId;
 
     public Long getId() {
@@ -24,12 +26,12 @@ public class CommentResponse {
         return this;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public CommentResponse setUserId(Long userId) {
-        this.userId = userId;
+    public CommentResponse setUser(User user) {
+        this.user = user;
         return this;
     }
 
