@@ -2,11 +2,14 @@ package esgi.ascl.news.infrastructure.web.responses;
 
 import esgi.ascl.User.domain.entities.User;
 
+import java.util.Date;
+
 public class CommentResponse {
     public Long id;
     public String content;
     public User user;
     public Long newsId;
+    public Date creationDate;
 
     public Long getId() {
         return id;
@@ -41,6 +44,15 @@ public class CommentResponse {
 
     public CommentResponse setNewsId(Long newsId) {
         this.newsId = newsId;
+        return this;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public CommentResponse setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
         return this;
     }
 }

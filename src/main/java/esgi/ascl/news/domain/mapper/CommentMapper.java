@@ -7,6 +7,8 @@ import esgi.ascl.news.infrastructure.web.requests.CommentRequest;
 import esgi.ascl.news.infrastructure.web.responses.CommentResponse;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 public class CommentMapper {
 
@@ -23,15 +25,17 @@ public class CommentMapper {
         return new CommentEntity()
                 .setUser(userService.getById(commentRequest.userId))
                 .setNews(newsService.getById(commentRequest.newsId))
-                .setContent(commentRequest.content);
+                .setContent(commentRequest.content)
+                .setCreationDate(new Date());
     }
 
 
     public static CommentResponse entityToResponse(CommentEntity commentEntity){
         return new CommentResponse()
                 .setId(commentEntity.getId())
+                .setContent(commentEntity.getContent())
                 .setUser(commentEntity.getUser())
                 .setNewsId(commentEntity.getNews().getId())
-                .setContent(commentEntity.getContent());
+                .setCreationDate(commentEntity.getCreationDate());
     }
 }
