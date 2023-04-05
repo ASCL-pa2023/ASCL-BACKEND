@@ -47,7 +47,16 @@ public class CommentController {
         return new ResponseEntity<>(CommentMapper.entityToResponse(comment), HttpStatus.OK);
     }
 
-    //TODO : update comment
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody String content){
+        var comment = commentService.getById(id);
+        if(comment == null) return new ResponseEntity<>("Comment not found", HttpStatus.NOT_FOUND);
+
+        var updatedComment = commentService.update(id, content);
+        if(updatedComment == null) return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(CommentMapper.entityToResponse(updatedComment), HttpStatus.OK);
+    }
 
 
     @GetMapping("/{id}")

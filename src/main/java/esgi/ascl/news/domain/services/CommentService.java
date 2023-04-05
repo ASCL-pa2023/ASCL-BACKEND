@@ -1,6 +1,7 @@
 package esgi.ascl.news.domain.services;
 
 import esgi.ascl.news.domain.entities.CommentEntity;
+import esgi.ascl.news.domain.exceptions.CommentException;
 import esgi.ascl.news.domain.mapper.CommentMapper;
 import esgi.ascl.news.infrastructure.repositories.CommentRepository;
 import esgi.ascl.news.infrastructure.web.requests.CommentRequest;
@@ -22,6 +23,15 @@ public class CommentService {
     public CommentEntity create(CommentRequest commentRequest){
         var comment = commentMapper.requestToEntity(commentRequest);
         return commentRepository.save(comment);
+    }
+
+    public CommentEntity update(Long commentId, String content) {
+        var commentToUpdate = commentRepository.findById(commentId).orElse(null);
+        if(commentToUpdate == null) return null;
+
+        commentToUpdate.setContent(content);
+
+        return commentRepository.save(commentToUpdate);
     }
 
     public CommentEntity getById(Long id){
