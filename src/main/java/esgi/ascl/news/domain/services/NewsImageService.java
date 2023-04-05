@@ -16,15 +16,18 @@ public class NewsImageService {
     private final NewsImageRepository newsImageRepository;
     private final NewsImageMapper newsImageMapper;
     private final FileService fileService;
+    private final NewsService newsService;
 
-    public NewsImageService(NewsImageRepository newsImageRepository, NewsImageMapper newsImageMapper, FileService fileService) {
+    public NewsImageService(NewsImageRepository newsImageRepository, NewsImageMapper newsImageMapper, FileService fileService, NewsService newsService) {
         this.newsImageRepository = newsImageRepository;
         this.newsImageMapper = newsImageMapper;
         this.fileService = fileService;
+        this.newsService = newsService;
     }
 
     private NewsImageEntity create(NewsImageRequest newsImageRequest) {
-        return newsImageRepository.save(newsImageMapper.requestToEntity(newsImageRequest));
+        var newsEntity = newsService.getById(newsImageRequest.newsId);
+        return newsImageRepository.save(newsImageMapper.requestToEntity(newsImageRequest, newsEntity));
     }
 
     public List<NewsImageEntity> getAllByNewsId(Long newsId) {

@@ -4,6 +4,7 @@ import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.news.domain.exceptions.TagExceptions;
 import esgi.ascl.news.domain.mapper.NewsMapper;
+import esgi.ascl.news.domain.services.NewsImageService;
 import esgi.ascl.news.domain.services.NewsService;
 import esgi.ascl.news.domain.services.UserLikeService;
 import esgi.ascl.news.infrastructure.web.requests.NewsRequest;
@@ -22,12 +23,14 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/api/v1/news")
 public class NewsController {
     private final NewsService newsService;
+    private final NewsImageService newsImageService;
     private final UserService userService;
     private final UserLikeService userLikeService;
     private final NewsMapper newsMapper;
 
-    public NewsController(NewsService newsService, UserService userService, UserLikeService userLikeService, NewsMapper newsMapper) {
+    public NewsController(NewsService newsService, NewsImageService newsImageService, UserService userService, UserLikeService userLikeService, NewsMapper newsMapper) {
         this.newsService = newsService;
+        this.newsImageService = newsImageService;
         this.userService = userService;
         this.userLikeService = userLikeService;
         this.newsMapper = newsMapper;
@@ -107,6 +110,8 @@ public class NewsController {
             return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
         }
         newsService.delete(news);
+        newsImageService.deleteAllByNewsId(id);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
