@@ -1,5 +1,6 @@
 package esgi.ascl.news.domain.mapper;
 
+import esgi.ascl.news.domain.entities.NewsEntity;
 import esgi.ascl.news.domain.entities.NewsImageEntity;
 import esgi.ascl.news.domain.services.NewsService;
 import esgi.ascl.news.infrastructure.web.requests.NewsImageRequest;
@@ -10,15 +11,9 @@ import java.util.Date;
 @Component
 public class NewsImageMapper {
 
-    private final NewsService newsService;
-
-    public NewsImageMapper(NewsService newsService) {
-        this.newsService = newsService;
-    }
-
-    public NewsImageEntity requestToEntity(NewsImageRequest newsImageRequest) {
+    public NewsImageEntity requestToEntity(NewsImageRequest newsImageRequest, NewsEntity newsEntity) {
         return new NewsImageEntity()
-                .setNews(newsService.getById(newsImageRequest.getNewsId()))
+                .setNews(newsEntity)
                 .setFilename(newsImageRequest.getFilename())
                 .setUrl(newsImageRequest.getUrl())
                 .setCreationDate(new Date());

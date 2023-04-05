@@ -20,15 +20,13 @@ public class NewsService {
     private final UserLikeService userLikeService;
     private final UserService userService;
     private final TagService tagService;
-    private final NewsImageService newsImageService;
 
-    public NewsService(NewsRepository newsRepository, NewsMapper newsMapper, UserLikeService userLikeService, UserService userService, TagService tagService, NewsImageService newsImageService) {
+    public NewsService(NewsRepository newsRepository, NewsMapper newsMapper, UserLikeService userLikeService, UserService userService, TagService tagService) {
         this.newsRepository = newsRepository;
         this.newsMapper = newsMapper;
         this.userLikeService = userLikeService;
         this.userService = userService;
         this.tagService = tagService;
-        this.newsImageService = newsImageService;
     }
 
     public NewsEntity create(NewsRequest newsRequest) throws TagExceptions {
@@ -99,7 +97,6 @@ public class NewsService {
     public void delete(NewsEntity newsEntity) {
         newsEntity.setUser(null);
         tagService.deleteAllByNewsId(newsEntity.getId());
-        newsImageService.deleteAllByNewsId(newsEntity.getId());
         newsRepository.delete(newsEntity);
     }
 }
