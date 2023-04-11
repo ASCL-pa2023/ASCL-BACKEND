@@ -8,7 +8,7 @@ jobs:
 
   test:
     name: Test - Units & Integrations
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v1
@@ -24,7 +24,7 @@ jobs:
 
   sonar:
     name: Test - SonarCloud Scan
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     needs: [ test ]
     steps:
       - uses: actions/checkout@v1
