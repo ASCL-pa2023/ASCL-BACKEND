@@ -1,7 +1,11 @@
 # .semaphore/semaphore.yml
 # Use the latest stable version of Semaphore 2.0 YML syntax:
 version: v1.0
-
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 # Name of your pipeline. In this example we connect two pipelines with
 # a promotion, so it helps to differentiate what's the job of each.
 name: Java Spring example CI pipeline on Semaphore
