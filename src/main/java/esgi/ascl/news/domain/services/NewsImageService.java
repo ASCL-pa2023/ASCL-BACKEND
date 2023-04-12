@@ -58,12 +58,13 @@ public class NewsImageService {
 
     public List<ImageResponse> getImages(Long newsId){
         var newsImageEntities = newsImageRepository.findAllByNewsId(newsId);
+        if(newsImageEntities.isEmpty()) return new ArrayList<>();
 
         var imageResponses = new ArrayList<ImageResponse>();
 
         newsImageEntities.forEach(newsImage -> {
             var imageResponse = newsImageMapper.entityToResponse(newsImage)
-                    .setFile(fileService.getFileTest(newsImage.getFilename()));
+                    .setFile(fileService.getFile(newsImage.getFilename()));
             imageResponses.add(imageResponse);
         });
 

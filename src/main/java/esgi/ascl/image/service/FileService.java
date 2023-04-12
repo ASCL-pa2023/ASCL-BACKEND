@@ -35,7 +35,7 @@ public class FileService {
         return s3Object;
     }
 
-    public byte[] getFileTest(String filename){
+    public byte[] getFile(String filename){
         var s3Object = awsService.getObject(filename);
         try {
             return s3ObjectToByteArray(s3Object);
