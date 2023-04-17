@@ -94,6 +94,11 @@
             <artifactId>aws-java-sdk-iam</artifactId>
             <version>1.12.429</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- FIN AWS -->
         <!-- ___________________________________________________________ -->
