@@ -5,7 +5,6 @@ import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.news.domain.entities.NewsEntity;
 import esgi.ascl.news.domain.mapper.NewsMapper;
 import esgi.ascl.news.infrastructure.repositories.NewsRepository;
-import esgi.ascl.news.infrastructure.web.requests.NewsRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
