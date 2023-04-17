@@ -91,5 +91,5 @@ class NewsServiceTest {
         var newsListFound = newsService.getAllByUserId(1L);
         assertEquals(newsListExpected, newsListFound);
     }
-    
+
 }
