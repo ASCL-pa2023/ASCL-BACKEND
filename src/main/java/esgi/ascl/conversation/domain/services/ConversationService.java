@@ -3,6 +3,7 @@ package esgi.ascl.conversation.domain.services;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.conversation.domain.entities.ConversationEntity;
 import esgi.ascl.conversation.infrastructure.repositories.ConversationRepository;
+import esgi.ascl.conversation.infrastructure.repositories.MessageRepository;
 import esgi.ascl.conversation.infrastructure.web.requests.ConversationRequest;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,12 @@ import java.util.List;
 public class ConversationService {
     private final ConversationRepository conversationRepository;
     public final UserConversationService userConversationService;
-    private final MessageService messageService;
+    private final MessageRepository messageRepository;
 
-    public ConversationService(ConversationRepository conversationRepository, UserConversationService userConversationService, MessageService messageService) {
+    public ConversationService(ConversationRepository conversationRepository, UserConversationService userConversationService, MessageRepository messageRepository) {
         this.conversationRepository = conversationRepository;
         this.userConversationService = userConversationService;
-        this.messageService = messageService;
+        this.messageRepository = messageRepository;
     }
 
     public ConversationEntity create(ConversationRequest conversationRequest) {
@@ -61,7 +62,7 @@ public class ConversationService {
     }
 
     public void deleteById(Long id) {
-        messageService.removeAllByConversationId(id);
+        messageRepository.deleteAllByConversationId(id);
         conversationRepository.deleteById(id);
     }
 

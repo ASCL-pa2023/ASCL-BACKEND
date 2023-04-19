@@ -3,6 +3,7 @@ package esgi.ascl.conversation.domain.services;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.conversation.domain.entities.ConversationEntity;
 import esgi.ascl.conversation.infrastructure.repositories.ConversationRepository;
+import esgi.ascl.conversation.infrastructure.repositories.MessageRepository;
 import esgi.ascl.conversation.infrastructure.web.requests.ConversationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.when;
 class ConversationServiceTest {
     ConversationRepository conversationRepository;
     UserConversationService userConversationService;
-    MessageService messageService;
+    MessageRepository messageRepository;
     ConversationService conversationService;
 
     ConversationEntity conversationEntity1 = new ConversationEntity();
@@ -33,8 +34,8 @@ class ConversationServiceTest {
     void setUp() {
         conversationRepository = Mockito.mock(ConversationRepository.class);
         userConversationService = Mockito.mock(UserConversationService.class);
-        messageService = Mockito.mock(MessageService.class);
-        conversationService = new ConversationService(conversationRepository, userConversationService, messageService);
+        messageRepository = Mockito.mock(MessageRepository.class);
+        conversationService = new ConversationService(conversationRepository, userConversationService, messageRepository);
 
         conversationEntity1
                 .setId(1L)

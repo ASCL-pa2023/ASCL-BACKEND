@@ -28,7 +28,7 @@ public class MessageController {
     public ResponseEntity<?> create(@RequestBody MessageRequest messageRequest) {
         var conversation = conversationService.getById(messageRequest.conversationId);
         if (conversation == null) return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
-        return ResponseEntity.ok(messageService.create(messageRequest, conversation));
+        return ResponseEntity.ok(messageService.create(messageRequest));
     }
 
     /**

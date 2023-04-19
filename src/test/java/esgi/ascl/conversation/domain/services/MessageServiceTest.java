@@ -24,6 +24,7 @@ class MessageServiceTest {
 
     MessageRepository messageRepository;
     MessageService messageService;
+    ConversationService conversationService;
     UserService userService;
     MessageEntity messageEntity1 = new MessageEntity();
     MessageEntity messageEntity2 = new MessageEntity();
@@ -35,7 +36,7 @@ class MessageServiceTest {
     void setUp() throws ParseException {
         messageRepository = Mockito.mock(MessageRepository.class);
         userService = Mockito.mock(UserService.class);
-        messageService = new MessageService(messageRepository, userService);
+        messageService = new MessageService(messageRepository, userService, conversationService);
 
         user
             .setId(Long.parseLong("1"))
