@@ -2,6 +2,8 @@ package esgi.ascl.image.service;
 
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.util.IOUtils;
+import esgi.ascl.image.exceptions.ConversionException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,18 +27,21 @@ public class FileService {
         return awsService.listBuckets();
     }
 
-    public S3Object getFile(String filename) {
+    public S3Object OLDgetFile(String filename) {
         var s3Object = awsService.getObject(filename);
-
         var uri = s3Object.getObjectContent().getHttpRequest().getURI();
         System.out.println("URI : " + uri);
 
-        //TODO : Convertir le S3Object en byte[] pour le renvoyer au front ???
-        //convert s3Object to byte[]
-        // var inputStream = s3Object.getObjectContent();
-        // var bytes = IOUtils.toByteArray(inputStream);
-
         return s3Object;
+    }
+
+    public byte[] getFile(String filename){
+        var s3Object = awsService.getObject(filename);
+        try {
+            return s3ObjectToByteArray(s3Object);
+        } catch (ConversionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public S3Object putFile(MultipartFile multipartFile) {
@@ -49,7 +54,7 @@ public class FileService {
             e.printStackTrace();
         }
 
-        //  Aller chercher l'image avec l'uuid
+        //Aller chercher l'image avec l'uuid
         return awsService.getObject(String.valueOf(uuid));
     }
 
@@ -66,6 +71,24 @@ public class FileService {
         File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + Objects.requireNonNull(multipartFile.getOriginalFilename()));
         multipartFile.transferTo(convFile);
         return convFile;
+    }
+
+    /**
+     * Convert S3Object to byte[]
+     * @param s3Object
+     * @return byte[]
+     * @throws ConversionException
+     */
+    private byte[] s3ObjectToByteArray(S3Object s3Object) throws ConversionException {
+        var inputStream = s3Object.getObjectContent();
+        byte[] bytes;
+        try{
+            bytes = IOUtils.toByteArray(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ConversionException("S3Object to byte[] error");
+        }
+        return bytes;
     }
 
 }

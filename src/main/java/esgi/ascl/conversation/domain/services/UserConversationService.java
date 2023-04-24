@@ -4,6 +4,7 @@ import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.conversation.domain.entities.ConversationEntity;
 import esgi.ascl.conversation.domain.entities.UserConversationEntity;
 import esgi.ascl.conversation.infrastructure.repositories.UserConversationRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,8 +36,13 @@ public class UserConversationService {
         return userConversationRepository.findByConversationIdAndAndUserId(conversationId, userId);
     }
 
+    @Transactional
     public void deletePerson(Long conversationId, Long userId) {
-        userConversationRepository.deleteByConversationIdAndAndUserId(conversationId, userId);
+        var userConversation = getByConversationIdAndUserId(conversationId, userId)
+                .setUser(null).setConversation(null);
+        userConversationRepository.save(userConversation);
+
+        userConversationRepository.deleteById(userConversation.getId());
     }
 
 }

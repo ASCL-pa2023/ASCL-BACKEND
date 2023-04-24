@@ -5,9 +5,11 @@ import esgi.ascl.news.domain.entities.NewsImageEntity;
 import esgi.ascl.news.domain.mapper.NewsImageMapper;
 import esgi.ascl.news.infrastructure.repositories.NewsImageRepository;
 import esgi.ascl.news.infrastructure.web.requests.NewsImageRequest;
+import esgi.ascl.news.infrastructure.web.responses.ImageResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,5 +53,21 @@ public class NewsImageService {
                 .setUrl(s3Object.getObjectContent().getHttpRequest().getURI().toString());
 
         create(newsImageRequest);
+    }
+
+
+    public List<ImageResponse> getImages(Long newsId){
+        var newsImageEntities = newsImageRepository.findAllByNewsId(newsId);
+        if(newsImageEntities.isEmpty()) return new ArrayList<>();
+
+        var imageResponses = new ArrayList<ImageResponse>();
+
+        newsImageEntities.forEach(newsImage -> {
+            var imageResponse = newsImageMapper.entityToResponse(newsImage)
+                    .setFile(fileService.getFile(newsImage.getFilename()));
+            imageResponses.add(imageResponse);
+        });
+
+        return imageResponses;
     }
 }

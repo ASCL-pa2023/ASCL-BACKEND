@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 import static java.util.stream.Collectors.toList;
 
 @CrossOrigin(origins = "*")
@@ -81,8 +83,8 @@ public class ConversationController {
      * @param conversationId : id of the conversation
      * @param userEmail : email of the user to add
      */
-    @PostMapping("/{conversationId}/addPerson")
-    public ResponseEntity<?> addPerson(@PathVariable Long conversationId, @RequestBody String userEmail){
+    @PostMapping("/{conversationId}/addPerson/{userEmail}")
+    public ResponseEntity<?> addPerson(@PathVariable Long conversationId, @PathVariable String userEmail){
         var conversation = conversationService.getById(conversationId);
         if(conversation == null) return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
 
@@ -102,8 +104,8 @@ public class ConversationController {
      * @param conversationId : id of the conversation
      * @param userEmail : email of the user to delete
      */
-    @DeleteMapping("/{conversationId}/deletePerson")
-    public ResponseEntity<?> deletePerson(@PathVariable Long conversationId, @RequestBody String userEmail){
+    @DeleteMapping("/{conversationId}/deletePerson/{userEmail}")
+    public ResponseEntity<?> deletePerson(@PathVariable Long conversationId, @PathVariable String userEmail){
         var conversation = conversationService.getById(conversationId);
         if(conversation == null) return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
 
