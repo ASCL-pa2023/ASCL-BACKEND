@@ -4,6 +4,8 @@ import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.User.infrastructure.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -15,7 +17,7 @@ public class UserService {
     public User getById(Long id) {
         return userRepository.getUserById(id);
     }
-    public User getByEmail(String userEmail) {
+    public Optional<User> getByEmail(String userEmail) {
         return userRepository.findByEmail(userEmail);
     }
 }

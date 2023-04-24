@@ -89,12 +89,12 @@ public class ConversationController {
         if(conversation == null) return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
 
         var user = userService.getByEmail(userEmail);
-        if(user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        if(user.isEmpty()) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
 
-        var alreadyInConversation = userConversationService.getByConversationIdAndUserId(conversationId, user.getId());
+        var alreadyInConversation = userConversationService.getByConversationIdAndUserId(conversationId, user.get().getId());
         if (alreadyInConversation != null) return new ResponseEntity<>("User already in conversation", HttpStatus.BAD_REQUEST);
 
-        userConversationService.addPerson(conversation, user);
+        userConversationService.addPerson(conversation, user.get());
 
         return new ResponseEntity<>("Person added to conversation", HttpStatus.OK);
     }
@@ -110,12 +110,12 @@ public class ConversationController {
         if(conversation == null) return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
 
         var user = userService.getByEmail(userEmail);
-        if(user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        if(user.isEmpty()) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
 
-        var alreadyInConversation = userConversationService.getByConversationIdAndUserId(conversationId, user.getId());
+        var alreadyInConversation = userConversationService.getByConversationIdAndUserId(conversationId, user.get().getId());
         if (alreadyInConversation == null) return new ResponseEntity<>("User not in conversation", HttpStatus.BAD_REQUEST);
 
-        userConversationService.deletePerson(conversation.getId(), user.getId());
+        userConversationService.deletePerson(conversation.getId(), user.get().getId());
 
         return new ResponseEntity<>("Person deleted from conversation", HttpStatus.OK);
     }
