@@ -10,6 +10,7 @@ public class ConversationMapper {
         return new ConversationResponse()
                 .setId(conversationEntity.getId())
                 .setTitle(conversationEntity.getTitle())
+                .setCreatorId(conversationEntity.getCreatorId())
                 .setCreationDate(conversationEntity.getCreationDate());
     }
 }

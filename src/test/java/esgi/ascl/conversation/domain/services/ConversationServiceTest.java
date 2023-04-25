@@ -1,6 +1,7 @@
 package esgi.ascl.conversation.domain.services;
 
 import esgi.ascl.User.domain.entities.User;
+import esgi.ascl.User.infrastructure.repositories.UserRepository;
 import esgi.ascl.conversation.domain.entities.ConversationEntity;
 import esgi.ascl.conversation.infrastructure.repositories.ConversationRepository;
 import esgi.ascl.conversation.infrastructure.repositories.MessageRepository;
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ConversationServiceTest {
     ConversationRepository conversationRepository;
+    UserRepository userRepository;
     UserConversationService userConversationService;
     MessageRepository messageRepository;
     ConversationService conversationService;
@@ -35,7 +37,8 @@ class ConversationServiceTest {
         conversationRepository = Mockito.mock(ConversationRepository.class);
         userConversationService = Mockito.mock(UserConversationService.class);
         messageRepository = Mockito.mock(MessageRepository.class);
-        conversationService = new ConversationService(conversationRepository, userConversationService, messageRepository);
+        userRepository = Mockito.mock(UserRepository.class);
+        conversationService = new ConversationService(conversationRepository, userConversationService, messageRepository, userRepository);
 
         conversationEntity1
                 .setId(1L)

@@ -12,8 +12,8 @@ public class ConversationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
+    private Long creatorId;
     private Date creationDate;
 
     public Long getId() {
@@ -31,6 +31,15 @@ public class ConversationEntity {
 
     public ConversationEntity setTitle(String title) {
         this.title = title;
+        return this;
+    }
+
+    public Long getCreatorId() {
+        return creatorId;
+    }
+
+    public ConversationEntity setCreatorId(Long creatorId) {
+        this.creatorId = creatorId;
         return this;
     }
 

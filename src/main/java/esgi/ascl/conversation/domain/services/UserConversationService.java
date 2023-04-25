@@ -45,4 +45,15 @@ public class UserConversationService {
         userConversationRepository.deleteById(userConversation.getId());
     }
 
+    @Transactional
+    public void deleteAllByConversationId(Long conversationId) {
+        var userConversations = userConversationRepository.findAllByConversationId(conversationId);
+
+        userConversations.forEach(userConversation -> {
+            userConversation.setConversation(null).setUser(null);
+            userConversationRepository.save(userConversation);
+            userConversationRepository.deleteById(userConversation.getId());
+        });
+    }
+
 }

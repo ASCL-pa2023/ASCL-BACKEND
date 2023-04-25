@@ -13,8 +13,10 @@ public class UserConversationEntity {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "conversation_id")
     private ConversationEntity conversation;
 
 
