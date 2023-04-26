@@ -1,5 +1,6 @@
 package esgi.ascl.news.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import esgi.ascl.User.domain.entities.User;
 import jakarta.persistence.*;
@@ -14,6 +15,7 @@ public class NewsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

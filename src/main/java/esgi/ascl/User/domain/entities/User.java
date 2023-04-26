@@ -1,5 +1,6 @@
 package esgi.ascl.User.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import esgi.ascl.security.token.Token;
 import jakarta.persistence.*;
@@ -55,6 +56,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 
