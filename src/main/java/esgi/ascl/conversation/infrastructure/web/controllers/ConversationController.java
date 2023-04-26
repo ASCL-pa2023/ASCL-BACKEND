@@ -112,19 +112,17 @@ public class ConversationController {
 
     /**
      * Delete a person from a conversation
-     * @param conversationId : id of the conversation
-     * @param userEmail : email of the user to delete
+     * @param addPersonRequest : add person request
      */
-    @DeleteMapping("/{conversationId}/deletePerson/{userEmail}")
-    //TODO : prendre AddPersonRequest en paramètre
-    public ResponseEntity<?> deletePerson(@PathVariable Long conversationId, @PathVariable String userEmail){
-        var conversation = conversationService.getById(conversationId);
+    @DeleteMapping("/deletePerson")
+    public ResponseEntity<?> deletePerson(@RequestBody AddPersonRequest addPersonRequest){
+        var conversation = conversationService.getById(addPersonRequest.conversationId);
         if(conversation == null) return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
 
-        var user = userService.getByEmail(userEmail);
+        var user = userService.getByEmail(addPersonRequest.userEmail);
         if(user.isEmpty()) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
 
-        var alreadyInConversation = userConversationService.getByConversationIdAndUserId(conversationId, user.get().getId());
+        var alreadyInConversation = userConversationService.getByConversationIdAndUserId(addPersonRequest.conversationId, user.get().getId());
         if (alreadyInConversation == null) return new ResponseEntity<>("User not in conversation", HttpStatus.BAD_REQUEST);
 
         userConversationService.deletePerson(conversation.getId(), user.get().getId());
