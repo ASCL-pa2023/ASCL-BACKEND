@@ -33,7 +33,7 @@ public class CommentController {
     }
 
 
-    @PostMapping()
+    @PostMapping("/create")
     public ResponseEntity<?> comment(@RequestBody CommentRequest commentRequest){
         var user = userService.getById(commentRequest.getUserId());
         if (user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
