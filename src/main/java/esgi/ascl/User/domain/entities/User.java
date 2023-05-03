@@ -41,6 +41,9 @@ public class User implements UserDetails {
     @Column(name = "lastname")
     private String lastname;
 
+    @Column(name = "bio")
+    private String bio;
+
     @Column(name = "password")
     private String password;//TODO: class Password ?
 
@@ -92,6 +95,14 @@ public class User implements UserDetails {
 
     public User setLastname(String lastname) {
         this.lastname = lastname;
+        return this;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+    public User setBio(String bio) {
+        this.bio = bio;
         return this;
     }
 

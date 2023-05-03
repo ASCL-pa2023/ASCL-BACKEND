@@ -8,6 +8,7 @@ public class UserRequest {
     private String phone;
     private String firstname;
     private String lastname;
+    private String bio;
     private String license;
     private Date birthday;
     private String profilePicture;
@@ -55,6 +56,15 @@ public class UserRequest {
 
     public UserRequest setLastname(String lastname) {
         this.lastname = lastname;
+        return this;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public UserRequest setBio(String bio) {
+        this.bio = bio;
         return this;
     }
 
