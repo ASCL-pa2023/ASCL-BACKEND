@@ -27,14 +27,46 @@ public class UserService {
     public User update(UserRequest userRequest){
         var user = userRepository.getUserById(userRequest.getId());
         user
-            .setEmail(Objects.equals(userRequest.getEmail(), "") ? user.getEmail() : userRequest.getEmail())
-            .setPhone(Objects.equals(userRequest.getPhone(), "") ? user.getPhone() : userRequest.getPhone())
-            .setFirstname(Objects.equals(userRequest.getFirstname(), "") ? user.getFirstname() : userRequest.getFirstname())
-            .setLastname(Objects.equals(userRequest.getLastname(), "") ? user.getLastname() : userRequest.getLastname())
-            .setBio(Objects.equals(userRequest.getBio(), "") ? user.getBio() : userRequest.getBio())
-            .setLicense(Objects.equals(userRequest.getLicense(), "") ? user.getLicense() : userRequest.getLicense())
-            .setBirthday(userRequest.getBirthday() == null ? user.getBirthday() : userRequest.getBirthday())
-            .setProfilePicture(Objects.equals(userRequest.getProfilePicture(), "") ? user.getProfilePicture() : userRequest.getProfilePicture());
+            .setEmail(
+                    Objects.equals(userRequest.getEmail(), "") || userRequest.getEmail() == null?
+                    user.getEmail()
+                    : userRequest.getEmail()
+            )
+            .setPhone(
+                    Objects.equals(userRequest.getPhone(), "") || userRequest.getPhone() == null ?
+                            user.getPhone() :
+                            userRequest.getPhone()
+            )
+            .setFirstname(
+                    Objects.equals(userRequest.getFirstname(), "") || userRequest.getFirstname() == null ?
+                            user.getFirstname() :
+                            userRequest.getFirstname()
+            )
+            .setLastname(
+                    Objects.equals(userRequest.getLastname(), "") || userRequest.getLastname() == null ?
+                            user.getLastname() :
+                            userRequest.getLastname()
+            )
+            .setBio(
+                    Objects.equals(userRequest.getBio(), "") || userRequest.getBio() == null ?
+                            user.getBio() :
+                            userRequest.getBio()
+            )
+            .setLicense(
+                    Objects.equals(userRequest.getLicense(), "") || userRequest.getLicense() == null ?
+                            user.getLicense() :
+                            userRequest.getLicense()
+            )
+            .setBirthday(
+                    userRequest.getBirthday() == null ?
+                            user.getBirthday() :
+                            userRequest.getBirthday()
+            )
+            .setProfilePicture(
+                    Objects.equals(userRequest.getProfilePicture(), "") || userRequest.getProfilePicture() == null ?
+                            user.getProfilePicture() :
+                            userRequest.getProfilePicture()
+            );
 
         return userRepository.save(user);
     }
