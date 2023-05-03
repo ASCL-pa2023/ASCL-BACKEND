@@ -58,6 +58,14 @@ public class FileService {
         return awsService.getObject(String.valueOf(uuid));
     }
 
+    public void deleteFile(String filename) {
+        try {
+            awsService.deleteObject(filename);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Convert MultipartFile to File
