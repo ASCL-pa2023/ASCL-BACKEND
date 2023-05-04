@@ -47,9 +47,6 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;//TODO: class Password ?
 
-    @Column(name = "license")
-    private String license;
-
     @Column(name = "birthday")
     private Date birthday;
 
@@ -70,11 +67,6 @@ public class User implements UserDetails {
 
     public User setPhone(String phone) {
         this.phone = phone;
-        return this;
-    }
-
-    public User setLicense(String license) {
-        this.license = license;
         return this;
     }
 

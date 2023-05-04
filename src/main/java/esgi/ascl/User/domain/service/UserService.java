@@ -52,11 +52,6 @@ public class UserService {
                             user.getBio() :
                             userRequest.getBio()
             )
-            .setLicense(
-                    Objects.equals(userRequest.getLicense(), "") || userRequest.getLicense() == null ?
-                            user.getLicense() :
-                            userRequest.getLicense()
-            )
             .setBirthday(
                     userRequest.getBirthday() == null ?
                             user.getBirthday() :

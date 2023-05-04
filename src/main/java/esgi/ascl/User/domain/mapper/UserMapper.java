@@ -12,7 +12,6 @@ public class UserMapper {
                 .setPhone(user.getPhone())
                 .setFirstname(user.getFirstname())
                 .setLastname(user.getLastname())
-                .setLicense(user.getLicense())
                 .setBirthday(user.getBirthday());
     }
 

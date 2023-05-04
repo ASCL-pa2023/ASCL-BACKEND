@@ -9,7 +9,6 @@ public class UserRequest {
     private String firstname;
     private String lastname;
     private String bio;
-    private String license;
     private Date birthday;
     private String profilePicture;
 
@@ -68,15 +67,6 @@ public class UserRequest {
         return this;
     }
 
-    public String getLicense() {
-        return license;
-    }
-
-    public UserRequest setLicense(String license) {
-        this.license = license;
-        return this;
-    }
-
     public Date getBirthday() {
         return birthday;
     }
@@ -103,7 +93,6 @@ public class UserRequest {
                 ", phone='" + phone + '\'' +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
-                ", license='" + license + '\'' +
                 ", birthday=" + birthday +
                 ", profilePicture='" + profilePicture + '\'' +
                 '}';

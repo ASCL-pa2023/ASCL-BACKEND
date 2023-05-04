@@ -9,7 +9,6 @@ public class UserResponse {
     public String firstname;
     public String lastname;
     public String bio;
-    public String license;
     public Date birthday;
 
 
@@ -64,15 +63,6 @@ public class UserResponse {
 
     public UserResponse setBio(String bio) {
         this.bio = bio;
-        return this;
-    }
-
-    public String getLicense() {
-        return license;
-    }
-
-    public UserResponse setLicense(String license) {
-        this.license = license;
         return this;
     }
 
