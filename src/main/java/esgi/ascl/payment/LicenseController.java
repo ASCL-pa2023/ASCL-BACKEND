@@ -11,16 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/license")
 public class LicenseController {
-
-    @Value("${stripe.api.key}")
-    private String stripeApiKey;
     private static final Gson gson = new Gson();
     private final LicenseService licenseService;
     private final UserService userService;
@@ -74,34 +70,17 @@ public class LicenseController {
     }
 
     @PostMapping("payment")
-    public ResponseEntity<?> paymentWithCheckoutPage(@RequestBody CheckoutPayment payment) throws StripeException {
+    public ResponseEntity<?> paymentWithCheckoutPage(@RequestBody CheckoutPayment payment) {
         var user = userService.getById(payment.getUserId());
         if (user == null) return userNotFound();
 
-        Stripe.apiKey = stripeApiKey ;
-
-        SessionCreateParams params = SessionCreateParams.builder()
-                .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
-                .setCustomerEmail(user.getEmail())
-                .setMode(SessionCreateParams.Mode.PAYMENT).setSuccessUrl(payment.getSuccessUrl())
-                .setCancelUrl(payment.getCancelUrl())
-                .addLineItem(
-                        SessionCreateParams.LineItem.builder()
-                                .setQuantity(payment.getQuantity())
-                                .setPriceData(
-                                        SessionCreateParams.LineItem.PriceData.builder()
-                                                .setCurrency(payment.getCurrency()).setUnitAmount(payment.getAmount())
-                                                .setProductData(SessionCreateParams.LineItem.PriceData.ProductData
-                                                        .builder().setName(payment.getName()).build())
-                                                .build())
-                                .build())
-                .build();
-
-        Session session = Session.create(params);
-        Map<String, String> responseData = new HashMap<>();
-        responseData.put("id", session.getId());
-
-
+        Map<String, String> responseData;
+        try {
+            responseData = licenseService.payment(payment, user);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
         return new ResponseEntity<>(gson.toJson(responseData), HttpStatus.OK);
     }
 
