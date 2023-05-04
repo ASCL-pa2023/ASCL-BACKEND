@@ -1,6 +1,7 @@
 package esgi.ascl.license.infrastructure.web.controller;
 
 import com.google.gson.Gson;
+import com.stripe.model.*;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.license.domain.entities.CheckoutPayment;
 import esgi.ascl.license.domain.service.LicenseService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Objects;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -81,6 +83,52 @@ public class LicenseController {
         
         return new ResponseEntity<>(gson.toJson(responseData), HttpStatus.OK);
     }
+
+
+    //TODO : Rendre ce endpoint accessible sans authentification
+    @PostMapping("webhook/payment-confirmation")
+    public ResponseEntity<?> webhook(@RequestBody Event event){
+        //commande strip CLI : stripe trigger payment_intent.succeeded
+        EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
+        StripeObject stripeObject = null;
+        if (dataObjectDeserializer.getObject().isPresent()) {
+            stripeObject = dataObjectDeserializer.getObject().get();
+        } else {
+            // Deserialization failed, probably due to an API version mismatch.
+            // Refer to the Javadoc documentation on `EventDataObjectDeserializer` for
+            // instructions on how to handle this case, or return an error here.
+        }
+
+        switch (event.getType()) {
+            case "payment_intent.succeeded" -> {
+                System.out.println("Dans payment_method.succeeded !");
+
+
+                PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
+                if(paymentIntent == null) break;
+
+                System.out.println("Payment for " + paymentIntent.getAmount() + " succeeded.");
+
+                var userEmail = paymentIntent.getReceiptEmail();
+                System.out.println("userEmail : " + userEmail);
+
+                if(!Objects.equals(userEmail, "")) {
+                    userService.getByEmail(userEmail)
+                            .ifPresent(licenseService::create);
+                }
+            }
+            case "payment_method.attached" -> {
+                PaymentMethod paymentMethod = (PaymentMethod) stripeObject;
+                System.out.println("Dans payment_method.attached !");
+            }
+
+            default -> System.out.println("Unhandled event type: " + event.getType());
+        }
+
+
+        return new ResponseEntity<>("", HttpStatus.OK);
+    }
+
 
 
     private ResponseEntity<?> userNotFound() {
