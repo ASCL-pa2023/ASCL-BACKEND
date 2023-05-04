@@ -1,6 +1,6 @@
-package esgi.ascl.User.infrastructure.web.response;
+package esgi.ascl.license.infrastructure.web.response;
 
-import esgi.ascl.User.domain.entities.User;
+import esgi.ascl.User.infrastructure.web.response.UserResponse;
 
 import java.util.Date;
 

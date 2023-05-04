@@ -1,5 +1,6 @@
-package esgi.ascl.payment;
+package esgi.ascl.license.domain.service;
 
+import esgi.ascl.license.infrastructure.repositories.LicenseRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;

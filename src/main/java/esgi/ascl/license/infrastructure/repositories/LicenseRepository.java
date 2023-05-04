@@ -1,4 +1,4 @@
-package esgi.ascl.payment;
+package esgi.ascl.license.infrastructure.repositories;
 
 import esgi.ascl.User.domain.entities.License;
 import org.springframework.data.jpa.repository.JpaRepository;

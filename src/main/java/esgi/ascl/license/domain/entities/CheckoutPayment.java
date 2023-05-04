@@ -1,4 +1,4 @@
-package esgi.ascl.payment;
+package esgi.ascl.license.domain.entities;
 
 
 public class CheckoutPayment {

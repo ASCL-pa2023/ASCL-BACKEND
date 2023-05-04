@@ -1,8 +1,8 @@
-package esgi.ascl.payment;
+package esgi.ascl.license.domain.mapper;
 
 import esgi.ascl.User.domain.entities.License;
 import esgi.ascl.User.domain.mapper.UserMapper;
-import esgi.ascl.User.infrastructure.web.response.LicenseResponse;
+import esgi.ascl.license.infrastructure.web.response.LicenseResponse;
 
 public class LicenseMapper {
 

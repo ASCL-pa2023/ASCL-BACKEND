@@ -1,15 +1,13 @@
-package esgi.ascl.payment;
+package esgi.ascl.license.infrastructure.web.controller;
 
 import com.google.gson.Gson;
-import com.stripe.Stripe;
-import com.stripe.exception.StripeException;
-import com.stripe.model.checkout.Session;
-import com.stripe.param.checkout.SessionCreateParams;
 import esgi.ascl.User.domain.service.UserService;
+import esgi.ascl.license.domain.entities.CheckoutPayment;
+import esgi.ascl.license.domain.service.LicenseService;
+import esgi.ascl.license.domain.mapper.LicenseMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package esgi.ascl.payment;
+package esgi.ascl.license.domain.service;
 
 import com.google.gson.Gson;
 import com.stripe.Stripe;
@@ -7,6 +7,8 @@ import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import esgi.ascl.User.domain.entities.License;
 import esgi.ascl.User.domain.entities.User;
+import esgi.ascl.license.infrastructure.repositories.LicenseRepository;
+import esgi.ascl.license.domain.entities.CheckoutPayment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
