@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Objects;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -107,23 +106,13 @@ public class LicenseController {
 
         switch (event.getType()) {
             case "payment_intent.succeeded" -> {
-                // TODO : mettre en place le sytème de prolongation de licence
+                System.out.println("Dans payment_method.succeeded !");
                 var user = userService.getByEmail(paymentIntent.getReceiptEmail());
                 var license = licenseService.getByUserId(user.get().getId());
-                if (license != null)
-                    licenseService.delete(license.getId());
-                //  //
-
-
-                System.out.println("Dans payment_method.succeeded !");
-                System.out.println("Payment for " + paymentIntent.getAmount() + " succeeded.");
-
-                var userEmail = paymentIntent.getReceiptEmail();
-                System.out.println("userEmail : " + userEmail);
-
-                if(!Objects.equals(userEmail, "")) {
-                    userService.getByEmail(userEmail)
-                            .ifPresent(licenseService::create);
+                if (license != null) {
+                    licenseService.licenseExtension(license.getId());
+                } else {
+                    licenseService.create(user.get());
                 }
             }
             case "payment_intent.payment_failed" -> {

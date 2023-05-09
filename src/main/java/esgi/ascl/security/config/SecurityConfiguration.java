@@ -28,7 +28,8 @@ public class SecurityConfiguration {
         .authorizeHttpRequests().requestMatchers(
                 "/api/v1/auth/**",
                 "/wschat/**",
-                "/api/v1/license/webhook/**")
+                "/api/v1/license/webhook/**",
+                "api/v1/license/test")
             .permitAll()
             .and()
             .authorizeHttpRequests().requestMatchers("/api/v1/**").permitAll()

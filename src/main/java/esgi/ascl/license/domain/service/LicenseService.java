@@ -28,11 +28,35 @@ public class LicenseService {
         this.licenseNumberGenerator = licenseNumberGenerator;
     }
 
+
+    public void licenseExtension(Long licenseId){
+        licenseRepository.findById(licenseId)
+            .ifPresentOrElse(
+                license -> {
+                    license.setExpirationDate(
+                            nextYear(license.getExpirationDate())
+                    );
+                    licenseRepository.save(license);
+                },
+                () -> {
+                    throw new NoSuchElementException("License not found");
+                }
+            );
+    }
+
+
+    public Date nextYear(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.YEAR, 1);
+        return cal.getTime();
+    }
+
     public License create(User user) {
         var license = new License()
                 .setUser(user)
                 .setNumber(licenseNumberGenerator.generate())
-                .setExpirationDate(null)
+                .setExpirationDate(nextYear(new Date()))
                 .setCreatedAt(new Date());
         return licenseRepository.save(license);
     }
@@ -92,7 +116,10 @@ public class LicenseService {
 
     public void delete(Long id) {
         licenseRepository.findById(id)
-                .ifPresent(licenseRepository::delete);
+                .ifPresent(license -> {
+                    license.setUser(null);
+                    licenseRepository.delete(license);
+                });
     }
 
 }
