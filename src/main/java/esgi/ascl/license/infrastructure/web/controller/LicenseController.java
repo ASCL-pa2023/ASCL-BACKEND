@@ -84,12 +84,12 @@ public class LicenseController {
         return new ResponseEntity<>(gson.toJson(responseData), HttpStatus.OK);
     }
 
-
-    //TODO : Rendre ce endpoint accessible sans authentification
     @PostMapping("webhook/payment-confirmation")
-    public ResponseEntity<?> webhook(@RequestBody Event event){
-        //commande strip CLI : stripe trigger payment_intent.succeeded
-        EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
+    public ResponseEntity<?> webhook(@RequestBody String stripeEvent){
+        //commande stripe CLI : stripe trigger payment_intent.succeeded
+        Event event = Event.GSON.fromJson(stripeEvent, Event.class);
+        EventDataObjectDeserializer dataObjectDeserializer =  event.getDataObjectDeserializer();
+
         StripeObject stripeObject = null;
         if (dataObjectDeserializer.getObject().isPresent()) {
             stripeObject = dataObjectDeserializer.getObject().get();
@@ -99,14 +99,23 @@ public class LicenseController {
             // instructions on how to handle this case, or return an error here.
         }
 
+        PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
+        if (paymentIntent == null) {
+            System.out.println("Dans paymentIntent == null !");
+            return new ResponseEntity<>("", HttpStatus.OK);
+        }
+
         switch (event.getType()) {
             case "payment_intent.succeeded" -> {
+                // TODO : mettre en place le sytème de prolongation de licence
+                var user = userService.getByEmail(paymentIntent.getReceiptEmail());
+                var license = licenseService.getByUserId(user.get().getId());
+                if (license != null)
+                    licenseService.delete(license.getId());
+                //  //
+
+
                 System.out.println("Dans payment_method.succeeded !");
-
-
-                PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
-                if(paymentIntent == null) break;
-
                 System.out.println("Payment for " + paymentIntent.getAmount() + " succeeded.");
 
                 var userEmail = paymentIntent.getReceiptEmail();
@@ -117,14 +126,16 @@ public class LicenseController {
                             .ifPresent(licenseService::create);
                 }
             }
+            case "payment_intent.payment_failed" -> {
+                System.out.println("Dans payment_intent.payment_failed !");
+                System.out.println("Payment intent : " + paymentIntent);
+            }
             case "payment_method.attached" -> {
-                PaymentMethod paymentMethod = (PaymentMethod) stripeObject;
+                System.out.println("Payment intent : " + paymentIntent);
                 System.out.println("Dans payment_method.attached !");
             }
-
             default -> System.out.println("Unhandled event type: " + event.getType());
         }
-
 
         return new ResponseEntity<>("", HttpStatus.OK);
     }

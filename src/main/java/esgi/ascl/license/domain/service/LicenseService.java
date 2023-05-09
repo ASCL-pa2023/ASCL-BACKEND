@@ -89,4 +89,10 @@ public class LicenseService {
         return responseData;
     }
 
+
+    public void delete(Long id) {
+        licenseRepository.findById(id)
+                .ifPresent(licenseRepository::delete);
+    }
+
 }

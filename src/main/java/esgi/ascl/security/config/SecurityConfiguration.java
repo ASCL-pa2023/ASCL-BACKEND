@@ -25,10 +25,13 @@ public class SecurityConfiguration {
     http
         .csrf()
         .disable()
-        .authorizeHttpRequests().requestMatchers("/api/v1/auth/**").permitAll()
-            .and()
-            .authorizeHttpRequests().requestMatchers("/api/v1/**")
+        .authorizeHttpRequests().requestMatchers(
+                "/api/v1/auth/**",
+                "/wschat/**",
+                "/api/v1/license/webhook/**")
             .permitAll()
+            .and()
+            .authorizeHttpRequests().requestMatchers("/api/v1/**").permitAll()
         .anyRequest().authenticated()
         .and()
         .authenticationProvider(authenticationProvider)
