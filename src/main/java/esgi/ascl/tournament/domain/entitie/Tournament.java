@@ -1,4 +1,4 @@
-package esgi.ascl.Tournament.Entitie;
+package esgi.ascl.tournament.domain.entitie;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -14,7 +14,7 @@ public class Tournament {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
-    private int id;
+    private long id;
 
     @Column(name = "location")
     private String location;
@@ -27,4 +27,8 @@ public class Tournament {
 
     @Column(name = "deadline_inscription_date")
     private Date deadline_inscription_date;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tournament_type_id")
+    private TournamentType tournamentType;
 }
