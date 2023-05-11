@@ -19,7 +19,7 @@ public class AuthenticationController {
   private final AuthenticationService service;
 
   @PostMapping("/register")
-  public ResponseEntity<AuthenticationResponse> register(
+  public ResponseEntity<RegisterResponse> register(
       @RequestBody RegisterRequest request
   ) {
     //todo verification des informations de l'utilisateur

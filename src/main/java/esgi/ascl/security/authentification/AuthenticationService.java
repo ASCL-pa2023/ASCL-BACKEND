@@ -31,16 +31,12 @@ public class AuthenticationService {
   private final AuthenticationManager authenticationManager;
 
   public boolean userEmailExist(String email){
-    return repository.findByEmail(email) == null ? false : true;
+    return repository.findByEmail(email).isPresent();
   }
 
-  public AuthenticationResponse badRequest(){
-    return AuthenticationResponse.builder().build();
-  }
-
-  public AuthenticationResponse register(RegisterRequest request) {
+  public RegisterResponse register(RegisterRequest request) {
     if(request.getPassword() == null || request.getFirstname() == null || request.getLastname() == null || request.getEmail() == null ){
-      return AuthenticationResponse.builder().build();
+      return null;
     }
     var user = User.builder()
         .firstname(request.getFirstname())
@@ -53,7 +49,7 @@ public class AuthenticationService {
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
     saveUserToken(savedUser, jwtToken);
-    return AuthenticationResponse.builder()
+    return RegisterResponse.builder()
         .accessToken(jwtToken)
             .refreshToken(refreshToken)
         .build();
