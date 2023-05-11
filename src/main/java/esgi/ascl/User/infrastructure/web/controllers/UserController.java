@@ -22,6 +22,13 @@ public class UserController {
         this.profilePictureService = profilePictureService;
     }
 
+    @GetMapping("mail/{email}")
+    public ResponseEntity<?> getByEmail(@PathVariable String email) {
+        var user = userService.getByEmail(email);
+        if (user.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(UserMapper.entityToResponse(user.get()));
+    }
+
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody UserRequest userRequest) {
         if(userService.getById(userRequest.getId()) == null) {
