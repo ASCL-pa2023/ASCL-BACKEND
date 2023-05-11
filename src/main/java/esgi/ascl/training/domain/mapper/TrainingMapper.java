@@ -9,15 +9,16 @@ import java.util.List;
 
 public class TrainingMapper {
     public static TrainingResponse entityToResponse(Training training){
-        return new TrainingResponse()
-                .setId(training.getId())
-                .setDate(training.getDate())
-                .setTimeSlot(training.getTimeSlot())
-                .setTrainingCategoryResponse(
+        return new TrainingResponse().builder()
+                .id(training.getId())
+                .date(training.getDate())
+                .timeSlot(training.getTimeSlot())
+                .trainingCategoryResponse(
                         TrainingCategoryMapper.entityToResponse(
                                 training.getTrainingCategory()
                         )
-                );
+                )
+                .build();
     }
 
     public static Training requestToEntity(TrainingRequest trainingRequest, TrainingCategory trainingCategory) {

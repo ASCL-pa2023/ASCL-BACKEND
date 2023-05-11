@@ -8,9 +8,10 @@ import java.util.List;
 
 public class TrainingCategoryMapper {
     public static TrainingCategoryResponse entityToResponse(TrainingCategory trainingCategory){
-        return new TrainingCategoryResponse()
-                .setId(trainingCategory.getId())
-                .setName(trainingCategory.getName());
+        return new TrainingCategoryResponse().builder()
+                .id(trainingCategory.getId())
+                .name(trainingCategory.getName())
+                .build();
     }
 
     public static TrainingCategory requestToEntity(TrainingCategoryRequest trainingCategoryRequest){
