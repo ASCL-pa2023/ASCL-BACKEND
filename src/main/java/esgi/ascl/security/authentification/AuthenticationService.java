@@ -4,6 +4,7 @@ package esgi.ascl.security.authentification;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import esgi.ascl.User.domain.entities.Role;
 import esgi.ascl.User.domain.entities.User;
+import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.infrastructure.repositories.UserRepository;
 import esgi.ascl.security.config.JwtService;
 import esgi.ascl.security.token.Token;
@@ -29,7 +30,18 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
 
+  public boolean userEmailExist(String email){
+    return repository.findByEmail(email) == null ? false : true;
+  }
+
+  public AuthenticationResponse badRequest(){
+    return AuthenticationResponse.builder().build();
+  }
+
   public AuthenticationResponse register(RegisterRequest request) {
+    if(request.getPassword() == null || request.getFirstname() == null || request.getLastname() == null || request.getEmail() == null ){
+      return AuthenticationResponse.builder().build();
+    }
     var user = User.builder()
         .firstname(request.getFirstname())
         .lastname(request.getLastname())
@@ -63,6 +75,7 @@ public class AuthenticationService {
     return AuthenticationResponse.builder()
         .accessToken(jwtToken)
             .refreshToken(refreshToken)
+            .user(UserMapper.entityToResponse(user))
         .build();
   }
 
