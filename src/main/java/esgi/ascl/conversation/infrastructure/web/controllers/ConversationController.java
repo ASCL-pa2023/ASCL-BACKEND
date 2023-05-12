@@ -5,12 +5,11 @@ import esgi.ascl.conversation.domain.services.ConversationService;
 import esgi.ascl.conversation.domain.services.UserConversationService;
 import esgi.ascl.conversation.infrastructure.web.requests.AddPersonRequest;
 import esgi.ascl.conversation.infrastructure.web.requests.ConversationRequest;
-import esgi.ascl.news.domain.mapper.ConversationMapper;
+import esgi.ascl.conversation.domain.mapper.ConversationMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
@@ -44,7 +43,7 @@ public class ConversationController {
         if(user == null) return new ResponseEntity<>("User (creatorId) not found", HttpStatus.NOT_FOUND);
 
         var conversation = conversationService.create(conversationRequest);
-        return new ResponseEntity<>(conversation, HttpStatus.CREATED);
+        return new ResponseEntity<>(ConversationMapper.entityToResponse(conversation), HttpStatus.CREATED);
     }
 
     /**
@@ -84,7 +83,7 @@ public class ConversationController {
             return new ResponseEntity<>("You are not the creator of this conversation", HttpStatus.BAD_REQUEST);
 
         conversationService.delete(conversation);
-        return new ResponseEntity<>("Conversation deleted", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
