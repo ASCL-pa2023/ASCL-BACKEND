@@ -23,6 +23,13 @@ public class AuthenticationController {
       @RequestBody RegisterRequest request
   ) {
     //todo verification des informations de l'utilisateur
+    if (request.getEmail() == null || request.getEmail().isEmpty() ||
+            request.getLastname() == null || request.getLastname().isEmpty() ||
+            request.getPassword() == null || request.getPassword().isEmpty() ||
+            request.getFirstname() == null || request.getFirstname().isEmpty()
+    )
+      return ResponseEntity.badRequest().build();
+
     return ResponseEntity.ok(service.register(request));
   }
   @PostMapping("/authenticate")

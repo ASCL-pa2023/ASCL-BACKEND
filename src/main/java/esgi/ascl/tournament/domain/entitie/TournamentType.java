@@ -18,4 +18,22 @@ public class TournamentType {
     private String name;
     ///enum des types de tournois ?
 
+
+    public long getId() {
+        return id;
+    }
+
+    public TournamentType setId(long id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public TournamentType setName(String name) {
+        this.name = name;
+        return this;
+    }
 }
