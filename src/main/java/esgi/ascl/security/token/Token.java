@@ -1,6 +1,7 @@
 package esgi.ascl.security.token;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import esgi.ascl.User.domain.entities.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,6 +28,7 @@ public class Token {
 
   public boolean expired;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   public User user;

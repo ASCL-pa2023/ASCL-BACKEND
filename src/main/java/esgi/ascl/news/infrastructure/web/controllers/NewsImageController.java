@@ -30,4 +30,12 @@ public class NewsImageController {
         newsImageService.uploadImage(newsId, file);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/download/{newsId}")
+    public ResponseEntity<?> downloadFile(@PathVariable Long newsId) {
+        if(newsService.getById(newsId) == null) return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
+
+        var files = newsImageService.getImages(newsId);
+        return new ResponseEntity<>(files, HttpStatus.OK);
+    }
 }

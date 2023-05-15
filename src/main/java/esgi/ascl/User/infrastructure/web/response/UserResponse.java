@@ -8,7 +8,7 @@ public class UserResponse {
     public String phone;
     public String firstname;
     public String lastname;
-    public String license;
+    public String bio;
     public Date birthday;
 
 
@@ -57,12 +57,12 @@ public class UserResponse {
         return this;
     }
 
-    public String getLicense() {
-        return license;
+    public String getBio() {
+        return bio;
     }
 
-    public UserResponse setLicense(String license) {
-        this.license = license;
+    public UserResponse setBio(String bio) {
+        this.bio = bio;
         return this;
     }
 
