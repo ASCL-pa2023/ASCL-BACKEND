@@ -62,7 +62,6 @@ class ConversationServiceTest {
             .setFirstname("firstName")
             .setLastname("lastName")
             .setPassword("password")
-            .setLicense("license")
             .setBirthday(new Date())
             .setProfilePicture("profilePicture");
     }
