@@ -1,5 +1,10 @@
 package esgi.ascl.game.infra.web.controller;
 
+import esgi.ascl.game.domain.entities.Score;
+import esgi.ascl.game.domain.entities.Team;
+import esgi.ascl.game.domain.exeptions.ScoreNotFoundException;
+import esgi.ascl.game.domain.exeptions.SetNotFoundException;
+import esgi.ascl.game.domain.exeptions.TeamNotFoundException;
 import esgi.ascl.game.domain.mapper.ScoreMapper;
 import esgi.ascl.game.domain.service.ScoreService;
 import esgi.ascl.game.domain.service.SetService;
@@ -29,20 +34,28 @@ public class ScoreController {
 
     @PostMapping("update")
     public ResponseEntity<?> update(@RequestBody ScoreUpdateRequest scoreUpdateRequest){
-        var team = teamService.getById(scoreUpdateRequest.teamId);
-        if (team == null)
-            return new ResponseEntity<>("Team not found", HttpStatus.NOT_FOUND);
+        try {
+            teamService.getById(scoreUpdateRequest.teamId);
+        } catch (TeamNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
-        var set = setService.getById(scoreUpdateRequest.setId);
-        if (set == null)
-            return new ResponseEntity<>("Set not found", HttpStatus.NOT_FOUND);
+        try {
+            setService.getById(scoreUpdateRequest.setId);
+        } catch (SetNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
         if(scoreUpdateRequest.scoreValue < MIN_SCORE || scoreUpdateRequest.scoreValue > MAX_SCORE)
             return new ResponseEntity<>("Score value must be between 0 and 21", HttpStatus.BAD_REQUEST);
 
-        var score = scoreService.getBySetIdAndTeamId(scoreUpdateRequest.setId, scoreUpdateRequest.teamId);
-        if (score == null)
-            return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);
+
+        Score score;
+        try {
+            score = scoreService.getBySetIdAndTeamId(scoreUpdateRequest.setId, scoreUpdateRequest.teamId);
+        } catch (ScoreNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
         scoreService.updateValue(score.getId(), scoreUpdateRequest.scoreValue);
         return ResponseEntity.ok().build();
@@ -50,9 +63,12 @@ public class ScoreController {
 
     @GetMapping("{scoreId}")
     public ResponseEntity<?> getById(@PathVariable Long scoreId){
-        var score = scoreService.getById(scoreId);
-        if (score == null)
-            return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);
+        Score score;
+        try {
+            score = scoreService.getById(scoreId);
+        } catch (ScoreNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity<>(ScoreMapper.toResponse(score), HttpStatus.OK);
     }

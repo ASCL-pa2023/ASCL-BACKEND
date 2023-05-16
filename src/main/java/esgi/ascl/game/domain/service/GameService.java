@@ -27,7 +27,7 @@ public class GameService {
         return gameRepository.save(gameMapper.requestToEntity(gameRequest));
     }
 
-    public Game getById(Long id) throws GameNotFoundException {
+    public Game getById(Long id) {
         return gameRepository.
                 findById(id)
                 .orElseThrow(() -> new GameNotFoundException("Game not found"));

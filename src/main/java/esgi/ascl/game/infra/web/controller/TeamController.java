@@ -1,6 +1,10 @@
 package esgi.ascl.game.infra.web.controller;
 
 import esgi.ascl.User.domain.service.UserService;
+import esgi.ascl.game.domain.entities.Game;
+import esgi.ascl.game.domain.entities.Team;
+import esgi.ascl.game.domain.exeptions.GameNotFoundException;
+import esgi.ascl.game.domain.exeptions.TeamNotFoundException;
 import esgi.ascl.game.domain.mapper.TeamMapper;
 import esgi.ascl.game.domain.service.GameService;
 import esgi.ascl.game.domain.service.PlayService;
@@ -27,9 +31,12 @@ public class TeamController {
 
     @PostMapping("create/{gameId}")
     public ResponseEntity<?> create(@PathVariable Long gameId){
-        var game = gameService.getById(gameId);
-        if (game == null)
-            return new ResponseEntity<>("Game not found", HttpStatus.NOT_FOUND);
+        Game game;
+        try {
+            game = gameService.getById(gameId);
+        } catch (GameNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
         var team = teamService.createTeam(game);
         return new ResponseEntity<>(TeamMapper.toResponse(team), HttpStatus.OK);
@@ -38,18 +45,23 @@ public class TeamController {
 
     @GetMapping("{teamId}")
     public ResponseEntity<?> getById(@PathVariable Long teamId){
-        var team = teamService.getById(teamId);
-        if (team == null)
-            return new ResponseEntity<>("Team not found", HttpStatus.NOT_FOUND);
-
+        Team team;
+        try {
+            team = teamService.getById(teamId);
+        } catch (TeamNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(TeamMapper.toResponse(team), HttpStatus.OK);
     }
 
     @PostMapping("addPlayer/{teamId}/{playerId}")
     public ResponseEntity<?> addPlayer(@PathVariable Long teamId, @PathVariable Long playerId){
-        var team = teamService.getById(teamId);
-        if (team == null)
-            return new ResponseEntity<>("Team not found", HttpStatus.NOT_FOUND);
+        Team team;
+        try {
+            team = teamService.getById(teamId);
+        } catch (TeamNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
         var player = userService.getById(playerId);
         if (player == null)
@@ -67,9 +79,12 @@ public class TeamController {
 
     @PostMapping("removePlayer/{teamId}/{playerId}")
     public ResponseEntity<?> removePlayer(@PathVariable Long teamId, @PathVariable Long playerId){
-        var team = teamService.getById(teamId);
-        if (team == null)
-            return new ResponseEntity<>("Team not found", HttpStatus.NOT_FOUND);
+        Team team;
+        try {
+            team = teamService.getById(teamId);
+        } catch (TeamNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
         var player = userService.getById(playerId);
         if (player == null)

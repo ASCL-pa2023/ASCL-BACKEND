@@ -1,5 +1,7 @@
 package esgi.ascl.game.infra.web.controller;
 
+import esgi.ascl.game.domain.entities.Game;
+import esgi.ascl.game.domain.exeptions.GameNotFoundException;
 import esgi.ascl.game.domain.mapper.GameMapper;
 import esgi.ascl.game.domain.service.GameService;
 import org.springframework.http.HttpStatus;
@@ -19,10 +21,13 @@ public class GameController {
 
     @GetMapping("{gameId}")
     public ResponseEntity<?> getById(@PathVariable Long gameId){
-        var game = gameService.getById(gameId);
-        if (game == null)
-            return new ResponseEntity<>("Game not found", HttpStatus.NOT_FOUND);
-
+        Game game;
+        try {
+            game = gameService.getById(gameId);
+        } catch (GameNotFoundException e){
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(GameMapper.entityToResponse(game), HttpStatus.OK);
     }
 

@@ -1,5 +1,8 @@
 package esgi.ascl.game.infra.web.controller;
 
+import esgi.ascl.game.domain.entities.Set;
+import esgi.ascl.game.domain.exeptions.GameNotFoundException;
+import esgi.ascl.game.domain.exeptions.SetNotFoundException;
 import esgi.ascl.game.domain.mapper.SetMapper;
 import esgi.ascl.game.domain.service.GameService;
 import esgi.ascl.game.domain.service.SetService;
@@ -23,20 +26,24 @@ public class SetController {
 
     @PostMapping("create")
     public ResponseEntity<?> create(@RequestBody SetRequest setRequest){
-        var game = gameService.getById(setRequest.gameId);
-        if (game == null)
-            return new ResponseEntity<>("Game not found", HttpStatus.NOT_FOUND);
+        try {
+            gameService.getById(setRequest.gameId);
+        } catch (GameNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
         var set = setService.createSet(setRequest);
-
         return new ResponseEntity<>(SetMapper.toResponse(set), HttpStatus.OK);
     }
 
     @GetMapping("{setId}")
     public ResponseEntity<?> getById(@PathVariable Long setId){
-        var set = setService.getById(setId);
-        if (set == null)
-            return new ResponseEntity<>("Set not found", HttpStatus.NOT_FOUND);
+        Set set;
+        try {
+            set = setService.getById(setId);
+        } catch (SetNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity<>(SetMapper.toResponse(set), HttpStatus.OK);
     }

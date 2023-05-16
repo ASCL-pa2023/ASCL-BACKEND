@@ -29,11 +29,13 @@ public class ScoreService {
     public Score getById(Long id) {
         return scoreRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException("Score not found"));
+                .orElseThrow(() -> new ScoreNotFoundException("Score not found"));
     }
 
     public Score getBySetIdAndTeamId(Long setId, Long teamId) {
-        return scoreRepository.findBySetIdAndTeamId(setId, teamId);
+        return scoreRepository
+                .findBySetIdAndTeamId(setId, teamId)
+                .orElseThrow(() -> new ScoreNotFoundException("Score not found"));
     }
 
     public void updateValue(Long scoreId, int newValue){
