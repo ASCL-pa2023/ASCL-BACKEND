@@ -7,7 +7,6 @@ import esgi.ascl.game.domain.mapper.SetMapper;
 import esgi.ascl.game.domain.service.GameService;
 import esgi.ascl.game.domain.service.SetService;
 import esgi.ascl.game.infra.web.request.SetRequest;
-import esgi.ascl.news.domain.mapper.CommentMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,5 +45,20 @@ public class SetController {
         }
 
         return new ResponseEntity<>(SetMapper.toResponse(set), HttpStatus.OK);
+    }
+
+    @GetMapping("game/{gameId}")
+    public ResponseEntity<?> getAllByGameId(@PathVariable Long gameId){
+        try {
+            gameService.getById(gameId);
+        } catch (GameNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        var sets = setService.getAllSetByGameId(gameId)
+                .stream()
+                .map(SetMapper::toResponse)
+                .toList();
+        return new ResponseEntity<>(sets, HttpStatus.OK);
     }
 }

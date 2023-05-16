@@ -7,6 +7,8 @@ import esgi.ascl.game.infra.web.request.ScoreRequest;
 import esgi.ascl.game.infra.web.request.SetRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SetService {
     private final SetRepository setRepository;
@@ -50,5 +52,12 @@ public class SetService {
         return setRepository
                 .findById(id)
                 .orElseThrow(() -> new SetNotFoundException("Set not found"));
+    }
+
+
+    public List<Set> getAllSetByGameId(Long gameId) {
+        return setRepository
+                .findAllByGameId(gameId)
+                .orElse(null);
     }
 }
