@@ -1,9 +1,14 @@
 package esgi.ascl.game.infra.web.controller;
 
+import esgi.ascl.User.domain.exceptions.UserNotFoundExceptions;
+import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.game.domain.entities.Game;
 import esgi.ascl.game.domain.exeptions.GameNotFoundException;
+import esgi.ascl.game.domain.exeptions.RefereeIsPlayerException;
+import esgi.ascl.game.domain.exeptions.TeamNotFoundException;
 import esgi.ascl.game.domain.mapper.GameMapper;
 import esgi.ascl.game.domain.service.GameService;
+import esgi.ascl.game.infra.web.request.AssignRefereeRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +18,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/game")
 public class GameController {
     private final GameService gameService;
+    private final UserService userService;
 
-    public GameController(GameService gameService) {
+    public GameController(GameService gameService, UserService userService) {
         this.gameService = gameService;
+        this.userService = userService;
     }
 
 
@@ -29,6 +36,22 @@ public class GameController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(GameMapper.entityToResponse(game), HttpStatus.OK);
+    }
+
+    @PostMapping("assignReferee")
+    public ResponseEntity<?> assignReferee(@RequestBody AssignRefereeRequest assignRefereeRequest) throws GameNotFoundException {
+        try {
+            userService.getById(assignRefereeRequest.getRefereeId());
+        } catch (UserNotFoundExceptions e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            gameService.assignReferee(assignRefereeRequest.getGameId(), assignRefereeRequest.getRefereeId());
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

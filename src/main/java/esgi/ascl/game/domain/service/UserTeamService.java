@@ -3,6 +3,7 @@ package esgi.ascl.game.domain.service;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.entities.UserTeam;
+import esgi.ascl.game.domain.exeptions.UserTeamNotFound;
 import esgi.ascl.game.infra.repository.UserTeamRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +28,21 @@ public class UserTeamService {
                 .setUser(null);
 
         userTeamRepository.delete(userTeam);
+    }
+
+    public UserTeam getByUserAndTeam(Long userId, Long teamId) {
+        return userTeamRepository.findByUserIdAndAndTeamId(userId, teamId);
+    }
+
+    public UserTeam getByUser(Long userId) {
+        return userTeamRepository
+                .findByUserId(userId)
+                .orElseThrow(() -> new UserTeamNotFound("UserTeam not found"));
+    }
+
+    public UserTeam getByTeam(Long teamId) {
+        return userTeamRepository
+                .findAllByTeamId(teamId)
+                .orElseThrow(() -> new UserTeamNotFound("UserTeam not found"));
     }
 }

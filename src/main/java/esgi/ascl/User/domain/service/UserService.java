@@ -1,6 +1,7 @@
 package esgi.ascl.User.domain.service;
 
 import esgi.ascl.User.domain.entities.User;
+import esgi.ascl.User.domain.exceptions.UserNotFoundExceptions;
 import esgi.ascl.User.infrastructure.repositories.UserRepository;
 import esgi.ascl.User.infrastructure.web.request.UserRequest;
 import esgi.ascl.User.infrastructure.web.response.UserResponse;
@@ -18,7 +19,9 @@ public class UserService {
     }
 
     public User getById(Long id) {
-        return userRepository.getUserById(id);
+        return userRepository
+                .findById(id)
+                .orElseThrow(() -> new UserNotFoundExceptions("User not found"));
     }
     public Optional<User> getByEmail(String userEmail) {
         return userRepository.findByEmail(userEmail);
