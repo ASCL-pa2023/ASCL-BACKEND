@@ -1,6 +1,7 @@
 package esgi.ascl.game.infra.web.controller;
 
 import esgi.ascl.User.domain.exceptions.UserNotFoundExceptions;
+import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.game.domain.entities.Game;
 import esgi.ascl.game.domain.exeptions.GameNotFoundException;
@@ -54,4 +55,22 @@ public class GameController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    @GetMapping("players/{gameId}")
+    public ResponseEntity<?> getPlayers(@PathVariable Long gameId){
+        try {
+            gameService.getById(gameId);
+        } catch (GameNotFoundException e){
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        var players = gameService.getPlayers(gameId)
+                .stream()
+                .map(UserMapper::entityToResponse)
+                .toList();
+
+
+        return new ResponseEntity<>(players, HttpStatus.OK);
+    }
 }

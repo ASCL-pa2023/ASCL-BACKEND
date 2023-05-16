@@ -1,6 +1,5 @@
 package esgi.ascl.game.domain.service;
 
-import esgi.ascl.User.domain.entities.Role;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.game.domain.entities.Game;
@@ -76,6 +75,26 @@ public class GameService {
             }
         });
         return isPlaying.get();
+    }
+
+
+    /**
+     * Get all players of a game
+     * @param gameId : Id of the game
+     * @return List<User>
+     */
+    public List<User> getPlayers(Long gameId) {
+        ArrayList<User> players = new ArrayList<>();
+
+        var pl = playService.getPlaysByGameId(gameId);
+        pl.forEach(play -> {
+            var teams = teamService.getAllByGameId(play.getTeam().getId());
+            teams.forEach(team -> {
+                var userTeam = userTeamService.getAllByTeam(team.getId());
+                userTeam.forEach(userTeam1 -> players.add(userTeam1.getUser()));
+            });
+        });
+        return players;
     }
 
 
