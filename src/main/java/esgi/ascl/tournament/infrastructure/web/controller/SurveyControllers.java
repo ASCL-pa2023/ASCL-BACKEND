@@ -3,8 +3,11 @@ package esgi.ascl.Tournament.infrastructure.web.controller;
 import esgi.ascl.Tournament.domain.Entitie.Survey;
 import esgi.ascl.Tournament.domain.exceptions.SurveyNotFoundException;
 import esgi.ascl.Tournament.domain.mapper.SurveyMapper;
+import esgi.ascl.Tournament.domain.service.PartnerCandidateService;
 import esgi.ascl.Tournament.domain.service.SurveyService;
+import esgi.ascl.Tournament.infrastructure.web.request.PartnerCandidacyRequest;
 import esgi.ascl.Tournament.infrastructure.web.request.SurveyRequest;
+import esgi.ascl.User.domain.exceptions.UserNotFoundExceptions;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.tournament.domain.service.TournamentService;
 import org.springframework.http.HttpStatus;
@@ -18,12 +21,14 @@ public class SurveyControllers {
     private final SurveyService surveyService;
     private final SurveyMapper surveyMapper;
     private final UserService userService;
-    private final esgi.ascl.tournament.domain.service.TournamentService tournamentService;
+    private final PartnerCandidateService partnerCandidateService;
+    private final TournamentService tournamentService;
 
-    public SurveyControllers(SurveyService surveyService, SurveyMapper surveyMapper, UserService userService, TournamentService tournamentService) {
+    public SurveyControllers(SurveyService surveyService, SurveyMapper surveyMapper, UserService userService, PartnerCandidateService partnerCandidateService, TournamentService tournamentService) {
         this.surveyService = surveyService;
         this.surveyMapper = surveyMapper;
         this.userService = userService;
+        this.partnerCandidateService = partnerCandidateService;
         this.tournamentService = tournamentService;
     }
 
@@ -84,5 +89,29 @@ public class SurveyControllers {
                 .map(surveyMapper::entityToResponse)
                 .toList();
         return new ResponseEntity<>(surveys, HttpStatus.OK);
+    }
+
+    @PostMapping("/candidate")
+    public ResponseEntity<?> candidate(@RequestBody PartnerCandidacyRequest partnerCandidacyRequest){
+        try {
+            userService.getById(partnerCandidacyRequest.userId);
+        } catch (UserNotFoundExceptions e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            surveyService.getById(partnerCandidacyRequest.surveyId);
+        } catch (SurveyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        var alreadyCandidate = partnerCandidateService.getBySurveyIdAndUserId(partnerCandidacyRequest.surveyId, partnerCandidacyRequest.userId);
+        if (alreadyCandidate != null){
+            return new ResponseEntity<>("User already candidate", HttpStatus.BAD_REQUEST);
+        }
+
+        var partnerCandidacy = partnerCandidateService.create(partnerCandidacyRequest);
+
+        return new ResponseEntity<>(partnerCandidacy, HttpStatus.OK);
     }
 }

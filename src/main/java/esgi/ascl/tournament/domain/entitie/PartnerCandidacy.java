@@ -3,7 +3,6 @@ package esgi.ascl.Tournament.domain.Entitie;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import esgi.ascl.User.domain.entities.User;
-import esgi.ascl.tournament.domain.entitie.Tournament;
 import jakarta.persistence.*;
 
 @Entity
@@ -22,9 +21,8 @@ public class PartnerCandidacy {
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "tournament_id")
-    private Tournament tournament;
-
+    @JoinColumn(name = "survey_id")
+    private Survey survey;
 
     public Long getId() {
         return id;
@@ -44,12 +42,12 @@ public class PartnerCandidacy {
         return this;
     }
 
-    public Tournament getTournament() {
-        return tournament;
+    public Survey getSurvey() {
+        return survey;
     }
 
-    public PartnerCandidacy setTournament(Tournament tournament) {
-        this.tournament = tournament;
+    public PartnerCandidacy setSurvey(Survey survey) {
+        this.survey = survey;
         return this;
     }
 
