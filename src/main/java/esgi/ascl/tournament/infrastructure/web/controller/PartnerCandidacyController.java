@@ -67,8 +67,17 @@ public class PartnerCandidacyController {
 
     @PostMapping("/accept/{id}")
     public ResponseEntity<?> accept(@PathVariable Long id){
-        //TODO : create a team + add to the tournament
-        return new ResponseEntity<>("Not Implemented", HttpStatus.NOT_IMPLEMENTED);
+
+        PartnerCandidacy partnerCandidacy;
+        try {
+            partnerCandidacy = partnerCandidateService.getById(id);
+        } catch (PartnerCandidacyNotFound e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        partnerCandidateService.accept(partnerCandidacy);
+
+        return new ResponseEntity<>("Accept successfully", HttpStatus.OK);
     }
 
 

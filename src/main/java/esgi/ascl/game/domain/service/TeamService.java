@@ -20,10 +20,16 @@ public class TeamService {
         this.userTeamService = userTeamService;
     }
 
-    public Team createTeam(Game game) {
-        var team = new Team()
-                .setGame(game);
-        return teamRepository.save(team);
+    public Team createTeam() {
+        return teamRepository.save(new Team());
+    }
+
+    public Team assignGame(Long teamId, Game game) {
+        return teamRepository
+                .findById(teamId)
+                .map(team -> team.setGame(game))
+                .map(teamRepository::save)
+                .orElseThrow(() -> new TeamNotFoundException("Team not found"));
     }
 
     public Team getById(Long id) {

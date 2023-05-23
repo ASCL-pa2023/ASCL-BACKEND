@@ -38,7 +38,8 @@ public class TeamController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
-        var team = teamService.createTeam(game);
+        var team = teamService.createTeam();
+        teamService.assignGame(team.getId(), game);
         return new ResponseEntity<>(TeamMapper.toResponse(team), HttpStatus.OK);
     }
 
