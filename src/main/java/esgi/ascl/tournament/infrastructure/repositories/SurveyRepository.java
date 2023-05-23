@@ -1,6 +1,6 @@
-package esgi.ascl.Tournament.infrastructure.repositories;
+package esgi.ascl.tournament.infrastructure.repositories;
 
-import esgi.ascl.Tournament.domain.Entitie.Survey;
+import esgi.ascl.tournament.domain.entities.Survey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

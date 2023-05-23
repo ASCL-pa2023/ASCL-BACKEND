@@ -1,6 +1,6 @@
-package esgi.ascl.Tournament.infrastructure.repositories;
+package esgi.ascl.tournament.infrastructure.repositories;
 
-import esgi.ascl.Tournament.domain.Entitie.PartnerCandidacy;
+import esgi.ascl.tournament.domain.entities.PartnerCandidacy;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

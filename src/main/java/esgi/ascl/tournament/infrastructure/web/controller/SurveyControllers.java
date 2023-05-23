@@ -1,12 +1,12 @@
-package esgi.ascl.Tournament.infrastructure.web.controller;
+package esgi.ascl.tournament.infrastructure.web.controller;
 
-import esgi.ascl.Tournament.domain.Entitie.Survey;
-import esgi.ascl.Tournament.domain.exceptions.SurveyNotFoundException;
-import esgi.ascl.Tournament.domain.mapper.SurveyMapper;
-import esgi.ascl.Tournament.domain.service.PartnerCandidateService;
-import esgi.ascl.Tournament.domain.service.SurveyService;
-import esgi.ascl.Tournament.infrastructure.web.request.PartnerCandidacyRequest;
-import esgi.ascl.Tournament.infrastructure.web.request.SurveyRequest;
+import esgi.ascl.tournament.domain.entities.Survey;
+import esgi.ascl.tournament.domain.exceptions.SurveyNotFoundException;
+import esgi.ascl.tournament.domain.mapper.SurveyMapper;
+import esgi.ascl.tournament.domain.service.PartnerCandidateService;
+import esgi.ascl.tournament.domain.service.SurveyService;
+import esgi.ascl.tournament.infrastructure.web.request.PartnerCandidacyRequest;
+import esgi.ascl.tournament.infrastructure.web.request.SurveyRequest;
 import esgi.ascl.User.domain.exceptions.UserNotFoundExceptions;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.tournament.domain.service.TournamentService;

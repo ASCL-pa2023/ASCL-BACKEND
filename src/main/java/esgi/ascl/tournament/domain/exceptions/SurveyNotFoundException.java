@@ -1,4 +1,4 @@
-package esgi.ascl.Tournament.domain.exceptions;
+package esgi.ascl.tournament.domain.exceptions;
 
 public class SurveyNotFoundException extends RuntimeException {
     public SurveyNotFoundException(Long id) {

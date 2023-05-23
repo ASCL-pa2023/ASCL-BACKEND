@@ -2,7 +2,7 @@ package esgi.ascl.game.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import esgi.ascl.User.domain.entities.User;
-import esgi.ascl.tournament.domain.entitie.Tournament;
+import esgi.ascl.tournament.domain.entities.Tournament;
 import jakarta.persistence.*;
 import org.joda.time.DateTime;
 

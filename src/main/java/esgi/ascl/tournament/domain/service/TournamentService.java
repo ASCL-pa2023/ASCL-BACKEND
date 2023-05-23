@@ -1,7 +1,7 @@
 package esgi.ascl.tournament.domain.service;
 
-import esgi.ascl.tournament.domain.entitie.Tournament;
-import esgi.ascl.tournament.domain.entitie.TournamentType;
+import esgi.ascl.tournament.domain.entities.Tournament;
+import esgi.ascl.tournament.domain.entities.TournamentType;
 import esgi.ascl.tournament.domain.mapper.TournamentMapper;
 import esgi.ascl.tournament.infrastructure.repositories.TournamentRepository;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentRequest;

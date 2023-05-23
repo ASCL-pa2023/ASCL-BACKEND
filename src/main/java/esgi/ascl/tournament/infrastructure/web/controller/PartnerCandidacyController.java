@@ -1,11 +1,11 @@
-package esgi.ascl.Tournament.infrastructure.web.controller;
+package esgi.ascl.tournament.infrastructure.web.controller;
 
-import esgi.ascl.Tournament.domain.Entitie.PartnerCandidacy;
-import esgi.ascl.Tournament.domain.exceptions.PartnerCandidacyNotFound;
-import esgi.ascl.Tournament.domain.exceptions.SurveyNotFoundException;
-import esgi.ascl.Tournament.domain.mapper.PartnerCandidacyMapper;
-import esgi.ascl.Tournament.domain.service.PartnerCandidateService;
-import esgi.ascl.Tournament.domain.service.SurveyService;
+import esgi.ascl.tournament.domain.entities.PartnerCandidacy;
+import esgi.ascl.tournament.domain.exceptions.PartnerCandidacyNotFound;
+import esgi.ascl.tournament.domain.exceptions.SurveyNotFoundException;
+import esgi.ascl.tournament.domain.mapper.PartnerCandidacyMapper;
+import esgi.ascl.tournament.domain.service.PartnerCandidateService;
+import esgi.ascl.tournament.domain.service.SurveyService;
 import esgi.ascl.User.domain.exceptions.UserNotFoundExceptions;
 import esgi.ascl.User.domain.service.UserService;
 import org.springframework.http.HttpStatus;

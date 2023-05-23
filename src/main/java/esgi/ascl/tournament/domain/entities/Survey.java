@@ -1,9 +1,9 @@
-package esgi.ascl.Tournament.domain.Entitie;
+package esgi.ascl.tournament.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import esgi.ascl.User.domain.entities.User;
-import esgi.ascl.tournament.domain.entitie.Tournament;
+import esgi.ascl.tournament.domain.entities.Tournament;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -11,7 +11,6 @@ import java.util.Date;
 @Entity
 @Table(name = "survey")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
 public class Survey {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +60,7 @@ public class Survey {
         return this;
     }
 
-    public esgi.ascl.tournament.domain.entitie.Tournament getTournament() {
+    public Tournament getTournament() {
         return tournament;
     }
 

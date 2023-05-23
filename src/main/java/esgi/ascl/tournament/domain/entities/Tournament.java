@@ -1,4 +1,4 @@
-package esgi.ascl.tournament.domain.entitie;
+package esgi.ascl.tournament.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;

@@ -1,9 +1,9 @@
-package esgi.ascl.Tournament.domain.mapper;
+package esgi.ascl.tournament.domain.mapper;
 
-import esgi.ascl.Tournament.domain.Entitie.PartnerCandidacy;
-import esgi.ascl.Tournament.domain.service.SurveyService;
-import esgi.ascl.Tournament.infrastructure.web.request.PartnerCandidacyRequest;
-import esgi.ascl.Tournament.infrastructure.web.response.PartnerCandidacyResponse;
+import esgi.ascl.tournament.domain.entities.PartnerCandidacy;
+import esgi.ascl.tournament.domain.service.SurveyService;
+import esgi.ascl.tournament.infrastructure.web.request.PartnerCandidacyRequest;
+import esgi.ascl.tournament.infrastructure.web.response.PartnerCandidacyResponse;
 import esgi.ascl.User.domain.service.UserService;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package esgi.ascl.Tournament.infrastructure.web.request;
+package esgi.ascl.tournament.infrastructure.web.request;
 
 public class PartnerCandidacyRequest {
     public Long userId;

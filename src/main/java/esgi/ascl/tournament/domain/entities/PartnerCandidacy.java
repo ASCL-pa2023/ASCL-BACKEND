@@ -1,4 +1,4 @@
-package esgi.ascl.Tournament.domain.Entitie;
+package esgi.ascl.tournament.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

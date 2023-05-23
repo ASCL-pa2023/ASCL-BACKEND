@@ -1,9 +1,9 @@
-package esgi.ascl.Tournament.domain.mapper;
+package esgi.ascl.tournament.domain.mapper;
 
-import esgi.ascl.Tournament.domain.Entitie.Survey;
+import esgi.ascl.tournament.domain.entities.Survey;
 
-import esgi.ascl.Tournament.infrastructure.web.request.SurveyRequest;
-import esgi.ascl.Tournament.infrastructure.web.response.SurveyResponse;
+import esgi.ascl.tournament.infrastructure.web.request.SurveyRequest;
+import esgi.ascl.tournament.infrastructure.web.response.SurveyResponse;
 import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.tournament.domain.service.TournamentService;

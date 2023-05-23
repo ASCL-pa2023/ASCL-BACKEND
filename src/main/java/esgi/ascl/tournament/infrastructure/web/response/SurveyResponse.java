@@ -1,7 +1,7 @@
-package esgi.ascl.Tournament.infrastructure.web.response;
+package esgi.ascl.tournament.infrastructure.web.response;
 
 import esgi.ascl.User.infrastructure.web.response.UserResponse;
-import esgi.ascl.tournament.domain.entitie.Tournament;
+import esgi.ascl.tournament.domain.entities.Tournament;
 
 import java.util.Date;
 

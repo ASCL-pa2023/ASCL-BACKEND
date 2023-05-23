@@ -1,7 +1,7 @@
 package esgi.ascl.tournament.infrastructure.repositories;
 
-import esgi.ascl.tournament.domain.entitie.Tournament;
-import esgi.ascl.tournament.domain.entitie.TournamentType;
+import esgi.ascl.tournament.domain.entities.Tournament;
+import esgi.ascl.tournament.domain.entities.TournamentType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

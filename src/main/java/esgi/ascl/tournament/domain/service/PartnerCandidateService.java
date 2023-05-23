@@ -1,10 +1,10 @@
-package esgi.ascl.Tournament.domain.service;
+package esgi.ascl.tournament.domain.service;
 
-import esgi.ascl.Tournament.domain.Entitie.PartnerCandidacy;
-import esgi.ascl.Tournament.domain.exceptions.PartnerCandidacyNotFound;
-import esgi.ascl.Tournament.domain.mapper.PartnerCandidacyMapper;
-import esgi.ascl.Tournament.infrastructure.repositories.PartnerCandidateRepository;
-import esgi.ascl.Tournament.infrastructure.web.request.PartnerCandidacyRequest;
+import esgi.ascl.tournament.domain.entities.PartnerCandidacy;
+import esgi.ascl.tournament.domain.exceptions.PartnerCandidacyNotFound;
+import esgi.ascl.tournament.domain.mapper.PartnerCandidacyMapper;
+import esgi.ascl.tournament.infrastructure.repositories.PartnerCandidateRepository;
+import esgi.ascl.tournament.infrastructure.web.request.PartnerCandidacyRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

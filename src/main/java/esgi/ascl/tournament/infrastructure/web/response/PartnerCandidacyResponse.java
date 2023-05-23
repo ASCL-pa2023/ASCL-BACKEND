@@ -1,4 +1,4 @@
-package esgi.ascl.Tournament.infrastructure.web.response;
+package esgi.ascl.tournament.infrastructure.web.response;
 
 public class PartnerCandidacyResponse {
     public Long id;

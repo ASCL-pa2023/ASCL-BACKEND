@@ -1,10 +1,10 @@
-package esgi.ascl.Tournament.domain.service;
+package esgi.ascl.tournament.domain.service;
 
-import esgi.ascl.Tournament.domain.Entitie.Survey;
-import esgi.ascl.Tournament.domain.exceptions.SurveyNotFoundException;
-import esgi.ascl.Tournament.domain.mapper.SurveyMapper;
-import esgi.ascl.Tournament.infrastructure.repositories.SurveyRepository;
-import esgi.ascl.Tournament.infrastructure.web.request.SurveyRequest;
+import esgi.ascl.tournament.domain.entities.Survey;
+import esgi.ascl.tournament.domain.exceptions.SurveyNotFoundException;
+import esgi.ascl.tournament.domain.mapper.SurveyMapper;
+import esgi.ascl.tournament.infrastructure.repositories.SurveyRepository;
+import esgi.ascl.tournament.infrastructure.web.request.SurveyRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
