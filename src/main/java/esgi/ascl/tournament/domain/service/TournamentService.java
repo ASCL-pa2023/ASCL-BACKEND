@@ -2,6 +2,7 @@ package esgi.ascl.tournament.domain.service;
 
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.entities.TournamentType;
+import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
 import esgi.ascl.tournament.domain.mapper.TournamentMapper;
 import esgi.ascl.tournament.infrastructure.repositories.TournamentRepository;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentRequest;
@@ -22,7 +23,9 @@ public class TournamentService {
     }
 
     public Tournament getById(Long id) {
-        return tournamentRepository.getTournamentById(id);
+        return tournamentRepository
+                .findById(id)
+                .orElseThrow(()-> new TournamentNotFoundException("Tournament not found"));
     }
 
     public List<Tournament> getByLocationLevenshtein(String location) {

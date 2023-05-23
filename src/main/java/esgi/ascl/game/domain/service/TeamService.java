@@ -7,6 +7,7 @@ import esgi.ascl.game.domain.exeptions.TeamNotFoundException;
 import esgi.ascl.game.infra.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -56,6 +57,20 @@ public class TeamService {
                             throw new TeamNotFoundException("Team not found");
                         }
                 );
+    }
+
+    public List<User> getAllUserByTeam(Long teamId) {
+        var users = new ArrayList<User>();
+        teamRepository
+                .findById(teamId)
+                .ifPresentOrElse(
+                        t -> userTeamService.getAllByTeam(t.getId())
+                                .forEach(userTeam -> users.add(userTeam.getUser())),
+                        () -> {
+                            throw new TeamNotFoundException("Team not found");
+                        }
+                );
+        return users;
     }
 
 
