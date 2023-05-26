@@ -15,6 +15,7 @@ public class TournamentMapper {
                 .end_date(tournament.getEnd_date())
                 .start_date(tournament.getStart_date())
                 .tournamentType(TournamentTypeMapper.entityToResponse(tournament.getTournamentType()))
+                .places_number(tournament.getPlaces_number())
                 .build();
     }
 
@@ -24,7 +25,8 @@ public class TournamentMapper {
                 .setDeadline_inscription_date(request.getDeadline_inscription_date())
                 .setEnd_date(request.getEnd_date())
                 .setStart_date(request.getStart_date())
-                .setTournamentType(TournamentTypeMapper.requestToEntity(request.getTournamentType()));
+                .setTournamentType(TournamentTypeMapper.requestToEntity(request.getTournamentType()))
+                .setPlaces_number(request.getPlaces_number());
     }
 
     public static List<TournamentResponse> listEntityToListResponse(List<Tournament> tournaments) {

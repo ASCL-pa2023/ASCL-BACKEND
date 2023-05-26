@@ -66,19 +66,17 @@ public class TournamentController {
         }
     }
 
-@GetMapping("/get-all")
+    @GetMapping("/get-all")
     public ResponseEntity<List<TournamentResponse>> getAllTournament() {
         System.out.println("/api/v1/tournament/get-all");
 
         try {
-            var tournaments = tournamentService.getAll();
-            if (tournaments == null)
-                return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(
-                    TournamentMapper.listEntityToListResponse(
-                            tournaments
-                    )
-            );
+            var tournaments = tournamentService.getAll()
+                    .stream()
+                    .map(TournamentMapper::entityToResponse)
+                    .toList();
+            return ResponseEntity.ok(tournaments);
+
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }

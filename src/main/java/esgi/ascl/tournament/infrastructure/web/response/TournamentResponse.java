@@ -25,4 +25,6 @@ public class TournamentResponse {
     private Date deadline_inscription_date;
     @JsonProperty("tournament_type")
     private TournamentTypeResponse tournamentType;
+    @JsonProperty("places_number")
+    private int places_number;
 }

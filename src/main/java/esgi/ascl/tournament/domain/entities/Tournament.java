@@ -32,6 +32,9 @@ public class Tournament {
     @JoinColumn(name = "tournament_type_id")
     private TournamentType tournamentType;
 
+    @Column(name = "places_number")
+    private int places_number;
+
 
     public long getId() {
         return id;
@@ -84,6 +87,15 @@ public class Tournament {
 
     public Tournament setTournamentType(TournamentType tournamentType) {
         this.tournamentType = tournamentType;
+        return this;
+    }
+
+    public int getPlaces_number() {
+        return places_number;
+    }
+
+    public Tournament setPlaces_number(int places_number) {
+        this.places_number = places_number;
         return this;
     }
 }
