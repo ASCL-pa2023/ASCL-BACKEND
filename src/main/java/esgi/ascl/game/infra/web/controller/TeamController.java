@@ -29,8 +29,20 @@ public class TeamController {
         this.playService = playService;
     }
 
-    @PostMapping("create/{gameId}")
-    public ResponseEntity<?> create(@PathVariable Long gameId){
+    @PostMapping("create")
+    public ResponseEntity<?> create(){
+        var team = teamService.createTeam();
+        return new ResponseEntity<>(TeamMapper.toResponse(team), HttpStatus.OK);
+    }
+
+    @PostMapping("assignGame/team/{teamId}/game/{gameId}")
+    public ResponseEntity<?> assignGame(@PathVariable Long teamId, @PathVariable Long gameId){
+        try {
+            teamService.getById(teamId);
+        } catch (TeamNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
         Game game;
         try {
             game = gameService.getById(gameId);
@@ -38,9 +50,13 @@ public class TeamController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
-        var team = teamService.createTeam();
-        teamService.assignGame(team.getId(), game);
-        return new ResponseEntity<>(TeamMapper.toResponse(team), HttpStatus.OK);
+        try {
+            teamService.assignGame(teamId, game);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("Game " + gameId + " assign to team " + teamId, HttpStatus.OK);
     }
 
 

@@ -6,7 +6,6 @@ import esgi.ascl.game.infra.web.response.TeamResponse;
 public class TeamMapper {
     public static TeamResponse toResponse(Team team) {
         return new TeamResponse()
-                .setId(team.getId())
-                .setGameId(team.getId());
+                .setId(team.getId());
     }
 }
