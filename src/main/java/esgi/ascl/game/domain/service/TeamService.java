@@ -1,6 +1,7 @@
 package esgi.ascl.game.domain.service;
 
 import esgi.ascl.User.domain.entities.User;
+import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.game.domain.entities.Game;
 import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.exeptions.TeamNotFoundException;
@@ -9,15 +10,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TeamService {
     private final TeamRepository teamRepository;
     private final UserTeamService userTeamService;
+    private final UserService userService;
 
-    public TeamService(TeamRepository teamRepository, UserTeamService userTeamService) {
+    public TeamService(TeamRepository teamRepository, UserTeamService userTeamService, UserService userService) {
         this.teamRepository = teamRepository;
         this.userTeamService = userTeamService;
+        this.userService = userService;
     }
 
     public Team createTeam() {
@@ -43,11 +47,18 @@ public class TeamService {
     }
 
 
-    public void addUser(Long teamId, User user) {
+    public void addUsers(Long teamId, Set<Long> usersId) {
+        var users = usersId
+                .stream()
+                .map(userService::getById);
+
+
         teamRepository
                 .findById(teamId)
                 .ifPresentOrElse(
-                        t -> userTeamService.createTeam(t, user),
+                        t -> {
+                            users.forEach(user -> userTeamService.createTeam(t, user));
+                        },
                         () -> {
                             throw new TeamNotFoundException("Team not found");
                         }

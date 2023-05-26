@@ -23,11 +23,12 @@ public class SurveyMapper {
         this.tournamentService = tournamentService;
     }
 
-    public Survey requestToEntity(SurveyRequest surveyRequest){
+    public Survey requestToEntity(SurveyRequest surveyRequest, Long teamId){
         return new Survey()
                 .setContent(surveyRequest.content)
                 .setUser(userService.getById(surveyRequest.userId))
                 .setTournament(tournamentService.getById(surveyRequest.tournamentId))
+                .setTeamId(teamId)
                 .setCreationDate(new Date());
     }
 

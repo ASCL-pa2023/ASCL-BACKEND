@@ -16,7 +16,6 @@ public class Survey {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String content;
 
     @JsonIgnore
@@ -29,6 +28,7 @@ public class Survey {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
+    private Long teamId;
 
     private Date creationDate;
 
@@ -75,6 +75,15 @@ public class Survey {
 
     public Survey setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+        return this;
+    }
+
+    public Long getTeamId() {
+        return teamId;
+    }
+
+    public Survey setTeamId(Long teamId) {
+        this.teamId = teamId;
         return this;
     }
 

@@ -13,6 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/team")
@@ -71,8 +75,8 @@ public class TeamController {
         return new ResponseEntity<>(TeamMapper.toResponse(team), HttpStatus.OK);
     }
 
-    @PostMapping("addPlayer/{teamId}/{playerId}")
-    public ResponseEntity<?> addPlayer(@PathVariable Long teamId, @PathVariable Long playerId){
+    @PostMapping("addPlayer/{teamId}")
+    public ResponseEntity<?> addPlayer(@PathVariable Long teamId, @RequestBody List<Long> playerIds){
         Team team;
         try {
             team = teamService.getById(teamId);
@@ -80,18 +84,13 @@ public class TeamController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
-        var player = userService.getById(playerId);
-        if (player == null)
-            return new ResponseEntity<>("Player not found", HttpStatus.NOT_FOUND);
-
-
         try {
-            teamService.addUser(team.getId(), player);
+            teamService.addUsers(team.getId(), new HashSet<>(playerIds));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("User " + playerId + " add to team " + teamId, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("removePlayer/{teamId}/{playerId}")

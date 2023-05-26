@@ -21,10 +21,11 @@ public class TournamentInscriptionVerification {
 
     public Boolean teamIsInGoodTournament(Tournament tournament, Team team) {
         var tournamentType = tournament.getTournamentType().getName();
+        var teamSize = teamService.getAllUserByTeam(team.getId()).size();
 
         return switch (tournamentType) {
-            case "SIMPLE" -> teamService.getAllUserByTeam(team.getId()).size() == 1;
-            case "DOUBLE" -> teamService.getAllUserByTeam(team.getId()).size() == 2;
+            case "SIMPLE" -> teamSize == 1;
+            case "DOUBLE" -> teamSize == 2;
             default -> false;
         };
     }

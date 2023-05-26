@@ -8,7 +8,9 @@ import esgi.ascl.tournament.infrastructure.repositories.PartnerCandidateReposito
 import esgi.ascl.tournament.infrastructure.web.request.PartnerCandidacyRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PartnerCandidateService {
@@ -60,13 +62,12 @@ public class PartnerCandidateService {
     }
 
     public void accept(PartnerCandidacy partnerCandidacy){
-        var team  = teamService.createTeam();
-        teamService.addUser(team.getId(), partnerCandidacy.getUser());
-        teamService.addUser(team.getId(), partnerCandidacy.getSurvey().getUser());
+        Long teamId = partnerCandidacy.getSurvey().getId();
+        teamService.addUsers(teamId, new HashSet<>(List.of(partnerCandidacy.getUser().getId())));
 
         tournamentInscriptionService.create(
                 partnerCandidacy.getSurvey().getTournament(),
-                team
+                teamService.getById(teamId)
         );
         delete(partnerCandidacy);
     }
