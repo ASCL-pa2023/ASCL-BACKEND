@@ -14,9 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -37,7 +40,7 @@ public class TeamController {
     @PostMapping("create")
     public ResponseEntity<?> create(){
         var team = teamService.createTeam();
-        return new ResponseEntity<>(TeamMapper.toResponse(team), HttpStatus.OK);
+        return new ResponseEntity<>(TeamMapper.toResponse(team, new ArrayList<>()), HttpStatus.OK);
     }
 
     @PostMapping("assignGame/team/{teamId}/game/{gameId}")
@@ -73,7 +76,12 @@ public class TeamController {
         } catch (TeamNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(TeamMapper.toResponse(team), HttpStatus.OK);
+
+        var users = teamService.getAllUserByTeam(teamId)
+                .stream()
+                .map(UserMapper::entityToResponse)
+                .toList();
+        return new ResponseEntity<>(TeamMapper.toResponse(team, users), HttpStatus.OK);
     }
 
     @PostMapping("addPlayer/{teamId}")
