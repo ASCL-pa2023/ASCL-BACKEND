@@ -1,5 +1,6 @@
 package esgi.ascl.game.infra.web.controller;
 
+import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.game.domain.entities.Game;
 import esgi.ascl.game.domain.entities.Team;
@@ -114,4 +115,22 @@ public class TeamController {
 
         return new ResponseEntity<>("User " + playerId + " remove from team " + teamId, HttpStatus.OK);
     }
+
+    @GetMapping("{teamId}/users")
+    public ResponseEntity<?> getUsers(@PathVariable Long teamId){
+        try {
+            teamService.getById(teamId);
+        } catch (TeamNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        var users = teamService.getAllUserByTeam(teamId)
+                .stream()
+                .map(UserMapper::entityToResponse)
+                .toList();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+
+
 }
