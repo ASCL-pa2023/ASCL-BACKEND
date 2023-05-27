@@ -2,6 +2,7 @@ package esgi.ascl.tournament.infrastructure.web.controller;
 
 import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.exeptions.TeamNotFoundException;
+import esgi.ascl.game.infra.web.response.TeamResponse;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.entities.TournamentInscription;
 import esgi.ascl.tournament.domain.exceptions.TournamentInscriptionNotFound;
@@ -99,6 +100,18 @@ public class TournamentInscriptionController {
                 .map(TournamentInscriptionMapper::entityToResponse)
                 .toList();
         return new ResponseEntity<>(inscriptionResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("tournament/{tournamentId}/teams")
+    public ResponseEntity<?> getTeamsRegisteredByTournament(@PathVariable Long tournamentId){
+        try {
+            tournamentService.getById(tournamentId);
+        } catch (TournamentNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        List<TeamResponse> teams = tournamentInscriptionService.getAllTeamsByTournamentId(tournamentId);
+        return new ResponseEntity<>(teams, HttpStatus.OK);
     }
 
     @GetMapping("team/{teamId}")
