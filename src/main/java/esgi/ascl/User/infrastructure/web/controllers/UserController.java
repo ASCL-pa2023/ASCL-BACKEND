@@ -1,6 +1,7 @@
 package esgi.ascl.User.infrastructure.web.controllers;
 
-import esgi.ascl.User.domain.mapper.ProfilePictureMapper;
+import esgi.ascl.User.domain.entities.User;
+import esgi.ascl.User.domain.exceptions.UserNotFoundExceptions;
 import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.domain.service.ProfilePictureService;
 import esgi.ascl.User.domain.service.UserService;
@@ -20,6 +21,17 @@ public class UserController {
     public UserController(UserService userService, ProfilePictureService profilePictureService) {
         this.userService = userService;
         this.profilePictureService = profilePictureService;
+    }
+
+    @GetMapping("id/{userId}")
+    public ResponseEntity<?> getById(@PathVariable Long userId) {
+        User user;
+        try {
+            user = userService.getById(userId);
+        } catch (UserNotFoundExceptions e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok().body(UserMapper.entityToResponse(user));
     }
 
     @GetMapping("mail/{email}")
