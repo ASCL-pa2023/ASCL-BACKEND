@@ -1,5 +1,6 @@
 package esgi.ascl.pool.infrastructure.web;
 
+import esgi.ascl.pool.domain.mapper.PoolMapper;
 import esgi.ascl.pool.domain.service.PoolService;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.*;
 public class PoolController {
     private final PoolService poolService;
     private final TournamentService tournamentService;
+    private final PoolMapper poolMapper;
 
-    public PoolController(PoolService poolService, TournamentService tournamentService) {
+    public PoolController(PoolService poolService, TournamentService tournamentService, PoolMapper poolMapper) {
         this.poolService = poolService;
         this.tournamentService = tournamentService;
+        this.poolMapper = poolMapper;
     }
 
     @PostMapping("/create/{tournamentId}")
@@ -31,5 +34,22 @@ public class PoolController {
 
         var pools = poolService.create(tournament);
         return new ResponseEntity<>((pools), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/all/{tournamentId}")
+    public ResponseEntity<?> getAllByTournament(@PathVariable Long tournamentId){
+        try {
+            tournamentService.getById(tournamentId);
+        } catch (TournamentNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        var pools = poolService.getAllByTournament(tournamentId)
+                .stream()
+                .map(poolMapper::entityToResponse)
+                .toList();
+
+        return new ResponseEntity<>(pools, HttpStatus.OK);
     }
 }

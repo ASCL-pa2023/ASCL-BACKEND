@@ -50,4 +50,9 @@ public class PoolService {
         poolRepository.saveAll(pools);
         return pools;
     }
+
+
+    public List<Pool> getAllByTournament(Long tournamentId){
+        return poolRepository.findAllByTournamentId(tournamentId);
+    }
 }

@@ -20,11 +20,13 @@ public class TournamentInscriptionService {
     private final TournamentInscriptionRepository tournamentInscriptionRepository;
     private final TournamentInscriptionMapper tournamentInscriptionMapper;
     private final TeamService teamService;
+    private final TeamMapper teamMapper;
 
-    public TournamentInscriptionService(TournamentInscriptionRepository tournamentInscriptionRepository, TournamentInscriptionMapper tournamentInscriptionMapper, TeamService teamService) {
+    public TournamentInscriptionService(TournamentInscriptionRepository tournamentInscriptionRepository, TournamentInscriptionMapper tournamentInscriptionMapper, TeamService teamService, TeamMapper teamMapper) {
         this.tournamentInscriptionRepository = tournamentInscriptionRepository;
         this.tournamentInscriptionMapper = tournamentInscriptionMapper;
         this.teamService = teamService;
+        this.teamMapper = teamMapper;
     }
 
 
@@ -62,9 +64,9 @@ public class TournamentInscriptionService {
 
         getAllByTournamentId(tournamentId)
                 .forEach(registration -> {
-                    var users = teamService.getAllUserByTeam(registration.getTeam().getId())
-                            .stream().map(UserMapper::entityToResponse).toList();
-                    res.add(TeamMapper.toResponse(registration.getTeam(), users));
+                    //var users = teamService.getAllUserByTeam(registration.getTeam().getId())
+                     //       .stream().map(UserMapper::entityToResponse).toList();
+                    res.add(teamMapper.toResponse(registration.getTeam()));
                 });
 
         return res;

@@ -17,21 +17,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import static java.util.stream.Collectors.toList;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/team")
 public class TeamController {
     private final TeamService teamService;
+    private final TeamMapper teamMapper;
     private final GameService gameService;
     private final UserService userService;
     private final PlayService playService;
 
-    public TeamController(TeamService teamService, GameService gameService, UserService userService, PlayService playService) {
+    public TeamController(TeamService teamService, TeamMapper teamMapper, GameService gameService, UserService userService, PlayService playService) {
         this.teamService = teamService;
+        this.teamMapper = teamMapper;
         this.gameService = gameService;
         this.userService = userService;
         this.playService = playService;
@@ -40,7 +39,7 @@ public class TeamController {
     @PostMapping("create")
     public ResponseEntity<?> create(){
         var team = teamService.createTeam();
-        return new ResponseEntity<>(TeamMapper.toResponse(team, new ArrayList<>()), HttpStatus.OK);
+        return new ResponseEntity<>(teamMapper.toResponse(team), HttpStatus.OK);
     }
 
     @PostMapping("assignGame/team/{teamId}/game/{gameId}")
@@ -77,11 +76,7 @@ public class TeamController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
-        var users = teamService.getAllUserByTeam(teamId)
-                .stream()
-                .map(UserMapper::entityToResponse)
-                .toList();
-        return new ResponseEntity<>(TeamMapper.toResponse(team, users), HttpStatus.OK);
+        return new ResponseEntity<>(teamMapper.toResponse(team), HttpStatus.OK);
     }
 
     @PostMapping("addPlayer/{teamId}")
