@@ -77,4 +77,9 @@ public class TournamentInscriptionService {
         tournamentInscriptionRepository.delete(tournamentInscription);
     }
 
+    public void deleteByTournamentIdAndTeamId(Long tournamentId, Long teamId){
+        var tournamentInscription = getByTournamentIdAndTeamId(tournamentId, teamId);
+        delete(tournamentInscription);
+    }
+
 }

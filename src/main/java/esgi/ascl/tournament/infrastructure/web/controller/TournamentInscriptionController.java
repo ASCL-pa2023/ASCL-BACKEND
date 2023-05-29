@@ -143,4 +143,10 @@ public class TournamentInscriptionController {
         return new ResponseEntity<>("Inscription deleted successfully", HttpStatus.OK);
     }
 
+    @DeleteMapping("tournament/{tournamentId}/team/{teamId}")
+    public ResponseEntity<?> deleteByTournamentIdAndTeamId(@PathVariable Long tournamentId, @PathVariable Long teamId){
+        tournamentInscriptionService.deleteByTournamentIdAndTeamId(tournamentId, teamId);
+        return ResponseEntity.ok().build();
+    }
+
 }
