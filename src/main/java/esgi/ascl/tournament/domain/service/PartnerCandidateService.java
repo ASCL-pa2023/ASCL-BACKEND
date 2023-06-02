@@ -62,7 +62,8 @@ public class PartnerCandidateService {
     }
 
     public void accept(PartnerCandidacy partnerCandidacy){
-        Long teamId = partnerCandidacy.getSurvey().getId();
+        Long teamId = partnerCandidacy.getSurvey().getTeamId();
+
         teamService.addUsers(teamId, new HashSet<>(List.of(partnerCandidacy.getUser().getId())));
 
         tournamentInscriptionService.create(
