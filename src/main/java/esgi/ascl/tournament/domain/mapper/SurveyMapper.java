@@ -32,7 +32,7 @@ public class SurveyMapper {
                 .setCreationDate(new Date());
     }
 
-    public SurveyResponse entityToResponse(Survey survey){
+    public static SurveyResponse entityToResponse(Survey survey){
         return new SurveyResponse()
                 .setId(survey.getId())
                 .setContent(survey.getContent())

@@ -90,6 +90,6 @@ public class PartnerCandidacyController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         partnerCandidateService.delete(partnerCandidacy);
-        return new ResponseEntity<>("Partner candidacy refused successfully", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

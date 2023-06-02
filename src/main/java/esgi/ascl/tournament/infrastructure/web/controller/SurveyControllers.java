@@ -42,7 +42,7 @@ public class SurveyControllers {
 
         var survey = surveyService.create(surveyRequest);
 
-        return new ResponseEntity<>(surveyMapper.entityToResponse(survey), HttpStatus.OK);
+        return new ResponseEntity<>(SurveyMapper.entityToResponse(survey), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -54,14 +54,14 @@ public class SurveyControllers {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(surveyMapper.entityToResponse(survey), HttpStatus.OK);
+        return new ResponseEntity<>(SurveyMapper.entityToResponse(survey), HttpStatus.OK);
     }
 
     @GetMapping("/all")
     public ResponseEntity<?> getAll(){
         var surveys = surveyService.getAll()
                 .stream()
-                .map(surveyMapper::entityToResponse)
+                .map(SurveyMapper::entityToResponse)
                 .toList();
         return new ResponseEntity<>(surveys, HttpStatus.OK);
     }
@@ -74,7 +74,7 @@ public class SurveyControllers {
 
         var surveys = surveyService.getByUserId(userId)
                 .stream()
-                .map(surveyMapper::entityToResponse)
+                .map(SurveyMapper::entityToResponse)
                 .toList();
         return new ResponseEntity<>(surveys, HttpStatus.OK);
     }
@@ -86,7 +86,7 @@ public class SurveyControllers {
 
         var surveys = surveyService.getByTournamentId(tournamentId)
                 .stream()
-                .map(surveyMapper::entityToResponse)
+                .map(SurveyMapper::entityToResponse)
                 .toList();
         return new ResponseEntity<>(surveys, HttpStatus.OK);
     }

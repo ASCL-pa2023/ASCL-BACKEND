@@ -1,9 +1,11 @@
 package esgi.ascl.tournament.infrastructure.web.response;
 
+import esgi.ascl.User.infrastructure.web.response.UserResponse;
+
 public class PartnerCandidacyResponse {
     public Long id;
-    public Long userId;
-    public Long surveyId;
+    public UserResponse user;
+    public SurveyResponse survey;
 
     public Long getId(){
         return id;
@@ -14,22 +16,21 @@ public class PartnerCandidacyResponse {
         return this;
     }
 
-    public Long getUserId(){
-        return userId;
+    public UserResponse getUser(){
+        return user;
     }
 
-    public PartnerCandidacyResponse setUserId(Long userId){
-        this.userId = userId;
+    public PartnerCandidacyResponse setUser(UserResponse user){
+        this.user = user;
         return this;
     }
 
-    public Long getSurveyId(){
-        return surveyId;
+    public SurveyResponse getSurvey(){
+        return survey;
     }
 
-    public PartnerCandidacyResponse setSurveyId(Long surveyId){
-        this.surveyId = surveyId;
+    public PartnerCandidacyResponse setSurvey(SurveyResponse survey){
+        this.survey = survey;
         return this;
     }
-
 }

@@ -1,5 +1,6 @@
 package esgi.ascl.tournament.domain.mapper;
 
+import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.tournament.domain.entities.PartnerCandidacy;
 import esgi.ascl.tournament.domain.service.SurveyService;
 import esgi.ascl.tournament.infrastructure.web.request.PartnerCandidacyRequest;
@@ -30,7 +31,7 @@ public class PartnerCandidacyMapper {
     public static PartnerCandidacyResponse entityToResponse(PartnerCandidacy partnerCandidacy) {
         return new PartnerCandidacyResponse()
                 .setId(partnerCandidacy.getId())
-                .setUserId(partnerCandidacy.getUser().getId())
-                .setSurveyId(partnerCandidacy.getSurvey().getId());
+                .setUser(UserMapper.entityToResponse(partnerCandidacy.getUser()))
+                .setSurvey(SurveyMapper.entityToResponse(partnerCandidacy.getSurvey()));
     }
 }
