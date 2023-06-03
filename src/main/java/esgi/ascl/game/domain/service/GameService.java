@@ -8,6 +8,8 @@ import esgi.ascl.game.domain.exeptions.RefereeIsPlayerException;
 import esgi.ascl.game.domain.mapper.GameMapper;
 import esgi.ascl.game.infra.repository.GameRepository;
 import esgi.ascl.game.infra.web.request.GameRequest;
+import esgi.ascl.pool.domain.entity.Pool;
+import esgi.ascl.tournament.domain.service.TournamentTypeService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,25 +24,51 @@ public class GameService {
     private final TeamService teamService;
     private final UserTeamService userTeamService;
     private final GameRepository gameRepository;
-    private final GameMapper gameMapper;
 
-    public GameService(UserService userService, PlayService playService, TeamService teamService, UserTeamService userTeamService, GameRepository gameRepository, GameMapper gameMapper) {
+    public GameService(UserService userService, PlayService playService, TeamService teamService, UserTeamService userTeamService, GameRepository gameRepository) {
         this.userService = userService;
         this.playService = playService;
         this.teamService = teamService;
         this.userTeamService = userTeamService;
         this.gameRepository = gameRepository;
-        this.gameMapper = gameMapper;
     }
 
-    public Game create(GameRequest gameRequest){
-        return gameRepository.save(gameMapper.requestToEntity(gameRequest));
+
+    public List<Game> createGamesPool(List<Pool> pools){
+        if(getAllByTournamentId(pools.get(0).getTournament().getId()).size() > 0){
+            throw new RuntimeException("Games already created");
+        }
+
+        List<Game> games = new ArrayList<>();
+
+        pools.forEach(pool -> {
+            var poolsTeams = pool.getTeams();
+
+            if(poolsTeams.size() > 1){
+                for(int i = 0; i < poolsTeams.size(); i++){
+                    for(int j = i + 1; j < poolsTeams.size(); j++){
+                        var game = gameRepository.save(
+                                new Game().setTournament(pool.getTournament())
+                        );
+                        var play1 = playService.playGame(game, poolsTeams.get(i));
+                        var play2 = playService.playGame(game, poolsTeams.get(j));
+                        gameRepository.save(game);
+                        games.add(game);
+                    }
+                }
+            }
+        });
+        return games;
     }
+
 
     public Game getById(Long id) {
         return gameRepository.
                 findById(id)
                 .orElseThrow(() -> new GameNotFoundException("Game not found"));
+    }
+    public List<Game> getAllByTournamentId(Long tournamentId) {
+        return gameRepository.findAllByTournamentId(tournamentId);
     }
 
 

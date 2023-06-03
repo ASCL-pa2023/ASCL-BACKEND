@@ -1,7 +1,10 @@
 package esgi.ascl.tournament.domain.service;
 
+import esgi.ascl.game.domain.service.GameService;
+import esgi.ascl.pool.domain.service.PoolService;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.entities.TournamentType;
+import esgi.ascl.tournament.domain.exceptions.TournamentException;
 import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
 import esgi.ascl.tournament.domain.mapper.TournamentMapper;
 import esgi.ascl.tournament.infrastructure.repositories.TournamentRepository;
@@ -17,9 +20,13 @@ import java.util.List;
 public class TournamentService {
     private final TournamentRepository tournamentRepository;
     private final Levenshtein levenshtein = new Levenshtein();
+    private final PoolService poolService;
+    private final GameService gameService;
 
-    public TournamentService(TournamentRepository tournamentRepository) {
+    public TournamentService(TournamentRepository tournamentRepository, PoolService poolService, GameService gameService) {
         this.tournamentRepository = tournamentRepository;
+        this.poolService = poolService;
+        this.gameService = gameService;
     }
 
     public Tournament getById(Long id) {
@@ -82,5 +89,14 @@ public class TournamentService {
         if (tournament == null)
             return null;
         return tournamentRepository.save(TournamentMapper.requestToEntity(request));
+    }
+
+    public void start(Long tournamentId) {
+        var pools = poolService.getAllByTournament(tournamentId);
+        if(pools == null || pools.isEmpty())
+            throw new TournamentException("No pools found for tournament : " + tournamentId);
+
+        try {gameService.createGamesPool(pools);}
+        catch (Exception e){throw new RuntimeException("Tournament already started");}
     }
 }

@@ -5,11 +5,11 @@ import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.game.domain.entities.Game;
 import esgi.ascl.game.domain.exeptions.GameNotFoundException;
-import esgi.ascl.game.domain.exeptions.RefereeIsPlayerException;
-import esgi.ascl.game.domain.exeptions.TeamNotFoundException;
 import esgi.ascl.game.domain.mapper.GameMapper;
 import esgi.ascl.game.domain.service.GameService;
 import esgi.ascl.game.infra.web.request.AssignRefereeRequest;
+import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
+import esgi.ascl.tournament.domain.service.TournamentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.*;
 public class GameController {
     private final GameService gameService;
     private final UserService userService;
+    private final TournamentService tournamentService;
 
-    public GameController(GameService gameService, UserService userService) {
+    public GameController(GameService gameService, UserService userService, TournamentService tournamentService) {
         this.gameService = gameService;
         this.userService = userService;
+        this.tournamentService = tournamentService;
     }
 
 
@@ -38,6 +40,23 @@ public class GameController {
         }
         return new ResponseEntity<>(GameMapper.entityToResponse(game), HttpStatus.OK);
     }
+
+    @GetMapping("tournament/{tournamentId}")
+    public ResponseEntity<?> getAllByTournament(@PathVariable Long tournamentId){
+        try {
+            tournamentService.getById(tournamentId);
+        } catch (TournamentNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        var games = gameService.getAllByTournamentId(tournamentId)
+                .stream()
+                .map(GameMapper::entityToResponse)
+                .toList();
+        return new ResponseEntity<>(games, HttpStatus.OK);
+    }
+
+
 
     @PostMapping("assignReferee")
     public ResponseEntity<?> assignReferee(@RequestBody AssignRefereeRequest assignRefereeRequest) throws GameNotFoundException {

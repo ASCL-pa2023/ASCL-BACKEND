@@ -1,10 +1,12 @@
 package esgi.ascl.tournament.infrastructure.web.controller;
 
+import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
 import esgi.ascl.tournament.domain.mapper.TournamentMapper;
 import esgi.ascl.tournament.domain.service.TournamentService;
 import esgi.ascl.tournament.domain.service.TournamentTypeService;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentRequest;
 import esgi.ascl.tournament.infrastructure.web.response.TournamentResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -171,5 +173,22 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+
+    @PostMapping("start/{id}")
+    public ResponseEntity<?> startTournament(@PathVariable Long id) {
+        try {
+            tournamentService.getById(id);
+        } catch (TournamentNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            tournamentService.start(id);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok().build();
     }
 }
