@@ -1,5 +1,6 @@
 package esgi.ascl.pool.infrastructure.web;
 
+import esgi.ascl.pool.domain.exception.PoolException;
 import esgi.ascl.pool.domain.mapper.PoolMapper;
 import esgi.ascl.pool.domain.service.PoolService;
 import esgi.ascl.tournament.domain.entities.Tournament;
@@ -34,8 +35,12 @@ public class PoolController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
-        var pools = poolService.create(tournament);
-        return new ResponseEntity<>((pools), HttpStatus.OK);
+        try {
+            var pools = poolService.create(tournament);
+            return new ResponseEntity<>((pools), HttpStatus.OK);
+        } catch (PoolException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 

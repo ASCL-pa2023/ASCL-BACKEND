@@ -33,8 +33,13 @@ public class PoolService {
                 });
 
         Collections.shuffle(registeredTeams);
-        
-        int nbPools = calculateNbPools(registeredTeams.size());
+
+        int nbPools;
+        try {
+            nbPools = calculateNbPools(registeredTeams.size());
+        } catch (PoolException e) {
+            throw new PoolException(e.getMessage());
+        }
         int[] teamsPerPool = dispatchPlayers(registeredTeams.size(), nbPools);
         
         List<Team> teamInPool = new ArrayList<>();
