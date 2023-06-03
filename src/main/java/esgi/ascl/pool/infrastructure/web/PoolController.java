@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/pool")
@@ -23,7 +25,7 @@ public class PoolController {
         this.poolMapper = poolMapper;
     }
 
-    @PostMapping("/create/{tournamentId}")
+    @PostMapping("/create/tournament/{tournamentId}")
     public ResponseEntity<?> create(@PathVariable Long tournamentId){
         Tournament tournament;
         try {
