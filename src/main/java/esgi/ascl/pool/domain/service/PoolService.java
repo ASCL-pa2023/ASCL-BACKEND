@@ -9,6 +9,8 @@ import esgi.ascl.tournament.domain.service.TournamentInscriptionService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -29,6 +31,8 @@ public class PoolService {
                 .forEach(tournamentInscription -> {
                     registeredTeams.add(tournamentInscription.getTeam());
                 });
+
+        Collections.shuffle(registeredTeams);
         
         int nbPools = calculateNbPools(registeredTeams.size());
         int[] teamsPerPool = dispatchPlayers(registeredTeams.size(), nbPools);
