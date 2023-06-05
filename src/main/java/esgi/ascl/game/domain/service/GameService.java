@@ -3,6 +3,7 @@ package esgi.ascl.game.domain.service;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.game.domain.entities.Game;
+import esgi.ascl.game.domain.exeptions.GameException;
 import esgi.ascl.game.domain.exeptions.GameNotFoundException;
 import esgi.ascl.game.domain.exeptions.RefereeIsPlayerException;
 import esgi.ascl.game.domain.mapper.GameMapper;
@@ -34,14 +35,18 @@ public class GameService {
     }
 
 
-    public List<Game> createGamesPool(List<Pool> pools){
+    /**
+     * Create games for each pool
+     * @param pools
+     */
+    public void createGamesPool(List<Pool> pools){
         if(getAllByTournamentId(pools.get(0).getTournament().getId()).size() > 0){
-            throw new RuntimeException("Games already created");
+            throw new GameException("Games already created");
         }
 
-        List<Game> games = new ArrayList<>();
 
         pools.forEach(pool -> {
+            List<Game> poolGames = new ArrayList<>();
             var poolsTeams = pool.getTeams();
 
             if(poolsTeams.size() > 1){
@@ -53,12 +58,12 @@ public class GameService {
                         var play1 = playService.playGame(game, poolsTeams.get(i));
                         var play2 = playService.playGame(game, poolsTeams.get(j));
                         gameRepository.save(game);
-                        games.add(game);
+                        poolGames.add(game);
                     }
                 }
             }
+            pool.setGames(poolGames);
         });
-        return games;
     }
 
 

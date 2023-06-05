@@ -1,6 +1,7 @@
 package esgi.ascl.pool.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import esgi.ascl.game.domain.entities.Game;
 import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import jakarta.persistence.*;
@@ -17,6 +18,9 @@ public class Pool {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Team> teams;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Game> games;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Tournament tournament;
@@ -37,6 +41,15 @@ public class Pool {
 
     public Pool setTeams(List<Team> teams) {
         this.teams = teams;
+        return this;
+    }
+
+    public List<Game> getGames() {
+        return games;
+    }
+
+    public Pool setGames(List<Game> games) {
+        this.games = games;
         return this;
     }
 
