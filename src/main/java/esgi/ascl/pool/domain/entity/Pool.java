@@ -16,7 +16,12 @@ public class Pool {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(
+            name = "pool_team",
+            joinColumns = @JoinColumn(name = "pool_id"),
+            inverseJoinColumns = @JoinColumn(name = "team_id")
+    )
     private List<Team> teams;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

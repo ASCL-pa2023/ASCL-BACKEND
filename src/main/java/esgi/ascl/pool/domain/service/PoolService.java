@@ -1,6 +1,9 @@
 package esgi.ascl.pool.domain.service;
 
+import esgi.ascl.game.domain.entities.Game;
 import esgi.ascl.game.domain.entities.Team;
+import esgi.ascl.game.domain.service.PlayService;
+import esgi.ascl.game.domain.service.TeamService;
 import esgi.ascl.pool.domain.entity.Pool;
 import esgi.ascl.pool.domain.exception.PoolException;
 import esgi.ascl.pool.infrastructure.PoolRepository;
@@ -8,18 +11,20 @@ import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.service.TournamentInscriptionService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PoolService {
     private final PoolRepository poolRepository;
     private final TournamentInscriptionService tournamentInscriptionService;
+    private final PlayService playService;
+    private final TeamService teamService;
 
-    public PoolService(PoolRepository poolRepository, TournamentInscriptionService tournamentInscriptionService) {
+    public PoolService(PoolRepository poolRepository, TournamentInscriptionService tournamentInscriptionService, PlayService playService, TeamService teamService) {
         this.poolRepository = poolRepository;
         this.tournamentInscriptionService = tournamentInscriptionService;
+        this.playService = playService;
+        this.teamService = teamService;
     }
 
 
@@ -100,7 +105,87 @@ public class PoolService {
     }
 
 
+    public Pool getById(Long id){
+        return poolRepository
+                .findById(id)
+                .orElseThrow(() -> new PoolException("Pool not found"));
+    }
+
     public List<Pool> getAllByTournament(Long tournamentId){
         return poolRepository.findAllByTournamentId(tournamentId);
+    }
+
+
+    public List<Game> getGamesWonByTeamInPool(Pool pool, Long teamId){
+        return pool.getGames()
+                .stream()
+                .filter(game -> Objects.equals(game.getWinner_id(), teamId))
+                .toList();
+    }
+
+    public List<Team> getFirstsOfPool(Pool pool){
+        List<Team> firsts = new ArrayList<>();
+        Map<Long, Integer> poolRecap = poolRecap(pool);
+        int max = Collections.max(poolRecap.values());
+        poolRecap.forEach((teamId, nbGamesWon) -> {
+            if (nbGamesWon == max) {
+                firsts.add(teamService.getById(teamId));
+            }
+        });
+        return firsts;
+    }
+
+
+    public List<Team> getSecondsOfPool(Pool pool){
+        List<Team> seconds = new ArrayList<>();
+        Map<Long, Integer> poolRecap = poolRecap(pool);
+        int max = Collections.max(poolRecap.values());
+        poolRecap.forEach((teamId, nbGamesWon) -> {
+            if (nbGamesWon == max - 1) {
+                //seconds.add(teamId);
+            }
+        });
+        return seconds;
+    }
+
+    public Map<Long, Integer> poolRecap(Pool pool){
+        SortedMap<Long, Integer> poolRecap = new TreeMap<>();
+        var teams = pool.getTeams();
+        teams.forEach(team -> {
+            int nbGamesWon = getGamesWonByTeamInPool(pool, team.getId()).size();
+            poolRecap.put(team.getId(), nbGamesWon);
+        });
+        return poolRecap;
+    }
+
+    public SortedMap<Long, Double> teamsRecapRatio(Pool pool){
+        SortedMap<Long, Double> poolRecap = new TreeMap<>();
+        pool.getTeams().forEach(team -> {
+            int nbGamesWon = getGamesWonByTeamInPool(pool, team.getId()).size();
+            int nbGamesPlayed = pool.getGames()
+                    .stream()
+                    .filter(game -> playService.getPlaysByGameId(game.getId())
+                    .stream()
+                    .anyMatch(play -> play.getTeam().getId().equals(team.getId())))
+                    .toList()
+                    .size();
+
+            double ratio = (double) nbGamesWon / nbGamesPlayed;
+            poolRecap.put(team.getId(), ratio);
+        });
+        return poolRecap;
+    }
+
+
+    public List<Team> getTeamWithBestRatio(Pool pool){
+        List<Team> teams = new ArrayList<>();
+        SortedMap<Long, Double> teamsRatio = teamsRecapRatio(pool);
+        double max = Collections.max(teamsRatio.values());
+        teamsRatio.forEach((teamId, ratio) -> {
+            if (ratio == max) {
+                teams.add(teamService.getById(teamId));
+            }
+        });
+        return teams;
     }
 }

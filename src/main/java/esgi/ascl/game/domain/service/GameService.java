@@ -3,14 +3,12 @@ package esgi.ascl.game.domain.service;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.game.domain.entities.Game;
+import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.exeptions.GameException;
 import esgi.ascl.game.domain.exeptions.GameNotFoundException;
 import esgi.ascl.game.domain.exeptions.RefereeIsPlayerException;
-import esgi.ascl.game.domain.mapper.GameMapper;
 import esgi.ascl.game.infra.repository.GameRepository;
-import esgi.ascl.game.infra.web.request.GameRequest;
 import esgi.ascl.pool.domain.entity.Pool;
-import esgi.ascl.tournament.domain.service.TournamentTypeService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,7 +44,7 @@ public class GameService {
 
 
         pools.forEach(pool -> {
-            List<Game> poolGames = new ArrayList<>();
+            //List<Game> poolGames = new ArrayList<>();
             var poolsTeams = pool.getTeams();
 
             if(poolsTeams.size() > 1){
@@ -58,11 +56,12 @@ public class GameService {
                         var play1 = playService.playGame(game, poolsTeams.get(i));
                         var play2 = playService.playGame(game, poolsTeams.get(j));
                         gameRepository.save(game);
-                        poolGames.add(game);
+                        pool.getGames().add(game);
+                        //poolGames.add(game);
                     }
                 }
             }
-            pool.setGames(poolGames);
+            //pool.setGames(poolGames);
         });
     }
 
@@ -117,17 +116,23 @@ public class GameService {
      * @return List<User>
      */
     public List<User> getPlayers(Long gameId) {
-        ArrayList<User> players = new ArrayList<>();
+        List<User> players = new ArrayList<>();
 
         var pl = playService.getPlaysByGameId(gameId);
         pl.forEach(play -> {
-            var teams = teamService.getAllByGameId(play.getTeam().getId());
-            teams.forEach(team -> {
-                var userTeam = userTeamService.getAllByTeam(team.getId());
-                userTeam.forEach(userTeam1 -> players.add(userTeam1.getUser()));
-            });
+            var team = teamService.getById(play.getTeam().getId());
+            var usersInTeam = userTeamService.getAllByTeam(team.getId());
+            usersInTeam.forEach(userTeam -> players.add(userTeam.getUser()));
         });
         return players;
+    }
+
+    public List<Team> getTeams(Long gameId) {
+        List<Team> teams = new ArrayList<>();
+
+        var pl = playService.getPlaysByGameId(gameId);
+        pl.forEach(play -> teams.add(play.getTeam()));
+        return teams;
     }
 
 

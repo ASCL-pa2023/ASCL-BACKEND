@@ -1,7 +1,10 @@
 package esgi.ascl.game.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import esgi.ascl.pool.domain.entity.Pool;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "team")
@@ -10,6 +13,9 @@ public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToMany(mappedBy = "teams")
+    private List<Pool> pools;
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Game game;

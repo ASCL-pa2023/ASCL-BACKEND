@@ -1,5 +1,6 @@
 package esgi.ascl.tournament.infrastructure.web.controller;
 
+import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
 import esgi.ascl.tournament.domain.mapper.TournamentMapper;
 import esgi.ascl.tournament.domain.service.TournamentService;
@@ -189,6 +190,20 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         }catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/final-phase/{id}")
+    public ResponseEntity<?> finalPhase(@PathVariable Long id) {
+        Tournament tournament;
+        try {
+            tournament = tournamentService.getById(id);
+        } catch (TournamentNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        tournamentService.finalPhase(tournament);
+
         return ResponseEntity.ok().build();
     }
 }

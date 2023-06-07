@@ -1,6 +1,8 @@
 package esgi.ascl.tournament.domain.service;
 
+import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.service.GameService;
+import esgi.ascl.game.domain.service.TeamService;
 import esgi.ascl.pool.domain.service.PoolService;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.entities.TournamentType;
@@ -10,11 +12,10 @@ import esgi.ascl.tournament.domain.mapper.TournamentMapper;
 import esgi.ascl.tournament.infrastructure.repositories.TournamentRepository;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentRequest;
 import esgi.ascl.utils.Levenshtein;
+import esgi.ascl.utils.NumberUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TournamentService {
@@ -22,11 +23,13 @@ public class TournamentService {
     private final Levenshtein levenshtein = new Levenshtein();
     private final PoolService poolService;
     private final GameService gameService;
+    private final TeamService teamService;
 
-    public TournamentService(TournamentRepository tournamentRepository, PoolService poolService, GameService gameService) {
+    public TournamentService(TournamentRepository tournamentRepository, PoolService poolService, GameService gameService, TeamService teamService) {
         this.tournamentRepository = tournamentRepository;
         this.poolService = poolService;
         this.gameService = gameService;
+        this.teamService = teamService;
     }
 
     public Tournament getById(Long id) {
@@ -98,5 +101,45 @@ public class TournamentService {
 
         try {gameService.createGamesPool(pools);}
         catch (Exception e){throw new RuntimeException("Tournament already started");}
+    }
+
+    public HashMap<Long, Double> ratio(Tournament tournament){
+        var poolTournamentRatio = new HashMap<Long, Double>();
+        poolService
+            .getAllByTournament(tournament.getId())
+            .forEach(pool -> {
+                poolTournamentRatio.putAll(poolService.teamsRecapRatio(pool));
+            });
+        return poolTournamentRatio;
+    }
+
+    public void finalPhase(Tournament tournament){
+        var pools = poolService.getAllByTournament(tournament.getId());
+
+        List<Long> teamsQualified = new ArrayList<>();
+        pools.forEach(pool -> {
+            teamsQualified.addAll(
+                    poolService
+                            .getFirstsOfPool(pool)
+                            .stream()
+                            .map(Team::getId)
+                            .toList()
+            );
+        });
+
+        if(!NumberUtils.isPowerOfTwo(pools.size())){
+            int nextPowerOfTwo = NumberUtils.nextPowerOfTwo(pools.size());
+            int nbTeamsToAdd = nextPowerOfTwo - pools.size();
+
+            //TODO : prendre le ratio du tournoi et enlever les équipes déjà qualifiés
+            var tournamentRatio = ratio(tournament);
+            var withoutTeamAlreadyQualified = tournamentRatio.keySet()
+                    .stream()
+                    .filter(key -> !teamsQualified.contains(key))
+                    .toList();
+
+            //TODO : ajouter les équipes manquantes
+            teamsQualified.addAll(withoutTeamAlreadyQualified.subList(0, nbTeamsToAdd));
+        }
     }
 }

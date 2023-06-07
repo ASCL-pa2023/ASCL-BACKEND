@@ -11,8 +11,9 @@ public class GameMapper {
         return new GameResponse()
                 .setId(game.getId())
                 .setTournamentId(game.getTournament().getId())
-                .setRefereeId(game.getReferee().getId())
-                .setHourly(game.getHourly());
+                .setRefereeId(game.getReferee() == null ? null : game.getReferee().getId())
+                .setHourly(game.getHourly())
+                .setWinner_id(game.getWinner_id());
     }
 
 }

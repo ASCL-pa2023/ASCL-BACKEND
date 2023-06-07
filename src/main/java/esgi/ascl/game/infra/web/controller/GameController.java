@@ -92,4 +92,19 @@ public class GameController {
 
         return new ResponseEntity<>(players, HttpStatus.OK);
     }
+
+    @GetMapping("teams/{gameId}")
+    public ResponseEntity<?> getTeams(@PathVariable Long gameId){
+        try {
+            gameService.getById(gameId);
+        } catch (GameNotFoundException e){
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        var teams = gameService.getTeams(gameId);
+
+
+        return new ResponseEntity<>(teams, HttpStatus.OK);
+    }
 }
