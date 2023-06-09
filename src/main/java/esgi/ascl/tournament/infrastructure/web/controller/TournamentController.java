@@ -1,8 +1,10 @@
 package esgi.ascl.tournament.infrastructure.web.controller;
 
+import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
 import esgi.ascl.tournament.domain.mapper.TournamentMapper;
+import esgi.ascl.tournament.domain.service.FinalPhaseService;
 import esgi.ascl.tournament.domain.service.TournamentService;
 import esgi.ascl.tournament.domain.service.TournamentTypeService;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentRequest;
@@ -22,10 +24,12 @@ import java.util.List;
 public class TournamentController {
     private final TournamentService tournamentService;
     private final TournamentTypeService tournamentTypeService;
+    private final FinalPhaseService finalPhaseService;
 
-    public TournamentController(TournamentService tournamentService, TournamentTypeService tournamentTypeService) {
+    public TournamentController(TournamentService tournamentService, TournamentTypeService tournamentTypeService, FinalPhaseService finalPhaseService) {
         this.tournamentService = tournamentService;
         this.tournamentTypeService = tournamentTypeService;
+        this.finalPhaseService = finalPhaseService;
     }
 
     @PostMapping("/create")
@@ -193,7 +197,7 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/final-phase/{id}")
+    @PostMapping("/start-final-phase/{id}")
     public ResponseEntity<?> finalPhase(@PathVariable Long id) {
         Tournament tournament;
         try {
@@ -202,7 +206,25 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
-        tournamentService.finalPhase(tournament);
+        finalPhaseService.startFinalPhase(tournament);
+        //tournamentService.finalPhase(tournament);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/nextRound")
+    public ResponseEntity<?> nextRound(@PathVariable Long id) {
+        Tournament tournament;
+        try {
+            tournament = tournamentService.getById(id);
+        } catch (TournamentNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        var tournamentUpdated = finalPhaseService.nextRound(tournament);
+        if (tournamentUpdated.getWinner_id() != null) {
+            return new ResponseEntity<>(TournamentMapper.entityToResponse(tournamentUpdated), HttpStatus.OK);
+        }
 
         return ResponseEntity.ok().build();
     }

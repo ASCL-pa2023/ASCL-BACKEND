@@ -176,6 +176,13 @@ public class PoolService {
         return poolRecap;
     }
 
+    public List<Long> getIdsTeamQualified(Pool pool){
+        return getFirstsOfPool(pool)
+                .stream()
+                .map(Team::getId)
+                .toList();
+    }
+
 
     public List<Team> getTeamWithBestRatio(Pool pool){
         List<Team> teams = new ArrayList<>();

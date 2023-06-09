@@ -16,6 +16,7 @@ public class TournamentMapper {
                 .start_date(tournament.getStart_date())
                 .tournamentType(TournamentTypeMapper.entityToResponse(tournament.getTournamentType()))
                 .places_number(tournament.getPlaces_number())
+                .winner_id(tournament.getWinner_id())
                 .build();
     }
 

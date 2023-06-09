@@ -3,12 +3,14 @@ package esgi.ascl.game.domain.service;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.game.domain.entities.Game;
+import esgi.ascl.game.domain.entities.GameType;
 import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.exeptions.GameException;
 import esgi.ascl.game.domain.exeptions.GameNotFoundException;
 import esgi.ascl.game.domain.exeptions.RefereeIsPlayerException;
 import esgi.ascl.game.infra.repository.GameRepository;
 import esgi.ascl.pool.domain.entity.Pool;
+import esgi.ascl.tournament.domain.entities.Tournament;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,6 +34,14 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
+    public Game create(Tournament tournament, GameType gameType){
+        return gameRepository.save(
+                new Game()
+                        .setTournament(tournament)
+                        .setType(gameType)
+        );
+    }
+
 
     /**
      * Create games for each pool
@@ -50,12 +60,11 @@ public class GameService {
             if(poolsTeams.size() > 1){
                 for(int i = 0; i < poolsTeams.size(); i++){
                     for(int j = i + 1; j < poolsTeams.size(); j++){
-                        var game = gameRepository.save(
-                                new Game().setTournament(pool.getTournament())
-                        );
+                        var game = create(pool.getTournament(), GameType.POOL);
+
                         var play1 = playService.playGame(game, poolsTeams.get(i));
                         var play2 = playService.playGame(game, poolsTeams.get(j));
-                        gameRepository.save(game);
+                        //gameRepository.save(game);
                         pool.getGames().add(game);
                         //poolGames.add(game);
                     }
@@ -135,5 +144,11 @@ public class GameService {
         return teams;
     }
 
+    public List<Team> getWinners(List<Game> games){
+        return games.stream()
+                .filter(game -> game.getWinner_id() != null)
+                .map(game -> teamService.getById(game.getWinner_id()))
+                .toList();
+    }
 
 }

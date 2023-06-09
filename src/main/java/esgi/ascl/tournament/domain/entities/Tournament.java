@@ -35,6 +35,9 @@ public class Tournament {
     @Column(name = "places_number")
     private int places_number;
 
+    @Column(name = "winner_id")
+    private Long winner_id;
+
 
     public long getId() {
         return id;
@@ -96,6 +99,15 @@ public class Tournament {
 
     public Tournament setPlaces_number(int places_number) {
         this.places_number = places_number;
+        return this;
+    }
+
+    public Long getWinner_id() {
+        return winner_id;
+    }
+
+    public Tournament setWinner_id(Long winner_id) {
+        this.winner_id = winner_id;
         return this;
     }
 }

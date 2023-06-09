@@ -27,6 +27,9 @@ public class Game {
 
     private Long winner_id;
 
+    @Enumerated(EnumType.STRING)
+    private GameType type;
+
 
     public Long getId() {
         return id;
@@ -65,6 +68,15 @@ public class Game {
 
     public Game setWinner_id(Long winner_id) {
         this.winner_id = winner_id;
+        return this;
+    }
+
+    public GameType getType() {
+        return type;
+    }
+
+    public Game setType(GameType type) {
+        this.type = type;
         return this;
     }
 }

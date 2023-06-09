@@ -1,5 +1,6 @@
 package esgi.ascl.tournament.domain.service;
 
+import esgi.ascl.game.domain.entities.GameType;
 import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.service.GameService;
 import esgi.ascl.game.domain.service.TeamService;
@@ -23,13 +24,11 @@ public class TournamentService {
     private final Levenshtein levenshtein = new Levenshtein();
     private final PoolService poolService;
     private final GameService gameService;
-    private final TeamService teamService;
 
-    public TournamentService(TournamentRepository tournamentRepository, PoolService poolService, GameService gameService, TeamService teamService) {
+    public TournamentService(TournamentRepository tournamentRepository, PoolService poolService, GameService gameService) {
         this.tournamentRepository = tournamentRepository;
         this.poolService = poolService;
         this.gameService = gameService;
-        this.teamService = teamService;
     }
 
     public Tournament getById(Long id) {
@@ -113,33 +112,31 @@ public class TournamentService {
         return poolTournamentRatio;
     }
 
-    public void finalPhase(Tournament tournament){
+    /*public void finalPhase(Tournament tournament){
         var pools = poolService.getAllByTournament(tournament.getId());
 
         List<Long> teamsQualified = new ArrayList<>();
         pools.forEach(pool -> {
             teamsQualified.addAll(
-                    poolService
-                            .getFirstsOfPool(pool)
-                            .stream()
-                            .map(Team::getId)
-                            .toList()
+                    poolService.getIdsTeamQualified(pool)
             );
         });
 
-        if(!NumberUtils.isPowerOfTwo(pools.size())){
+        //if(!NumberUtils.isPowerOfTwo(pools.size())){
+        if(!NumberUtils.isPowerOfTwo(teamsQualified.size())){
             int nextPowerOfTwo = NumberUtils.nextPowerOfTwo(pools.size());
             int nbTeamsToAdd = nextPowerOfTwo - pools.size();
 
-            //TODO : prendre le ratio du tournoi et enlever les équipes déjà qualifiés
+            //Prendre le ratio du tournoi et enlever les équipes déjà qualifiés
             var tournamentRatio = ratio(tournament);
             var withoutTeamAlreadyQualified = tournamentRatio.keySet()
                     .stream()
                     .filter(key -> !teamsQualified.contains(key))
                     .toList();
 
-            //TODO : ajouter les équipes manquantes
+            //Ajouter les équipes manquantes
             teamsQualified.addAll(withoutTeamAlreadyQualified.subList(0, nbTeamsToAdd));
         }
-    }
+        finalPhaseService.createFinalPhaseGame(tournament, teamsQualified);
+    }*/
 }
