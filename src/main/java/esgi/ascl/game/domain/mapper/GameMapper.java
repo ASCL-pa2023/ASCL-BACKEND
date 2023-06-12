@@ -1,10 +1,8 @@
 package esgi.ascl.game.domain.mapper;
 
-import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.infrastructure.web.response.GameResponse;
 import esgi.ascl.game.domain.entities.Game;
 import esgi.ascl.game.domain.service.GameService;
-import esgi.ascl.game.domain.service.PlayService;
 import org.springframework.stereotype.Component;
 
 @Component
