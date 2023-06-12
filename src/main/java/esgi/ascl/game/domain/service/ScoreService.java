@@ -20,10 +20,19 @@ public class ScoreService {
 
 
     public Score createScore(ScoreRequest scoreRequest) {
+        var set = setRepository
+                .findById(scoreRequest.getSetId())
+                .orElseThrow(() -> new ScoreNotFoundException("Set not found"));
+
         var score = new Score()
-                .setSet(setRepository.findById(scoreRequest.getSetId()).get())
-                .setTeam(teamService.getById(scoreRequest.getTeamId()));
-        return scoreRepository.save(score);
+                .setValue(scoreRequest.score)
+                .setTeam(teamService.getById(scoreRequest.getTeamId()))
+                .setSet(set);
+
+        var scoreSaved = scoreRepository.save(score);
+        set.addScore(scoreSaved);
+
+        return scoreSaved;
     }
 
     public Score getById(Long id) {

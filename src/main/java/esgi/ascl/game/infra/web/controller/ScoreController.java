@@ -1,7 +1,6 @@
 package esgi.ascl.game.infra.web.controller;
 
 import esgi.ascl.game.domain.entities.Score;
-import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.exeptions.ScoreNotFoundException;
 import esgi.ascl.game.domain.exeptions.SetNotFoundException;
 import esgi.ascl.game.domain.exeptions.TeamNotFoundException;
@@ -35,29 +34,16 @@ public class ScoreController {
     @PostMapping("update")
     public ResponseEntity<?> update(@RequestBody ScoreUpdateRequest scoreUpdateRequest){
         try {
-            teamService.getById(scoreUpdateRequest.teamId);
-        } catch (TeamNotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-
-        try {
-            setService.getById(scoreUpdateRequest.setId);
-        } catch (SetNotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-
-        if(scoreUpdateRequest.scoreValue < MIN_SCORE || scoreUpdateRequest.scoreValue > MAX_SCORE)
-            return new ResponseEntity<>("Score value must be between 0 and 21", HttpStatus.BAD_REQUEST);
-
-
-        Score score;
-        try {
-            score = scoreService.getBySetIdAndTeamId(scoreUpdateRequest.setId, scoreUpdateRequest.teamId);
+            scoreService.getById(scoreUpdateRequest.scoreId);
         } catch (ScoreNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
-        scoreService.updateValue(score.getId(), scoreUpdateRequest.scoreValue);
+        if(scoreUpdateRequest.value < MIN_SCORE || scoreUpdateRequest.value > MAX_SCORE)
+            return new ResponseEntity<>("Score value must be between 0 and 21", HttpStatus.BAD_REQUEST);
+
+
+        scoreService.updateValue(scoreUpdateRequest.scoreId, scoreUpdateRequest.value);
         return ResponseEntity.ok().build();
     }
 
@@ -66,6 +52,25 @@ public class ScoreController {
         Score score;
         try {
             score = scoreService.getById(scoreId);
+        } catch (ScoreNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(ScoreMapper.toResponse(score), HttpStatus.OK);
+    }
+
+    @GetMapping("set/{setId}/team/{teamId}")
+    public ResponseEntity<?> getBySetIdAndTeamId(@PathVariable Long setId, @PathVariable Long teamId){
+        try {setService.getById(setId);
+        } catch (SetNotFoundException e){return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);}
+
+        try {teamService.getById(teamId);
+        } catch (TeamNotFoundException e){return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);}
+
+
+        Score score;
+        try {
+            score = scoreService.getBySetIdAndTeamId(setId, teamId);
         } catch (ScoreNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

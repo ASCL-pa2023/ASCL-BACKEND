@@ -8,6 +8,11 @@ public class SetMapper {
     public static SetResponse toResponse(Set set){
         return new SetResponse()
                 .setId(set.getId())
-                .setGameId(set.getGame().getId());
+                .setGameId(set.getGame().getId())
+                .setScores(set.getScores()
+                        .stream()
+                        .map(ScoreMapper::toResponse)
+                        .toList()
+                );
     }
 }

@@ -3,6 +3,8 @@ package esgi.ascl.game.domain.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "set")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -14,6 +16,14 @@ public class Set {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "game_id")
     private Game game;
+
+    @OneToMany(mappedBy = "set", cascade = CascadeType.ALL)
+    private List<Score> scores;
+
+
+    public void addScore(Score score) {
+        this.scores.add(score);
+    }
 
     public Long getId() {
         return id;
@@ -30,6 +40,15 @@ public class Set {
 
     public Set setGame(Game game) {
         this.game = game;
+        return this;
+    }
+
+    public List<Score> getScores() {
+        return scores;
+    }
+
+    public Set setScores(List<Score> scores) {
+        this.scores = scores;
         return this;
     }
 

@@ -8,7 +8,7 @@ public class ScoreMapper {
         return new ScoreResponse()
                 .setId(score.getId())
                 .setValue(score.getValue())
-                .setSetId(score.getSet().getId())
-                .setTeamId(score.getTeam().getId());
+                .setTeamId(score.getTeam().getId())
+                .setSetId(score.getSet().getId());
     }
 }

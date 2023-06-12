@@ -7,6 +7,7 @@ import esgi.ascl.game.infra.web.request.ScoreRequest;
 import esgi.ascl.game.infra.web.request.SetRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,7 +30,8 @@ public class SetService {
     public Set createSet(SetRequest setRequest) {
         var game = gameService.getById(setRequest.getGameId());
         var set = new Set()
-                .setGame(game);
+                .setGame(game)
+                .setScores(new ArrayList<>());
         var setCreated = setRepository.save(set);
 
 

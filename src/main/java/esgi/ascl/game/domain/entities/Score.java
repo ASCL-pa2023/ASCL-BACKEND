@@ -13,13 +13,13 @@ public class Score {
 
     private int value;
 
-    @ManyToOne
-    @JoinColumn(name = "set_id")
-    private Set set;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "set_id")
+    private Set set;
 
     public Long getId() {
         return id;
@@ -39,21 +39,21 @@ public class Score {
         return this;
     }
 
-    public Set getSet() {
-        return set;
-    }
-
-    public Score setSet(Set set) {
-        this.set = set;
-        return this;
-    }
-
     public Team getTeam() {
         return team;
     }
 
     public Score setTeam(Team team) {
         this.team = team;
+        return this;
+    }
+
+    public Set getSet() {
+        return set;
+    }
+
+    public Score setSet(Set set) {
+        this.set = set;
         return this;
     }
 }
