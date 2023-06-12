@@ -13,6 +13,7 @@ public class SetMapper {
                         .stream()
                         .map(ScoreMapper::toResponse)
                         .toList()
-                );
+                )
+                .setWinnerId(set.getWinnerId() == null ? null : set.getWinnerId());
     }
 }

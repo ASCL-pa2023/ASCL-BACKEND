@@ -13,11 +13,9 @@ import java.util.List;
 @Component
 public class TeamMapper {
 
-    private final UserService userService;
     private final TeamService teamService;
 
-    public TeamMapper(UserService userService, TeamService teamService) {
-        this.userService = userService;
+    public TeamMapper(TeamService teamService) {
         this.teamService = teamService;
     }
 

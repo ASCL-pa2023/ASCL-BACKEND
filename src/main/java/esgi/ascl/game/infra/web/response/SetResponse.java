@@ -6,6 +6,7 @@ public class SetResponse {
     public Long id;
     public Long gameId;
     public List<ScoreResponse> scores;
+    public Long winnerId;
 
     public SetResponse setId(Long id) {
         this.id = id;
@@ -31,6 +32,15 @@ public class SetResponse {
 
     public SetResponse setScores(List<ScoreResponse> scores) {
         this.scores = scores;
+        return this;
+    }
+
+    public Long getWinnerId() {
+        return winnerId;
+    }
+
+    public SetResponse setWinnerId(Long winnerId) {
+        this.winnerId = winnerId;
         return this;
     }
 }

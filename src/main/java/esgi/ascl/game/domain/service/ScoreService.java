@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ScoreService {
+    private static final int MAX_SCORE = 21;
     private final ScoreRepository scoreRepository;
     private final SetRepository setRepository;
     private final TeamService teamService;
@@ -53,6 +54,10 @@ public class ScoreService {
                 .ifPresentOrElse(
                         score -> {
                             score.setValue(newValue);
+
+                            if(newValue == MAX_SCORE)
+                                score.getSet().setWinnerId(score.getTeam().getId());
+
                             scoreRepository.save(score);
                         },
                         () -> {

@@ -20,6 +20,8 @@ public class Set {
     @OneToMany(mappedBy = "set", cascade = CascadeType.ALL)
     private List<Score> scores;
 
+    private Long winnerId;
+
 
     public void addScore(Score score) {
         this.scores.add(score);
@@ -49,6 +51,15 @@ public class Set {
 
     public Set setScores(List<Score> scores) {
         this.scores = scores;
+        return this;
+    }
+
+    public Long getWinnerId() {
+        return winnerId;
+    }
+
+    public Set setWinnerId(Long winnerId) {
+        this.winnerId = winnerId;
         return this;
     }
 
