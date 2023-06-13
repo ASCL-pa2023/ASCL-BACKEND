@@ -151,4 +151,13 @@ public class GameService {
                 .toList();
     }
 
+    public Game winGame(Game game, Team team){
+        if(!getTeams(game.getId()).contains(team)){
+            throw new GameException("Team not in game");
+        }
+
+        game.setWinner_id(team.getId());
+        return gameRepository.save(game);
+    }
+
 }
