@@ -228,4 +228,15 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
 
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteTournament(@PathVariable long id) {
+        try {
+            var tournament = tournamentService.getById(id);
+            tournamentService.delete(tournament);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

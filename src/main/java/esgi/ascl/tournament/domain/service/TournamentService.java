@@ -139,4 +139,10 @@ public class TournamentService {
         }
         finalPhaseService.createFinalPhaseGame(tournament, teamsQualified);
     }*/
+
+
+    public void delete(Tournament tournament) {
+        tournament.setTournamentType(null);
+        tournamentRepository.delete(tournament);
+    }
 }

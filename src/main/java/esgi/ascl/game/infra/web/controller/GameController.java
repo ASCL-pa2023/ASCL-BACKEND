@@ -3,6 +3,7 @@ package esgi.ascl.game.infra.web.controller;
 import esgi.ascl.User.domain.exceptions.UserNotFoundExceptions;
 import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.domain.service.UserService;
+import esgi.ascl.User.infrastructure.web.response.GameResponse;
 import esgi.ascl.game.domain.entities.Game;
 import esgi.ascl.game.domain.exeptions.GameNotFoundException;
 import esgi.ascl.game.domain.mapper.GameMapper;
@@ -14,6 +15,8 @@ import esgi.ascl.tournament.domain.service.TournamentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Comparator;
 
 
 @CrossOrigin(origins = "*")
@@ -56,6 +59,7 @@ public class GameController {
         var games = gameService.getAllByTournamentId(tournamentId)
                 .stream()
                 .map(GameMapper::entityToResponse)
+                .sorted(Comparator.comparing(GameResponse::getId))
                 .toList();
         return new ResponseEntity<>(games, HttpStatus.OK);
     }
@@ -120,7 +124,6 @@ public class GameController {
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
