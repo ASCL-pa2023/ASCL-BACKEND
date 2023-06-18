@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -158,6 +159,13 @@ public class GameService {
 
         game.setWinner_id(team.getId());
         return gameRepository.save(game);
+    }
+
+    public List<Game> getGamesWonByTeam(List<Game> games, Long teamId){
+        return games
+                .stream()
+                .filter(game -> Objects.equals(game.getWinner_id(), teamId))
+                .toList();
     }
 
 }

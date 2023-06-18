@@ -8,10 +8,12 @@ import esgi.ascl.game.domain.service.PlayService;
 import esgi.ascl.game.domain.service.TeamService;
 import esgi.ascl.pool.domain.service.PoolService;
 import esgi.ascl.tournament.domain.entities.Tournament;
+import esgi.ascl.tournament.domain.entities.TournamentInscription;
 import esgi.ascl.utils.NumberUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -21,13 +23,15 @@ public class FinalPhaseService {
     private final PlayService playService;
     private final PoolService poolService;
     private final TournamentService tournamentService;
+    private final TournamentInscriptionService tournamentInscriptionService;
 
-    public FinalPhaseService(GameService gameService, TeamService teamService, PlayService playService, PoolService poolService, TournamentService tournamentService) {
+    public FinalPhaseService(GameService gameService, TeamService teamService, PlayService playService, PoolService poolService, TournamentService tournamentService, TournamentInscriptionService tournamentInscriptionService) {
         this.gameService = gameService;
         this.teamService = teamService;
         this.playService = playService;
         this.poolService = poolService;
         this.tournamentService = tournamentService;
+        this.tournamentInscriptionService = tournamentInscriptionService;
     }
 
     public Tournament nextRound(Tournament tournament){
@@ -59,7 +63,7 @@ public class FinalPhaseService {
             int nbTeamsToAdd = nextPowerOfTwo - pools.size();
 
             //Prendre le ratio du tournoi et enlever les équipes déjà qualifiés
-            var tournamentRatio = tournamentService.ratio(tournament);
+            var tournamentRatio = tournamentService.poolRatio(tournament.getId());
             var withoutTeamAlreadyQualified = tournamentRatio.keySet()
                     .stream()
                     .filter(key -> !teamsQualified.contains(key))
@@ -106,6 +110,40 @@ public class FinalPhaseService {
                 .toList();
 
         return gameService.getWinners(gameFiltered);
+    }
+
+    public HashMap<Long, Double> ratio(Tournament tournament){
+        var tournamentGames = gameService.getAllByTournamentId(tournament.getId());
+
+        List<Game> finalPhaseGames = tournamentGames
+                .stream()
+                .filter(game -> game.getType() != GameType.POOL)
+                .toList();
+
+        var teamsPlayFinalePhase = new ArrayList<Team>();
+
+        finalPhaseGames.forEach(game -> {
+            playService.getPlaysByGameId(game.getId())
+                    .forEach(played -> {
+                        teamsPlayFinalePhase.add(played.getTeam());
+                    });
+        });
+
+
+        var finalPhaseRatio = new HashMap<Long, Double>();
+
+        teamsPlayFinalePhase.forEach(team -> {
+            int nbGameWonByTeam = gameService.getGamesWonByTeam(finalPhaseGames, team.getId()).size();
+
+            int nbGamesPlayed = tournamentService.gamesPlayedByTeam(tournament.getId(), team.getId())
+                    .stream()
+                    .filter(game -> game.getType() != GameType.POOL)
+                    .toList().size();
+
+            var ratio = (double) nbGameWonByTeam / nbGamesPlayed;
+            finalPhaseRatio.put(team.getId(), ratio);
+        });
+        return finalPhaseRatio;
     }
 
 }

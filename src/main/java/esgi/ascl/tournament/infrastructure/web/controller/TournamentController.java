@@ -1,6 +1,5 @@
 package esgi.ascl.tournament.infrastructure.web.controller;
 
-import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
 import esgi.ascl.tournament.domain.mapper.TournamentMapper;
@@ -180,6 +179,37 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         }
     }
 
+    @GetMapping("{id}/ratio")
+    public ResponseEntity<?> getRatio(@PathVariable Long id) {
+        try {
+            tournamentService.getById(id);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(tournamentService.tournamentRatio(id));
+    }
+
+    @GetMapping("{id}/final-phase/ratio")
+    public ResponseEntity<?> getFinalPhaseRatio(@PathVariable Long id) {
+        Tournament tournament;
+        try {
+            tournament = tournamentService.getById(id);
+        } catch (TournamentNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(finalPhaseService.ratio(tournament));
+    }
+
+    @GetMapping("{id}/ratio/pool")
+    public ResponseEntity<?> getPoolRatio(@PathVariable Long id) {
+        try {
+            tournamentService.getById(id);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(tournamentService.poolRatio(id));
+    }
+
 
     @PostMapping("start/{id}")
     public ResponseEntity<?> startTournament(@PathVariable Long id) {
@@ -207,7 +237,6 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         }
 
         finalPhaseService.startFinalPhase(tournament);
-        //tournamentService.finalPhase(tournament);
 
         return ResponseEntity.ok().build();
     }
