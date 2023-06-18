@@ -1,19 +1,16 @@
 package esgi.ascl.tournament.domain.service;
 
-import esgi.ascl.game.domain.entities.GameType;
-import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.service.GameService;
-import esgi.ascl.game.domain.service.TeamService;
 import esgi.ascl.pool.domain.service.PoolService;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.entities.TournamentType;
+import esgi.ascl.tournament.domain.entities.TournamentTypeO;
 import esgi.ascl.tournament.domain.exceptions.TournamentException;
 import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
 import esgi.ascl.tournament.domain.mapper.TournamentMapper;
 import esgi.ascl.tournament.infrastructure.repositories.TournamentRepository;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentRequest;
 import esgi.ascl.utils.Levenshtein;
-import esgi.ascl.utils.NumberUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -73,8 +70,8 @@ public class TournamentService {
         return tournamentsByDate;
     }
 
-    public List<Tournament> getByTournamentType(TournamentType tournamentType) {
-        return tournamentRepository.getTournamentsByTournamentType(tournamentType);
+    public List<Tournament> getByTournamentType(String tournamentType) {
+        return tournamentRepository.getTournamentsByType(TournamentType.valueOf(tournamentType.toUpperCase()));
     }
     public Tournament create(TournamentRequest request) {
         if(request == null)
@@ -142,7 +139,7 @@ public class TournamentService {
 
 
     public void delete(Tournament tournament) {
-        tournament.setTournamentType(null);
+        tournament.setType(null);
         tournamentRepository.delete(tournament);
     }
 }

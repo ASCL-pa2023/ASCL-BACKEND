@@ -1,6 +1,7 @@
 package esgi.ascl.tournament.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import esgi.ascl.game.domain.entities.GameType;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -28,9 +29,8 @@ public class Tournament {
     @Column(name = "deadline_inscription_date")
     private Date deadline_inscription_date;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "tournament_type_id")
-    private TournamentType tournamentType;
+    @Enumerated(EnumType.STRING)
+    private TournamentType type;
 
     @Column(name = "places_number")
     private int places_number;
@@ -84,12 +84,12 @@ public class Tournament {
         return this;
     }
 
-    public TournamentType getTournamentType() {
-        return tournamentType;
+    public TournamentType getType() {
+        return type;
     }
 
-    public Tournament setTournamentType(TournamentType tournamentType) {
-        this.tournamentType = tournamentType;
+    public Tournament setType(TournamentType type) {
+        this.type = type;
         return this;
     }
 

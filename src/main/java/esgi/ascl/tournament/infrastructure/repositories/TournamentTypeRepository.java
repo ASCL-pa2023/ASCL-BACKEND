@@ -1,10 +1,10 @@
 package esgi.ascl.tournament.infrastructure.repositories;
 
-import esgi.ascl.tournament.domain.entities.TournamentType;
+import esgi.ascl.tournament.domain.entities.TournamentTypeO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TournamentTypeRepository extends JpaRepository<TournamentType, Long> {
-    TournamentType getTournamentTypeById(Long id);
+public interface TournamentTypeRepository extends JpaRepository<TournamentTypeO, Long> {
+    TournamentTypeO getTournamentTypeById(Long id);
 
-    TournamentType getTournamentTypeByName(String name);
+    TournamentTypeO getTournamentTypeByName(String name);
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/v1/tournament-category")
+@RequestMapping("/api/v1/tournament-types")
 public class TournamentTypeController {
     private final TournamentTypeService tournamentTypeService;
 
@@ -17,7 +17,7 @@ public class TournamentTypeController {
         this.tournamentTypeService = tournamentTypeService;
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<TournamentTypeResponse> createTournamentType(@RequestBody TournamentTypeRequest tournamentTypeRequest) {
         System.out.println("/api/v1/tournament-category/create");
 
@@ -38,7 +38,7 @@ public class TournamentTypeController {
         }
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<TournamentTypeResponse> getTournamentType(@PathVariable long id) {
         System.out.println("/api/v1/tournament-category/get/{id}" + id);
 
@@ -58,7 +58,7 @@ public class TournamentTypeController {
         }
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateTournamentType(@PathVariable long id, @RequestBody TournamentTypeRequest tournamentTypeRequest) {
         System.out.println("/api/v1/tournament-category/update/{id}" + id);
 
@@ -76,7 +76,7 @@ public class TournamentTypeController {
         }
     }
 
-    @GetMapping("get/all")
+    @GetMapping()
     public ResponseEntity<?> getAllTournamentType() {
         System.out.println("/api/v1/tournament-category/get/all");
 
@@ -90,7 +90,7 @@ public class TournamentTypeController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTournamentType(@PathVariable long id) {
         System.out.println("/api/v1/tournament-category/delete/{id}" + id);
 

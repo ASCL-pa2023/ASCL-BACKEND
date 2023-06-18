@@ -1,20 +1,20 @@
 package esgi.ascl.tournament.domain.mapper;
 
-import esgi.ascl.tournament.domain.entities.TournamentType;
+import esgi.ascl.tournament.domain.entities.TournamentTypeO;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentTypeRequest;
 import esgi.ascl.tournament.infrastructure.web.response.TournamentTypeResponse;
 
 public class TournamentTypeMapper {
 
-    public static TournamentTypeResponse entityToResponse(TournamentType tournamentType) {
+    public static TournamentTypeResponse entityToResponse(TournamentTypeO tournamentTypeO) {
         return new TournamentTypeResponse().builder()
-                .id(tournamentType.getId())
-                .name(tournamentType.getName())
+                .id(tournamentTypeO.getId())
+                .name(tournamentTypeO.getName())
                 .build();
     }
 
-    public static TournamentType requestToEntity(TournamentTypeRequest tournamentTypeRequest) {
-        return new TournamentType()
+    public static TournamentTypeO requestToEntity(TournamentTypeRequest tournamentTypeRequest) {
+        return new TournamentTypeO()
                 .setName(tournamentTypeRequest.getName());
     }
 }

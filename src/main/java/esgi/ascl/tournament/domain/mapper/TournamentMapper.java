@@ -1,6 +1,7 @@
 package esgi.ascl.tournament.domain.mapper;
 
 import esgi.ascl.tournament.domain.entities.Tournament;
+import esgi.ascl.tournament.domain.entities.TournamentType;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentRequest;
 import esgi.ascl.tournament.infrastructure.web.response.TournamentResponse;
 
@@ -14,7 +15,7 @@ public class TournamentMapper {
                 .deadline_inscription_date(tournament.getDeadline_inscription_date())
                 .end_date(tournament.getEnd_date())
                 .start_date(tournament.getStart_date())
-                .tournamentType(TournamentTypeMapper.entityToResponse(tournament.getTournamentType()))
+                .tournamentType(tournament.getType().toString())
                 .places_number(tournament.getPlaces_number())
                 .winner_id(tournament.getWinner_id())
                 .build();
@@ -26,7 +27,7 @@ public class TournamentMapper {
                 .setDeadline_inscription_date(request.getDeadline_inscription_date())
                 .setEnd_date(request.getEnd_date())
                 .setStart_date(request.getStart_date())
-                .setTournamentType(TournamentTypeMapper.requestToEntity(request.getTournamentType()))
+                .setType(TournamentType.valueOf(request.getTournamentType()))
                 .setPlaces_number(request.getPlaces_number());
     }
 

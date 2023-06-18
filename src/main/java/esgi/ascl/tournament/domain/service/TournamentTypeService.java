@@ -1,6 +1,6 @@
 package esgi.ascl.tournament.domain.service;
 
-import esgi.ascl.tournament.domain.entities.TournamentType;
+import esgi.ascl.tournament.domain.entities.TournamentTypeO;
 import esgi.ascl.tournament.domain.mapper.TournamentTypeMapper;
 import esgi.ascl.tournament.infrastructure.repositories.TournamentTypeRepository;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentTypeRequest;
@@ -16,15 +16,15 @@ public class TournamentTypeService {
         this.tournamentTypeRepository = tournamentTypeRepository;
     }
 
-    public TournamentType getById(Long id) {
+    public TournamentTypeO getById(Long id) {
         return tournamentTypeRepository.getTournamentTypeById(id);
     }
 
-    public TournamentType getByName(String name) {
+    public TournamentTypeO getByName(String name) {
         return tournamentTypeRepository.getTournamentTypeByName(name);
     }
 
-    public TournamentType createTournamentType(TournamentTypeRequest tournamentTypeRequest) {
+    public TournamentTypeO createTournamentType(TournamentTypeRequest tournamentTypeRequest) {
         if(tournamentTypeRequest.getName() == null || tournamentTypeRequest.getName().isEmpty())
             return null;
         return tournamentTypeRepository.save(
@@ -34,7 +34,7 @@ public class TournamentTypeService {
         );
     }
 
-    public TournamentType updateTournamentType(TournamentTypeRequest tournamentTypeRequest, long id) {
+    public TournamentTypeO updateTournamentType(TournamentTypeRequest tournamentTypeRequest, long id) {
         var tournamentType = tournamentTypeRepository.getTournamentTypeById(id);
         if (tournamentType == null)
             return null;
@@ -47,7 +47,7 @@ public class TournamentTypeService {
         );
     }
 
-    public List<TournamentType> getAll() {
+    public List<TournamentTypeO> getAll() {
         return tournamentTypeRepository.findAll();
     }
 

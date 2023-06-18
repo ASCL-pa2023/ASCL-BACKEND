@@ -22,7 +22,7 @@ public class TournamentRequest {
     @JsonProperty("deadline_inscription_date")
     private Date deadline_inscription_date;
     @JsonProperty("tournament_type")
-    private esgi.ascl.tournament.infrastructure.web.request.TournamentTypeRequest tournamentType;
+    private String tournamentType;
     @JsonProperty("places_number")
     private int places_number;
 }

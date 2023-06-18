@@ -132,18 +132,18 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
 
 
     @GetMapping("/get-by-type/{type}")
-    public ResponseEntity<List<TournamentResponse>> getTournamentByType(@PathVariable long type) {
+    public ResponseEntity<List<TournamentResponse>> getTournamentByType(@PathVariable String type) {
         System.out.println("/api/v1/tournament/get-by-type/{type}" + type);
-
-        if (type <= 0)
-            return ResponseEntity.badRequest().build();
         try {
+            /*
             var tournamentType = tournamentTypeService.getById(type);
             if (tournamentType == null)
                 return ResponseEntity.notFound().build();
 
+             */
 
-            var tournaments = tournamentService.getByTournamentType(tournamentType);
+
+            var tournaments = tournamentService.getByTournamentType(type);
             if (tournaments == null)
                 return ResponseEntity.notFound().build();
             return ResponseEntity.ok(
