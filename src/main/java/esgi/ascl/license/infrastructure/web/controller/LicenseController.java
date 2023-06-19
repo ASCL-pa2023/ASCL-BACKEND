@@ -48,7 +48,7 @@ public class LicenseController {
     @GetMapping("user/{userId}")
     public ResponseEntity<?> getByUserId(@PathVariable Long userId) {
         var license = licenseService.getByUserId(userId);
-        if (license == null) return ResponseEntity.notFound().build();
+        if (license == null) return new ResponseEntity<>("", HttpStatus.OK);
         return ResponseEntity.ok().body(LicenseMapper.toResponse(license));
     }
 
