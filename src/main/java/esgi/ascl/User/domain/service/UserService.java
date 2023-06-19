@@ -7,6 +7,7 @@ import esgi.ascl.User.infrastructure.web.request.UserRequest;
 import esgi.ascl.User.infrastructure.web.response.UserResponse;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -23,6 +24,11 @@ public class UserService {
                 .findById(id)
                 .orElseThrow(() -> new UserNotFoundExceptions("User not found"));
     }
+
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
+
     public Optional<User> getByEmail(String userEmail) {
         return userRepository.findByEmail(userEmail);
     }

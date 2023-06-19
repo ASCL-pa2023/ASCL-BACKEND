@@ -34,6 +34,15 @@ public class UserController {
         return ResponseEntity.ok().body(UserMapper.entityToResponse(user));
     }
 
+    @GetMapping()
+    public ResponseEntity<?> getAll() {
+        var users = userService.getAll()
+                .stream()
+                .map(UserMapper::entityToResponse)
+                .toList();
+        return ResponseEntity.ok().body(users);
+    }
+
     @GetMapping("mail/{email}")
     public ResponseEntity<?> getByEmail(@PathVariable String email) {
         var user = userService.getByEmail(email);
