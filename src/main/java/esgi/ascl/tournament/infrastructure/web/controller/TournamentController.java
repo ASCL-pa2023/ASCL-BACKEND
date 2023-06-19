@@ -2,10 +2,10 @@ package esgi.ascl.tournament.infrastructure.web.controller;
 
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
+import esgi.ascl.tournament.domain.mapper.TeamRatioMapper;
 import esgi.ascl.tournament.domain.mapper.TournamentMapper;
 import esgi.ascl.tournament.domain.service.FinalPhaseService;
 import esgi.ascl.tournament.domain.service.TournamentService;
-import esgi.ascl.tournament.domain.service.TournamentTypeService;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentRequest;
 import esgi.ascl.tournament.infrastructure.web.response.TournamentResponse;
 import org.springframework.http.HttpStatus;
@@ -22,13 +22,13 @@ import java.util.List;
 @RequestMapping("/api/v1/tournament")
 public class TournamentController {
     private final TournamentService tournamentService;
-    private final TournamentTypeService tournamentTypeService;
     private final FinalPhaseService finalPhaseService;
+    private final TeamRatioMapper teamRatioMapper;
 
-    public TournamentController(TournamentService tournamentService, TournamentTypeService tournamentTypeService, FinalPhaseService finalPhaseService) {
+    public TournamentController(TournamentService tournamentService, FinalPhaseService finalPhaseService, TeamRatioMapper teamRatioMapper) {
         this.tournamentService = tournamentService;
-        this.tournamentTypeService = tournamentTypeService;
         this.finalPhaseService = finalPhaseService;
+        this.teamRatioMapper = teamRatioMapper;
     }
 
     @PostMapping("/create")
@@ -197,7 +197,9 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         } catch (TournamentNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(finalPhaseService.ratio(tournament));
+
+        var ratio = finalPhaseService.ratio(tournament);
+        return ResponseEntity.ok(teamRatioMapper.toResponse(ratio));
     }
 
     @GetMapping("{id}/ratio/pool")

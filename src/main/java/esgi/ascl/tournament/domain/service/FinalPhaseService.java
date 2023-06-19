@@ -3,12 +3,13 @@ package esgi.ascl.tournament.domain.service;
 import esgi.ascl.game.domain.entities.Game;
 import esgi.ascl.game.domain.entities.GameType;
 import esgi.ascl.game.domain.entities.Team;
+import esgi.ascl.game.domain.mapper.TeamMapper;
 import esgi.ascl.game.domain.service.GameService;
 import esgi.ascl.game.domain.service.PlayService;
 import esgi.ascl.game.domain.service.TeamService;
+import esgi.ascl.game.infra.web.response.TeamResponse;
 import esgi.ascl.pool.domain.service.PoolService;
 import esgi.ascl.tournament.domain.entities.Tournament;
-import esgi.ascl.tournament.domain.entities.TournamentInscription;
 import esgi.ascl.utils.NumberUtils;
 import org.springframework.stereotype.Service;
 
@@ -23,15 +24,15 @@ public class FinalPhaseService {
     private final PlayService playService;
     private final PoolService poolService;
     private final TournamentService tournamentService;
-    private final TournamentInscriptionService tournamentInscriptionService;
+    private final TeamMapper teamMapper;
 
-    public FinalPhaseService(GameService gameService, TeamService teamService, PlayService playService, PoolService poolService, TournamentService tournamentService, TournamentInscriptionService tournamentInscriptionService) {
+    public FinalPhaseService(GameService gameService, TeamService teamService, PlayService playService, PoolService poolService, TournamentService tournamentService, TeamMapper teamMapper) {
         this.gameService = gameService;
         this.teamService = teamService;
         this.playService = playService;
         this.poolService = poolService;
         this.tournamentService = tournamentService;
-        this.tournamentInscriptionService = tournamentInscriptionService;
+        this.teamMapper = teamMapper;
     }
 
     public Tournament nextRound(Tournament tournament){
@@ -112,7 +113,7 @@ public class FinalPhaseService {
         return gameService.getWinners(gameFiltered);
     }
 
-    public HashMap<Long, Double> ratio(Tournament tournament){
+    public HashMap<Team, Double> ratio(Tournament tournament){
         var tournamentGames = gameService.getAllByTournamentId(tournament.getId());
 
         List<Game> finalPhaseGames = tournamentGames
@@ -130,7 +131,7 @@ public class FinalPhaseService {
         });
 
 
-        var finalPhaseRatio = new HashMap<Long, Double>();
+        var finalPhaseRatio = new HashMap<Team, Double>();
 
         teamsPlayFinalePhase.forEach(team -> {
             int nbGameWonByTeam = gameService.getGamesWonByTeam(finalPhaseGames, team.getId()).size();
@@ -141,7 +142,7 @@ public class FinalPhaseService {
                     .toList().size();
 
             var ratio = (double) nbGameWonByTeam / nbGamesPlayed;
-            finalPhaseRatio.put(team.getId(), ratio);
+            finalPhaseRatio.put(team, ratio);
         });
         return finalPhaseRatio;
     }
