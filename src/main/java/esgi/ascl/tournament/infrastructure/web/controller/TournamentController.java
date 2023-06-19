@@ -202,14 +202,16 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         return ResponseEntity.ok(teamRatioMapper.toResponse(ratio));
     }
 
-    @GetMapping("{id}/ratio/pool")
+    @GetMapping("{id}/pool/ratio")
     public ResponseEntity<?> getPoolRatio(@PathVariable Long id) {
         try {
             tournamentService.getById(id);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(tournamentService.poolRatio(id));
+
+        var poolRatio = tournamentService.poolRatio(id);
+        return ResponseEntity.ok(teamRatioMapper.poolRatioToResponse(poolRatio));
     }
 
 
