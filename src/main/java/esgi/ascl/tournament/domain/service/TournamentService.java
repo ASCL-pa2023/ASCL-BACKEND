@@ -44,13 +44,13 @@ public class TournamentService {
 
     public List<Tournament> getByLocationLevenshtein(String location) {
         List<Tournament> tournaments = tournamentRepository.findAll();
-        List<Tournament> tournamentsByLocation = null;
+        List<Tournament> tournamentsByLocation = new ArrayList<>();
         tournaments.forEach(tournament -> {
             if(levenshtein.calculate(location.toUpperCase(), tournament.getLocation().toUpperCase()) < 3){
                 tournamentsByLocation.add(tournament);
             }
         });
-        return tournamentRepository.getTournamentsByLocation(location);
+        return tournamentsByLocation;
     }
 
     public List<Tournament> getByDate(Date date) {
@@ -93,9 +93,15 @@ public class TournamentService {
 
     public Tournament update(TournamentRequest request, long id) {
         var tournament = tournamentRepository.getTournamentById(id);
-        if (tournament == null)
-            return null;
-        return tournamentRepository.save(TournamentMapper.requestToEntity(request));
+
+        tournament
+                .setLocation(request.getLocation() != null ? request.getLocation() : tournament.getLocation())
+                .setStart_date(request.getStart_date() != null ? request.getStart_date() : tournament.getStart_date())
+                .setEnd_date(request.getEnd_date() != null ? request.getEnd_date() : tournament.getEnd_date())
+                .setDeadline_inscription_date(request.getDeadline_inscription_date() != null ? request.getDeadline_inscription_date() : tournament.getDeadline_inscription_date())
+                .setType(request.getTournamentType() != null ? TournamentType.valueOf(request.getTournamentType().toUpperCase()) : tournament.getType())
+                .setPlaces_number(request.getPlaces_number() == 0 ? tournament.getPlaces_number() : request.getPlaces_number());
+        return tournamentRepository.save(tournament);
     }
 
     public void start(Long tournamentId) {

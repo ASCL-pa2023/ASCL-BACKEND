@@ -5,6 +5,7 @@ import esgi.ascl.tournament.domain.entities.TournamentType;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentRequest;
 import esgi.ascl.tournament.infrastructure.web.response.TournamentResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TournamentMapper {
@@ -32,7 +33,7 @@ public class TournamentMapper {
     }
 
     public static List<TournamentResponse> listEntityToListResponse(List<Tournament> tournaments) {
-        List<TournamentResponse> tournamentResponses = null;
+        List<TournamentResponse> tournamentResponses = new ArrayList<>();
         for (Tournament tournament : tournaments)
             tournamentResponses.add(entityToResponse(tournament));
         return tournamentResponses;

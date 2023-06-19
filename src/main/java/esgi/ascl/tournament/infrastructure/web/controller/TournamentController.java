@@ -88,24 +88,13 @@ public class TournamentController {
         }
     }
 
-    @GetMapping("/get-by-location/{location}")
+    @GetMapping("/location/{location}")
     public ResponseEntity<List<TournamentResponse>> getTournamentByLocation(@PathVariable String location) {
-        System.out.println("/api/v1/tournament/get-by-location/{location}" + location);
-
-        if (location == null || location.isEmpty())
-            return ResponseEntity.badRequest().build();
-        try {
-            var tournaments = tournamentService.getByLocationLevenshtein(location);
-            if (tournaments == null)
-                return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(
-                    TournamentMapper.listEntityToListResponse(
-                            tournaments
-                    )
-            );
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        var tournaments = tournamentService.getByLocationLevenshtein(location)
+                .stream()
+                .map(TournamentMapper::entityToResponse)
+                .toList();
+        return new ResponseEntity<>(tournaments, HttpStatus.OK);
     }
 
     @GetMapping("/get-by-date/")
@@ -155,28 +144,19 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         }
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<TournamentResponse> updateTournament(@PathVariable long id, @RequestBody TournamentRequest tournamentRequest) {
-        System.out.println("/api/v1/tournament/update/{id}" + id);
-
-        if (id <= 0 || tournamentRequest == null)
-            return ResponseEntity.badRequest().build();
         try {
-            var tournament = tournamentService.getById(id);
-            if (tournament == null)
-                return ResponseEntity.notFound().build();
-
-            var updatedTournament = tournamentService.update(tournamentRequest, id);
-            if (updatedTournament == null)
-                return ResponseEntity.badRequest().build();
-            return ResponseEntity.ok(
-                    TournamentMapper.entityToResponse(
-                            updatedTournament
-                    )
-            );
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            tournamentService.getById(id);
+        } catch (TournamentNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
+
+        var updatedTournament = tournamentService.update(tournamentRequest, id);
+
+        return ResponseEntity.ok(
+                TournamentMapper.entityToResponse(updatedTournament)
+        );
     }
 
     @GetMapping("{id}/ratio")
