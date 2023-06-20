@@ -19,10 +19,6 @@ public class TrainingController {
 
     @PostMapping()
     public ResponseEntity<?> createTraining(@RequestBody @NonNull TrainingRequest trainingRequest) {
-        if(trainingRequest.getTimeSlot() == null ||
-            trainingRequest.getTrainingCategoryId() == null || trainingRequest.getDate() == null)
-            return ResponseEntity.badRequest().body("Missing required fields");
-
         try {
             var training = trainingService.create(trainingRequest);
             return ResponseEntity.ok(TrainingMapper.entityToResponse(training));

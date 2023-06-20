@@ -18,4 +18,5 @@ public interface TrainingRepository extends JpaRepository<Training, Long> {
 
     List<Training> getByTrainingCategoryAndDate(TrainingCategory trainingCategory, Date date);
 
+    List<Training> findAllByRecurrenceTraining(Training training);
 }

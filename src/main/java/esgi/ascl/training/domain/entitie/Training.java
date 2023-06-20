@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -29,7 +31,7 @@ public class Training {
     private TrainingCategory trainingCategory;
 
     @Temporal(TemporalType.DATE)
-    private Date date;
+    private LocalDate date;
 
     private LocalTime timeSlot;
 
@@ -38,6 +40,14 @@ public class Training {
     private DayOfWeek dayOfRecurrence;
 
     private Integer nbPlayerMax;
+
+    @ManyToOne
+    @JoinColumn(name = "recurrence_of_id")
+    private Training recurrenceTraining;
+
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private Date timestamp;
 
 
 
@@ -51,7 +61,7 @@ public class Training {
         return this;
     }
 
-    public Training setDate(Date date) {
+    public Training setDate(LocalDate date) {
         this.date = date;
         return this;
     }
@@ -74,6 +84,15 @@ public class Training {
     public Training setNbPlayerMax(Integer nbPlayerMax) {
         this.nbPlayerMax = nbPlayerMax;
         return this;
+    }
+
+    public Training setRecurrenceTraining(Training recurrenceTraining) {
+        this.recurrenceTraining = recurrenceTraining;
+        return this;
+    }
+
+    public TrainingCategory getTrainingCategory() {
+        return trainingCategory;
     }
 
 }

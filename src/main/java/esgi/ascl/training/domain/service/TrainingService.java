@@ -6,10 +6,13 @@ import esgi.ascl.training.domain.entitie.TrainingCategory;
 import esgi.ascl.training.domain.mapper.TrainingMapper;
 import esgi.ascl.training.infastructure.repository.TrainingRepository;
 import esgi.ascl.training.infastructure.web.request.TrainingRequest;
+import esgi.ascl.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class TrainingService {
@@ -30,59 +33,86 @@ public class TrainingService {
         return trainingRepository.findAll();
     }
 
-    public Training create(TrainingRequest trainingRequest) {
-        if(trainingRequest.getTimeSlot() == null ||
-            trainingRequest.getDate() == null || trainingRequest.getTrainingCategoryId() <= 0)
-            return null;
 
+    public List<Training> getAllRecurrences(Training training) {
+        return trainingRepository.findAllByRecurrenceTraining(training);
+    }
+
+    public Training create(TrainingRequest trainingRequest) {
         var trainingCategory = trainingCategoryService.getById(trainingRequest.getTrainingCategoryId());
 
+        var training = trainingRepository.save(
+                TrainingMapper.requestToEntity(trainingRequest, trainingCategory)
+        );
+
+
+        if(trainingRequest.getIsRecurrent()){
+            createRecurrences(trainingRequest, training);
+        }
+
+        return training;
+    }
+
+
+    public List<Training> createRecurrences(TrainingRequest trainingRequest, Training training){
+        var dayOccurrences = DateUtils.geListOfDayOccurrences(
+                trainingRequest.getDayOfRecurrence(),
+                trainingRequest.getTrainingRecurrenceRequest().getStartDate(),
+                trainingRequest.getTrainingRecurrenceRequest().getEndDate()
+        );
+
+        var result = new ArrayList<Training>();
+        dayOccurrences.forEach(day -> {
+            var training1 = new Training()
+                    .setTrainingCategory(training.getTrainingCategory())
+                    .setDate(day)
+                    .setTimeSlot(trainingRequest.getTimeSlot())
+                    .setIsRecurrent(true)
+                    .setDayOfRecurrence(trainingRequest.getDayOfRecurrence())
+                    .setRecurrenceTraining(training)
+                    .setNbPlayerMax(trainingRequest.getNbPlayerMax());
+            result.add(training1);
+        });
+
+        return trainingRepository.saveAll(result);
+    }
+
+
+    public Training update(TrainingRequest trainingRequest, Long id) {
+        var training = trainingRepository.findById(id).orElseThrow();
+        var trainingCategory = trainingCategoryService.getById(trainingRequest.getTrainingCategoryId());
+
+        if(trainingRequest.getIsRecurrent()){
+            var trainingsRecurrences = getAllRecurrences(training);
+            updateTrainingsRecurrences(trainingsRecurrences, trainingRequest, trainingCategory, training);
+        }
+
         return trainingRepository.save(
-                TrainingMapper.requestToEntity(
+                TrainingMapper.updateRequestToEntity(
                         trainingRequest,
-                        trainingCategory
-                )
+                        training,
+                        trainingCategory)
         );
     }
 
-    public Training update(TrainingRequest trainingRequest, Long id) {
-        var training1 = trainingRepository.findById(id).orElseThrow();
-        training1.setTrainingCategory(
-                trainingRequest.getTrainingCategoryId() == null ?
-                                training1.getTrainingCategory() :
-                            trainingCategoryService.getById(trainingRequest.getTrainingCategoryId())
-        );
-        training1.setDate(
-                trainingRequest.getDate() == null ?
-                        training1.getDate() :
-                        trainingRequest.getDate()
-        );
-        training1.setTimeSlot(
-                trainingRequest.getTimeSlot() == null ?
-                        training1.getTimeSlot() :
-                        trainingRequest.getTimeSlot()
-        );
-        training1.setIsRecurrent(
-                trainingRequest.getIsRecurrent() == null ?
-                training1.getIsRecurrent() :
-                trainingRequest.getIsRecurrent()
-        );
-        training1.setDayOfRecurrence(
-                trainingRequest.getDayOfRecurrence() == null ?
-                        training1.getDayOfRecurrence() :
-                        trainingRequest.getDayOfRecurrence()
-        );
-        training1.setNbPlayerMax(
-                trainingRequest.getNbPlayerMax() == null ?
-                training1.getNbPlayerMax() :
-                trainingRequest.getNbPlayerMax()
-        );
 
-        return trainingRepository.save(training1);
+    public void updateTrainingsRecurrences(List<Training> trainingRecurrences, TrainingRequest trainingRequest,
+                                           TrainingCategory trainingCategory, Training training){
+        trainingRecurrences.forEach(currTraining -> {
+            if(trainingRequest.getTimeSlot() != training.getTimeSlot())
+                currTraining.setTimeSlot(trainingRequest.getTimeSlot());
+
+            if(trainingRequest.getDayOfRecurrence() != training.getDayOfRecurrence())
+                currTraining.setDayOfRecurrence(trainingRequest.getDayOfRecurrence());
+
+            if(!Objects.equals(trainingRequest.getTrainingCategoryId(), training.getTrainingCategory().getId()))
+                currTraining.setTrainingCategory(trainingCategory);
+
+            trainingRepository.save(currTraining);
+        });
     }
 
     public void delete(Long id) {
-        //todo delete les refs avec dautres tables
         if(trainingRepository.existsById(id))
             trainingRepository.deleteById(id);
     }

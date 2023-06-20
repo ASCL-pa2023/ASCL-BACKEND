@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -20,7 +21,7 @@ public class TrainingResponse {
     @JsonProperty("trainingCategory")
     private TrainingCategoryResponse trainingCategoryResponse;
     @JsonProperty("date")
-    private Date date;
+    private LocalDate date;
     @JsonProperty("timeSlot")
     private LocalTime timeSlot;
     private Boolean isRecurrent;

@@ -34,6 +34,28 @@ public class TrainingMapper {
                 .setNbPlayerMax(trainingRequest.getNbPlayerMax());
     }
 
+    public static Training updateRequestToEntity(TrainingRequest trainingRequest, Training training, TrainingCategory trainingCategory) {
+        return training
+                .setTrainingCategory(
+                    trainingCategory == null ? training.getTrainingCategory() : trainingCategory
+                )
+                .setDate(
+                        trainingRequest.getDate() == null ? training.getDate() : trainingRequest.getDate()
+                )
+                .setTimeSlot(
+                        trainingRequest.getTimeSlot() == null ? training.getTimeSlot() : trainingRequest.getTimeSlot()
+                )
+                .setIsRecurrent(
+                        trainingRequest.getIsRecurrent() == null ? training.getIsRecurrent() : trainingRequest.getIsRecurrent()
+                )
+                .setDayOfRecurrence(
+                        trainingRequest.getDayOfRecurrence() == null ? training.getDayOfRecurrence() : trainingRequest.getDayOfRecurrence())
+                .setNbPlayerMax(
+                        trainingRequest.getNbPlayerMax() == null ? training.getNbPlayerMax() : trainingRequest.getNbPlayerMax()
+                )
+                .setRecurrenceTraining(null);
+    }
+
     public static List<TrainingResponse> entityListToResponseList(List<Training> trainingList) {
         List<TrainingResponse> trainingResponseList = null;
         for (Training training : trainingList) {
