@@ -29,11 +29,11 @@ public class TrainingRegistrationController {
     public ResponseEntity<?> registration(@RequestBody @NonNull
                                           TrainingRegistrationRequest trainingRegistrationRequest) {
         try {
-            var training = trainingService.getById(trainingRegistrationRequest.getTrainingId());
-            var user = userService.getById(trainingRegistrationRequest.getUserId());
-            var trainingRegistration = trainingRegistrationService.registration(training, user);
-
-            return ResponseEntity.ok(TrainingRegistrationMapper.toResponse(trainingRegistration));
+            var registrationsResponses = trainingRegistrationService.registration(trainingRegistrationRequest)
+                    .stream()
+                    .map(TrainingRegistrationMapper::toResponse)
+                    .toList();
+            return new ResponseEntity<>(registrationsResponses, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

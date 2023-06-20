@@ -1,28 +1,52 @@
 package esgi.ascl.training.domain.service;
 
-import esgi.ascl.User.domain.entities.User;
+import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.training.domain.entitie.Training;
 import esgi.ascl.training.domain.entitie.TrainingRegistration;
 import esgi.ascl.training.domain.exception.TrainingRegistrationException;
 import esgi.ascl.training.infastructure.repository.TrainingRegistrationRepository;
+import esgi.ascl.training.infastructure.web.request.TrainingRegistrationRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TrainingRegistrationService {
     private final TrainingRegistrationRepository trainingRegistrationRepository;
+    private final TrainingService trainingService;
+    private final UserService userService;
 
-    public TrainingRegistrationService(TrainingRegistrationRepository trainingRegistrationRepository) {
+    public TrainingRegistrationService(TrainingRegistrationRepository trainingRegistrationRepository, TrainingService trainingService, UserService userService) {
         this.trainingRegistrationRepository = trainingRegistrationRepository;
+        this.trainingService = trainingService;
+        this.userService = userService;
     }
 
-    public TrainingRegistration registration(Training training, User user){
-        return trainingRegistrationRepository.save(
-                new TrainingRegistration()
-                        .setTraining(training)
-                        .setPlayer(user)
+    public List<TrainingRegistration> registration(TrainingRegistrationRequest trainingRegistrationRequest){
+        var training = trainingService.getById(trainingRegistrationRequest.getTrainingId());
+        var user = userService.getById(trainingRegistrationRequest.getUserId());
+
+        if(trainingRegistrationRequest.getRecurring()){
+            var trainings = trainingService.getAllRecurrences(training);
+
+            for(Training t : trainings){
+                if(trainingRegistrationRepository.findAllByTrainingId(t.getId())
+                        .stream().anyMatch(tr -> tr.getPlayer().getId().equals(user.getId()))){
+                    throw new TrainingRegistrationException("Training registration already exist");
+                }
+            }
+
+            var registrations = new ArrayList<TrainingRegistration>();
+            trainings.forEach(t -> registrations.add(new TrainingRegistration().setTraining(t).setPlayer(user)));
+
+            return trainingRegistrationRepository.saveAll(registrations);
+        }
+
+        var registration = trainingRegistrationRepository.save(
+                new TrainingRegistration().setTraining(training).setPlayer(user)
         );
+        return List.of(registration);
     }
 
     public TrainingRegistration getById(Long id){

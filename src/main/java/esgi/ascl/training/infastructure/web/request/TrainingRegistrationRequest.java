@@ -2,6 +2,7 @@ package esgi.ascl.training.infastructure.web.request;
 
 public class TrainingRegistrationRequest {
     private Long trainingId;
+    private Boolean recurring;
     private Long userId;
 
     public Long getTrainingId() {
@@ -10,6 +11,15 @@ public class TrainingRegistrationRequest {
 
     public TrainingRegistrationRequest setTrainingId(Long trainingId) {
         this.trainingId = trainingId;
+        return this;
+    }
+
+    public Boolean getRecurring() {
+        return recurring;
+    }
+
+    public TrainingRegistrationRequest setRecurring(Boolean recurring) {
+        this.recurring = recurring;
         return this;
     }
 
