@@ -4,6 +4,7 @@ import esgi.ascl.training.domain.mapper.TrainingMapper;
 import esgi.ascl.training.domain.service.TrainingService;
 import esgi.ascl.training.infastructure.web.request.TrainingRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("*")
@@ -17,71 +18,53 @@ public class TrainingController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createTraining(@RequestBody TrainingRequest trainingRequest) {
-        System.out.println("/api/v1/training/create");
-
-        if(trainingRequest == null)
-            return ResponseEntity.badRequest().body("Missing Body");
-
-        if(trainingRequest.getTimeSlot() == null || trainingRequest.getTimeSlot().isEmpty() ||
-            trainingRequest.getTrainingCategoryId() <= 0 || trainingRequest.getDate() == null)
+    public ResponseEntity<?> createTraining(@RequestBody @NonNull TrainingRequest trainingRequest) {
+        if(trainingRequest.getTimeSlot() == null ||
+            trainingRequest.getTrainingCategoryId() == null || trainingRequest.getDate() == null)
             return ResponseEntity.badRequest().body("Missing required fields");
 
-        var training = trainingService.create(trainingRequest);
-        if(training == null)
-            return ResponseEntity.badRequest().build();
-        else
+        try {
+            var training = trainingService.create(trainingRequest);
             return ResponseEntity.ok(TrainingMapper.entityToResponse(training));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTraining(@PathVariable long id) {
-        System.out.println("/api/v1/training/" + id);
-
-        if(id <= 0)
-            return ResponseEntity.notFound().build();
-
-        var training = trainingService.getById(id);
-
-        if (training != null)
+    public ResponseEntity<?> getTraining(@PathVariable Long id) {
+        try {
+            var training = trainingService.getById(id);
             return ResponseEntity.ok(
                     TrainingMapper.entityToResponse(
                             training
                     )
             );
-
-        else return ResponseEntity.notFound().build();
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTraining(@PathVariable long id, @RequestBody TrainingRequest trainingRequest) {
-        System.out.println("/api/v1/training/update/id"+ id);
+    public ResponseEntity<?> updateTraining(@PathVariable Long id,
+                                            @RequestBody @NonNull
+                                            TrainingRequest trainingRequest) {
 
-        if(trainingRequest == null)
-            return ResponseEntity.badRequest().body("Missing Body");
-
-        if(trainingRequest.getId() <= 0)
-            return ResponseEntity.badRequest().body("Missing required fields");
-
-        var training = trainingService.update(trainingRequest ,id);
-        if(training == null)
-            return ResponseEntity.badRequest().build();
-        else
+        try {
+            trainingService.getById(id);
+            var training = trainingService.update(trainingRequest ,id);
             return ResponseEntity.ok(TrainingMapper.entityToResponse(training));
-    }
-
-    @GetMapping("")
-    public ResponseEntity<?> getAllTrainings() {
-        System.out.println("/api/v1/training/all");
-
-        try{
-            var trainingList = trainingService.getAll();
-
-            var trainingResponseList = TrainingMapper.entityListToResponseList(trainingList);
-
-            return ResponseEntity.ok(trainingResponseList);
-        } catch (Exception e) {
+        }catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping()
+    public ResponseEntity<?> getAllTrainings() {
+        var trainingList = trainingService.getAll()
+                .stream()
+                .map(TrainingMapper::entityToResponse)
+                .toList();
+        return ResponseEntity.ok(trainingList);
     }
 }

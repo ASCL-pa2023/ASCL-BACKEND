@@ -1,6 +1,6 @@
 package esgi.ascl.training.infastructure.web.controller;
 
-import esgi.ascl.training.domain.TrainingCategoryException;
+import esgi.ascl.training.domain.exception.TrainingCategoryException;
 import esgi.ascl.training.domain.entitie.TrainingCategory;
 import esgi.ascl.training.domain.mapper.TrainingCategoryMapper;
 import esgi.ascl.training.domain.service.TrainingCategoryService;

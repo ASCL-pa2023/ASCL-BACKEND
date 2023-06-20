@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Data
@@ -15,10 +17,13 @@ import java.util.Date;
 public class TrainingResponse {
     @JsonProperty("id")
     private long id;
+    @JsonProperty("trainingCategory")
+    private TrainingCategoryResponse trainingCategoryResponse;
     @JsonProperty("date")
     private Date date;
     @JsonProperty("timeSlot")
-    private String timeSlot;
-    @JsonProperty("trainingCategory")
-    private TrainingCategoryResponse trainingCategoryResponse;
+    private LocalTime timeSlot;
+    private Boolean isRecurrent;
+    private DayOfWeek dayOfRecurrence;
+    private Integer nbPlayerMax;
 }
