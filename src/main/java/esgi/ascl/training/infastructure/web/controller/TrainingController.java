@@ -67,4 +67,15 @@ public class TrainingController {
                 .toList();
         return ResponseEntity.ok(trainingList);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            trainingService.getById(id);
+            trainingService.delete(id);
+            return ResponseEntity.ok().build();
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
