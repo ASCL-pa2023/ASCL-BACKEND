@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @Service
 public class TrainingService {
@@ -35,7 +36,14 @@ public class TrainingService {
 
 
     public List<Training> getAllRecurrences(Training training) {
-        return trainingRepository.findAllByRecurrenceTraining(training);
+        var fistPart =  trainingRepository.findAllByRecurrenceTraining(training);
+        var secondPart = trainingRepository.findAllByRecurrenceTraining(training.getRecurrenceTraining());
+
+        var result = new ArrayList<Training>();
+        result.addAll(fistPart);
+        result.addAll(secondPart);
+
+        return result;
     }
 
     public Training create(TrainingRequest trainingRequest) {

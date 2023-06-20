@@ -26,9 +26,16 @@ public class TrainingRegistrationService {
     public List<TrainingRegistration> registration(TrainingRegistrationRequest trainingRegistrationRequest){
         var training = trainingService.getById(trainingRegistrationRequest.getTrainingId());
         var user = userService.getById(trainingRegistrationRequest.getUserId());
+        var registrations = new ArrayList<TrainingRegistration>();
+
+
+        registrations.add(new TrainingRegistration().setTraining(training).setPlayer(user));
 
         if(trainingRegistrationRequest.getRecurring()){
-            var trainings = trainingService.getAllRecurrences(training);
+            var trainings = trainingService.getAllRecurrences(training)
+                    .stream()
+                    .filter(t -> t.getDate().isAfter(training.getDate()))
+                    .toList();
 
             for(Training t : trainings){
                 if(trainingRegistrationRepository.findAllByTrainingId(t.getId())
@@ -37,16 +44,10 @@ public class TrainingRegistrationService {
                 }
             }
 
-            var registrations = new ArrayList<TrainingRegistration>();
             trainings.forEach(t -> registrations.add(new TrainingRegistration().setTraining(t).setPlayer(user)));
-
-            return trainingRegistrationRepository.saveAll(registrations);
         }
 
-        var registration = trainingRegistrationRepository.save(
-                new TrainingRegistration().setTraining(training).setPlayer(user)
-        );
-        return List.of(registration);
+        return trainingRegistrationRepository.saveAll(registrations);
     }
 
     public TrainingRegistration getById(Long id){
