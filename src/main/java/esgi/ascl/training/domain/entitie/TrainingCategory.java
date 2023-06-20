@@ -17,10 +17,8 @@ import lombok.NoArgsConstructor;
 public class TrainingCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
     private Long id;
 
-    @Column(name="name")
     private String name;
 
     public TrainingCategory setId(Long id) {

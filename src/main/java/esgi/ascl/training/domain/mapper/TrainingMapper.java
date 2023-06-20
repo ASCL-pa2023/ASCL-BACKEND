@@ -12,7 +12,6 @@ public class TrainingMapper {
         return new TrainingResponse().builder()
                 .id(training.getId())
                 .date(training.getDate())
-                .timeSlot(training.getTimeSlot())
                 .trainingCategoryResponse(
                         TrainingCategoryMapper.entityToResponse(
                                 training.getTrainingCategory()
@@ -24,8 +23,6 @@ public class TrainingMapper {
     public static Training requestToEntity(TrainingRequest trainingRequest, TrainingCategory trainingCategory) {
         return new Training()
                 .setId(trainingRequest.getId())
-                .setDate(trainingRequest.getDate())
-                .setTimeSlot(trainingRequest.getTimeSlot())
                 .setTrainingCategory(trainingCategory
                 );
     }

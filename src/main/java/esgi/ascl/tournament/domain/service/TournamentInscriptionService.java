@@ -1,6 +1,5 @@
 package esgi.ascl.tournament.domain.service;
 
-import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.game.domain.mapper.TeamMapper;
 import esgi.ascl.game.domain.service.TeamService;
 import esgi.ascl.game.infra.web.response.TeamResponse;

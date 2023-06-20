@@ -1,5 +1,6 @@
 package esgi.ascl.training.domain.service;
 
+import esgi.ascl.training.domain.TrainingCategoryException;
 import esgi.ascl.training.domain.entitie.TrainingCategory;
 import esgi.ascl.training.domain.mapper.TrainingCategoryMapper;
 import esgi.ascl.training.infastructure.repository.TrainingCategoryRepository;
@@ -19,11 +20,13 @@ public class TrainingCategoryService {
 
     public TrainingCategory getById(Long id) {
         var trainingCategory = trainingCategoryRepository.findById(id);
-        return trainingCategory.orElse(null); //equivalent d un ternaire : trainingCategory.isPresent() ? trainingCategory.get() : null;
+        return trainingCategory
+                .orElseThrow(() -> new TrainingCategoryException("Training Category not found"));
     }
 
     public TrainingCategory getByName(String name) {
-        return trainingCategoryRepository.getByName(name);
+        return trainingCategoryRepository.findByName(name)
+                .orElseThrow(() -> new TrainingCategoryException("Training Category not found"));
     }
 
     public TrainingCategory create(TrainingCategoryRequest trainingCategoryRequest) {
@@ -36,17 +39,20 @@ public class TrainingCategoryService {
         );
     }
 
-    public TrainingCategory update(long id, TrainingCategoryRequest trainingCategoryRequest) {
-        var trainingCategory = trainingCategoryRepository.getById(id);
-        if(trainingCategoryRequest.getName() != null && !trainingCategoryRequest.getName().isEmpty() && trainingCategory != null)
-            if (!Objects.equals(trainingCategoryRequest.getName(), trainingCategory.getName())) {
-                trainingCategory.setName(trainingCategoryRequest.getName());
-                trainingCategoryRepository.save(trainingCategory);
-            }
-        return null;
+    public TrainingCategory update(Long id, TrainingCategoryRequest trainingCategoryRequest) {
+        var trainingCategory = trainingCategoryRepository
+                .findById(id)
+                .orElseThrow(() -> new TrainingCategoryException("TrainingCategory not found"));
+
+        if (Objects.equals(trainingCategoryRequest.getName(), trainingCategory.getName())) {
+            return trainingCategory;
+        }
+
+        trainingCategory.setName(trainingCategoryRequest.getName());
+        return trainingCategoryRepository.save(trainingCategory);
     }
 
-    public void delete(long id) {
+    public void delete(Long id) {
         //todo delete les references dans les autres tables
         if(trainingCategoryRepository.existsById(id))
             trainingCategoryRepository.deleteById(id);

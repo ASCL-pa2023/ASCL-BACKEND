@@ -16,7 +16,7 @@ public class TrainingController {
         this.trainingService = trainingService;
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<?> createTraining(@RequestBody TrainingRequest trainingRequest) {
         System.out.println("/api/v1/training/create");
 
@@ -53,7 +53,7 @@ public class TrainingController {
         else return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateTraining(@PathVariable long id, @RequestBody TrainingRequest trainingRequest) {
         System.out.println("/api/v1/training/update/id"+ id);
 
@@ -70,7 +70,7 @@ public class TrainingController {
             return ResponseEntity.ok(TrainingMapper.entityToResponse(training));
     }
 
-    @GetMapping("/all")
+    @GetMapping("")
     public ResponseEntity<?> getAllTrainings() {
         System.out.println("/api/v1/training/all");
 

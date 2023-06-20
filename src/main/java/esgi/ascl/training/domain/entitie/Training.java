@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Getter
@@ -22,28 +24,31 @@ public class Training {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @Column(name="date")
-    private Date date;
-
-    @Column(name="time_slot")
-    private String timeSlot;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "training_category_id")
-    TrainingCategory trainingCategory;
+    private TrainingCategory trainingCategory;
+
+    @Temporal(TemporalType.DATE)
+    private Date date;
+
+    private LocalTime timeSlot;
+
+    private Boolean isRecurrent;
+
+    private DayOfWeek dayOfRecurrence;
+
+    private Integer nbPlayerMax;
 
 
-    public Long getId() {
-        return id;
-    }
 
     public Training setId(Long id) {
         this.id = id;
         return this;
     }
 
-    public Date getDate() {
-        return date;
+    public Training setTrainingCategory(TrainingCategory trainingCategory) {
+        this.trainingCategory = trainingCategory;
+        return this;
     }
 
     public Training setDate(Date date) {
@@ -51,21 +56,24 @@ public class Training {
         return this;
     }
 
-    public String getTimeSlot() {
-        return timeSlot;
-    }
-
-    public Training setTimeSlot(String timeSlot) {
+    public Training setTimeSlot(LocalTime timeSlot) {
         this.timeSlot = timeSlot;
         return this;
     }
 
-    public TrainingCategory getTrainingCategory() {
-        return trainingCategory;
-    }
-
-    public Training setTrainingCategory(TrainingCategory trainingCategory) {
-        this.trainingCategory = trainingCategory;
+    public Training setIsRecurrent(Boolean isRecurrent) {
+        this.isRecurrent = isRecurrent;
         return this;
     }
+
+    public Training setDayOfRecurrence(DayOfWeek dayOfRecurrence) {
+        this.dayOfRecurrence = dayOfRecurrence;
+        return this;
+    }
+
+    public Training setNbPlayerMax(Integer nbPlayerMax) {
+        this.nbPlayerMax = nbPlayerMax;
+        return this;
+    }
+
 }
