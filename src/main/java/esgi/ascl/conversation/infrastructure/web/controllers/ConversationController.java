@@ -3,11 +3,14 @@ package esgi.ascl.conversation.infrastructure.web.controllers;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.conversation.domain.services.ConversationService;
 import esgi.ascl.conversation.domain.services.UserConversationService;
+import esgi.ascl.conversation.infrastructure.web.requests.AddPersonRequest;
 import esgi.ascl.conversation.infrastructure.web.requests.ConversationRequest;
-import esgi.ascl.news.domain.mapper.ConversationMapper;
+import esgi.ascl.conversation.domain.mapper.ConversationMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
@@ -35,8 +38,12 @@ public class ConversationController {
         if(conversationAlreadyExist != null) {
             return new ResponseEntity<>("Conversation with name <" + conversationRequest.title + "> already exist", HttpStatus.BAD_REQUEST);
         }
+
+        var user = userService.getById(conversationRequest.creatorId);
+        if(user == null) return new ResponseEntity<>("User (creatorId) not found", HttpStatus.NOT_FOUND);
+
         var conversation = conversationService.create(conversationRequest);
-        return new ResponseEntity<>(conversation, HttpStatus.CREATED);
+        return new ResponseEntity<>(ConversationMapper.entityToResponse(conversation), HttpStatus.CREATED);
     }
 
     /**
@@ -66,54 +73,58 @@ public class ConversationController {
         return new ResponseEntity<>(ConversationMapper.entityToResponse(conversation), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id) {
-        var conversation = conversationService.getById(id);
-        if(conversation == null) {
+    @DeleteMapping("/{conversationId}/{creatorId}")
+    public ResponseEntity<?> deleteById(@PathVariable Long conversationId, @PathVariable Long creatorId) {
+        var conversation = conversationService.getById(conversationId);
+        if(conversation == null)
             return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
-        }
-        conversationService.deleteById(id);
-        return new ResponseEntity<>("Conversation deleted", HttpStatus.OK);
+
+        if(!Objects.equals(conversation.getCreatorId(), creatorId))
+            return new ResponseEntity<>("You are not the creator of this conversation", HttpStatus.BAD_REQUEST);
+
+        conversationService.delete(conversation);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
-     * Add a person to a conversation
-     * @param conversationId : id of the conversation
-     * @param userEmail : email of the user to add
+     *  Add a person to a conversation
+     * @param addPersonRequest : add person request
+     * @return ResponseEntity
      */
-    @PostMapping("/{conversationId}/addPerson")
-    public ResponseEntity<?> addPerson(@PathVariable Long conversationId, @RequestBody String userEmail){
-        var conversation = conversationService.getById(conversationId);
+    @PostMapping("/addPerson")
+    public ResponseEntity<?> addPerson(@RequestBody AddPersonRequest addPersonRequest){
+        var conversation = conversationService.getById(addPersonRequest.conversationId);
         if(conversation == null) return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
 
-        var user = userService.getByEmail(userEmail);
-        if(user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        if(!Objects.equals(conversation.getCreatorId(), addPersonRequest.getConversationCreatorId()))
+            return new ResponseEntity<>("You are not the creator of this conversation", HttpStatus.BAD_REQUEST);
 
-        var alreadyInConversation = userConversationService.getByConversationIdAndUserId(conversationId, user.getId());
+        var user = userService.getByEmail(addPersonRequest.userEmail);
+        if(user.isEmpty()) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+
+        var alreadyInConversation = userConversationService.getByConversationIdAndUserId(addPersonRequest.conversationId, user.get().getId());
         if (alreadyInConversation != null) return new ResponseEntity<>("User already in conversation", HttpStatus.BAD_REQUEST);
-
-        userConversationService.addPerson(conversation, user);
+        userConversationService.addPerson(conversation, user.get());
 
         return new ResponseEntity<>("Person added to conversation", HttpStatus.OK);
     }
 
     /**
      * Delete a person from a conversation
-     * @param conversationId : id of the conversation
-     * @param userEmail : email of the user to delete
+     * @param addPersonRequest : add person request
      */
-    @DeleteMapping("/{conversationId}/deletePerson")
-    public ResponseEntity<?> deletePerson(@PathVariable Long conversationId, @RequestBody String userEmail){
-        var conversation = conversationService.getById(conversationId);
+    @DeleteMapping("/deletePerson")
+    public ResponseEntity<?> deletePerson(@RequestBody AddPersonRequest addPersonRequest){
+        var conversation = conversationService.getById(addPersonRequest.conversationId);
         if(conversation == null) return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
 
-        var user = userService.getByEmail(userEmail);
-        if(user == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        var user = userService.getByEmail(addPersonRequest.userEmail);
+        if(user.isEmpty()) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
 
-        var alreadyInConversation = userConversationService.getByConversationIdAndUserId(conversationId, user.getId());
+        var alreadyInConversation = userConversationService.getByConversationIdAndUserId(addPersonRequest.conversationId, user.get().getId());
         if (alreadyInConversation == null) return new ResponseEntity<>("User not in conversation", HttpStatus.BAD_REQUEST);
 
-        userConversationService.deletePerson(conversation.getId(), user.getId());
+        userConversationService.deletePerson(conversation.getId(), user.get().getId());
 
         return new ResponseEntity<>("Person deleted from conversation", HttpStatus.OK);
     }

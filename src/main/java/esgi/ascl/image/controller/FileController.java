@@ -26,7 +26,7 @@ public class FileController {
 
     @GetMapping("/{filename}")
     public ResponseEntity<?> getFile(@PathVariable String filename) {
-        var file = fileService.getFile(filename);
+        var file = fileService.OLDgetFile(filename);
         return new ResponseEntity<>(file, HttpStatus.OK);
     }
 

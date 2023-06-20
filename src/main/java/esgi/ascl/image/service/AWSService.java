@@ -4,6 +4,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.S3Object;
 import esgi.ascl.image.configuration.AWSConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -12,7 +13,8 @@ import java.util.List;
 @Service
 public class AWSService {
 
-    private final String bucketName = "test-pa";
+    @Value("${amazon.aws.bucketname}")
+    private String bucketName;
     private final AWSConfig awsConfig;
 
 

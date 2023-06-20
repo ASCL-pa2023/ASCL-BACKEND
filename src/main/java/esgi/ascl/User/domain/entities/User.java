@@ -1,5 +1,6 @@
 package esgi.ascl.User.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import esgi.ascl.security.token.Token;
 import jakarta.persistence.*;
@@ -40,11 +41,11 @@ public class User implements UserDetails {
     @Column(name = "lastname")
     private String lastname;
 
+    @Column(name = "bio")
+    private String bio;
+
     @Column(name = "password")
     private String password;//TODO: class Password ?
-
-    @Column(name = "license")
-    private String license;
 
     @Column(name = "birthday")
     private Date birthday;
@@ -55,6 +56,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 
@@ -65,11 +67,6 @@ public class User implements UserDetails {
 
     public User setPhone(String phone) {
         this.phone = phone;
-        return this;
-    }
-
-    public User setLicense(String license) {
-        this.license = license;
         return this;
     }
 
@@ -90,6 +87,14 @@ public class User implements UserDetails {
 
     public User setLastname(String lastname) {
         this.lastname = lastname;
+        return this;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+    public User setBio(String bio) {
+        this.bio = bio;
         return this;
     }
 

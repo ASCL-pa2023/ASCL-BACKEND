@@ -1,5 +1,7 @@
 package esgi.ascl.User.infrastructure.web.response;
 
+import esgi.ascl.User.domain.entities.Role;
+
 import java.util.Date;
 
 public class UserResponse {
@@ -8,8 +10,9 @@ public class UserResponse {
     public String phone;
     public String firstname;
     public String lastname;
-    public String license;
+    public String bio;
     public Date birthday;
+    public Role role;
 
 
     public Long getId() {
@@ -57,12 +60,12 @@ public class UserResponse {
         return this;
     }
 
-    public String getLicense() {
-        return license;
+    public String getBio() {
+        return bio;
     }
 
-    public UserResponse setLicense(String license) {
-        this.license = license;
+    public UserResponse setBio(String bio) {
+        this.bio = bio;
         return this;
     }
 
@@ -72,6 +75,15 @@ public class UserResponse {
 
     public UserResponse setBirthday(Date birthday) {
         this.birthday = birthday;
+        return this;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public UserResponse setRole(Role role) {
+        this.role = role;
         return this;
     }
 }

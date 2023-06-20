@@ -7,21 +7,33 @@ import esgi.ascl.news.infrastructure.web.requests.CommentRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
+    private final UserLikeCommentService userLikeCommentService;
 
-    public CommentService(CommentRepository commentRepository, CommentMapper commentMapper) {
+    public CommentService(CommentRepository commentRepository, CommentMapper commentMapper, UserLikeCommentService userLikeCommentService) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
+        this.userLikeCommentService = userLikeCommentService;
     }
 
     public CommentEntity create(CommentRequest commentRequest){
         var comment = commentMapper.requestToEntity(commentRequest);
         return commentRepository.save(comment);
+    }
+
+    public CommentEntity update(Long commentId, String content) {
+        var commentToUpdate = commentRepository.findById(commentId).orElse(null);
+        if(commentToUpdate == null) return null;
+
+        commentToUpdate.setContent(content);
+
+        return commentRepository.save(commentToUpdate);
     }
 
     public CommentEntity getById(Long id){
@@ -39,6 +51,15 @@ public class CommentService {
         return commentRepository.findByNewsId(newsId);
     }
 
+    public List<CommentEntity> getAllLikedByUserId(Long userId){
+        var userLikeCommentEntities = userLikeCommentService.getAllByUserId(userId);
+        var comments = new ArrayList<CommentEntity>();
+        userLikeCommentEntities.forEach(userLike -> {
+            var comment = commentRepository.findById(userLike.getComment().getId());
+            comment.ifPresent(comments::add);
+        });
+        return comments;
+    }
     @Transactional
     public void delete(CommentEntity commentEntity){
         commentEntity.setNews(null);

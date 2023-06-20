@@ -16,14 +16,21 @@ import java.util.List;
 public class MessageService {
     private final MessageRepository messageRepository;
     private final UserService userService;
+    private final ConversationService conversationService;
 
-    public MessageService(MessageRepository messageRepository, UserService userService) {
+    public MessageService(MessageRepository messageRepository, UserService userService, ConversationService conversationService) {
         this.messageRepository = messageRepository;
         this.userService = userService;
+        this.conversationService = conversationService;
     }
 
-    public MessageEntity create(MessageRequest messageRequest, ConversationEntity conversation) {
+    public MessageEntity create(MessageRequest messageRequest) {
         var user = userService.getById(messageRequest.userId);
+        var conversation = conversationService.getById(messageRequest.conversationId);
+
+        if(messageRequest.imageUrl != null && !messageRequest.imageUrl.isEmpty()){
+            //TODO: upload image
+        }
 
         var message = new MessageEntity()
                 .setUser(user)

@@ -5,6 +5,7 @@ import java.util.Date;
 public class ConversationResponse {
     public Long id;
     public String title;
+    public Long creatorId;
     public Date creationDate;
 
     public Long getId() {
@@ -22,6 +23,15 @@ public class ConversationResponse {
 
     public ConversationResponse setTitle(String title) {
         this.title = title;
+        return this;
+    }
+
+    public Long getCreatorId() {
+        return creatorId;
+    }
+
+    public ConversationResponse setCreatorId(Long creatorId) {
+        this.creatorId = creatorId;
         return this;
     }
 

@@ -11,5 +11,4 @@ public interface UserConversationRepository extends JpaRepository<UserConversati
     List<UserConversationEntity> findAllByConversationId(Long conversationId);
     UserConversationEntity findByConversationIdAndAndUserId(Long conversationId, Long userId);
     List<UserConversationEntity> findAllByUserId(Long userId);
-    void deleteByConversationIdAndAndUserId(Long conversationId, Long userId);
 }

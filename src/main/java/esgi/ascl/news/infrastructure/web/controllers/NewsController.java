@@ -143,6 +143,7 @@ public class NewsController {
         if (userService.getById(userLikeRequest.userId) == null) return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         if (newsService.getById(userLikeRequest.newsId) == null) return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
 
+        if(userLikeService.getByUserIdAndNewsId(userLikeRequest) == null) return new ResponseEntity<>("User already dislike this news", HttpStatus.BAD_REQUEST);
         userLikeService.dislike(userLikeRequest);
         return ResponseEntity.ok().build();
     }
