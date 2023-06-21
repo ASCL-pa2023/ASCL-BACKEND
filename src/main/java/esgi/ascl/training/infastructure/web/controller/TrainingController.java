@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/training")
@@ -63,6 +65,34 @@ public class TrainingController {
                 .toList();
         return ResponseEntity.ok(trainingList);
     }
+
+
+    @GetMapping("/category/id/{id}")
+    public ResponseEntity<?> getAllTrainingsByCategoryId(@PathVariable Long id) {
+        var trainingList = trainingService.getAllByCategoryId(id)
+                .stream()
+                .map(TrainingMapper::entityToResponse)
+                .toList();
+        return ResponseEntity.ok(trainingList);
+    }
+    @GetMapping("/category/name/{name}")
+    public ResponseEntity<?> getAllTrainingsByCategoryName(@PathVariable String name) {
+        var trainingList = trainingService.getAllByCategoryName(name)
+                .stream()
+                .map(TrainingMapper::entityToResponse)
+                .toList();
+        return ResponseEntity.ok(trainingList);
+    }
+
+    @GetMapping("/day/{day}")
+    public ResponseEntity<?> getAllTrainingsByDayOfRecurrence(@PathVariable String day) {
+        var trainingList = trainingService.getAllByDayOfRecurrenceLevenshtein(day)
+                .stream()
+                .map(TrainingMapper::entityToResponse)
+                .toList();
+        return ResponseEntity.ok(trainingList);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {

@@ -7,18 +7,20 @@ import esgi.ascl.training.domain.mapper.TrainingMapper;
 import esgi.ascl.training.infastructure.repository.TrainingRepository;
 import esgi.ascl.training.infastructure.web.request.TrainingRequest;
 import esgi.ascl.utils.DateUtils;
+import esgi.ascl.utils.Levenshtein;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 @Service
 public class TrainingService {
     private final TrainingRepository trainingRepository;
     private final TrainingCategoryService trainingCategoryService;
+    private final Levenshtein levenshtein = new Levenshtein();
 
     public TrainingService(TrainingRepository trainingRepository, TrainingCategoryService trainingCategoryService) {
         this.trainingRepository = trainingRepository;
@@ -125,12 +127,48 @@ public class TrainingService {
             trainingRepository.deleteById(id);
     }
 
-    public List<Training> getByDate(Date date) {
-        return trainingRepository.getByDate(date);
+    public List<Training> getAllByDate(Date date) {
+        return trainingRepository.findAllByDate(date);
     }
 
-    public List<Training> getByTrainingCategory(TrainingCategory trainingCategoryId) {
-        return trainingRepository.getByTrainingCategory(trainingCategoryId);
+    public List<Training> getAllByCategoryId(Long trainingCategoryId) {
+        return trainingRepository.findAllByTrainingCategoryId(trainingCategoryId);
+    }
+
+    public List<Training> getAllByCategoryName(String name) {
+        var result = new ArrayList<Training>();
+        trainingRepository.findAll().forEach(training -> {
+            var levenshteinCalc = levenshtein.calculate(
+                    name.toUpperCase(),
+                    training.getTrainingCategory().getName().toUpperCase()
+            );
+
+            if(levenshteinCalc < 3){
+                result.add(training);
+            }
+        });
+
+        return result;
+    }
+
+    public List<Training> getAllByDayOfRecurrence(DayOfWeek dayOfRecurrence) {
+        return trainingRepository.findAllByDayOfRecurrence(dayOfRecurrence);
+    }
+
+    public List<Training> getAllByDayOfRecurrenceLevenshtein(String dayOfRecurrence) {
+        var result = new ArrayList<Training>();
+        trainingRepository.findAll().forEach(training -> {
+            var levenshteinCalc = levenshtein.calculate(
+                    dayOfRecurrence.toUpperCase(),
+                    training.getDayOfRecurrence().toString().toUpperCase()
+            );
+
+            if(levenshteinCalc < 3){
+                result.add(training);
+            }
+        });
+
+        return result;
     }
 
     public List<Training> getByTrainingCategoryAndDate(TrainingCategory trainingCategory, Date date) {
