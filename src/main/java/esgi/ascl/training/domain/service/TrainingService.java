@@ -13,7 +13,6 @@ import esgi.ascl.utils.Levenshtein;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -129,7 +128,7 @@ public class TrainingService {
 
         deleteRegistrations(training.getId());
 
-        if(deleteTrainingRequest.getWithRecurrence()){
+        if(deleteTrainingRequest.getWithRecurrences()){
             deleteTrainingsRecurrences(training);
         } else if(training.getRecurrenceTraining() != null){
             rematchRecurrences(training);
