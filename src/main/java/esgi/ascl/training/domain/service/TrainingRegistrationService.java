@@ -68,7 +68,7 @@ public class TrainingRegistrationService {
         return trainingRegistrationRepository.findAllByPlayerId(playerId);
     }
 
-    public void deleteById(TrainingRegistration trainingRegistration){
+    public void delete(TrainingRegistration trainingRegistration){
         trainingRegistration.setTraining(null);
         trainingRegistration.setPlayer(null);
         trainingRegistrationRepository.delete(trainingRegistration);

@@ -97,8 +97,8 @@ public class TrainingController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
-            trainingService.getById(id);
-            trainingService.delete(id);
+            var training = trainingService.getById(id);
+            trainingService.delete(training);
             return ResponseEntity.ok().build();
         }catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

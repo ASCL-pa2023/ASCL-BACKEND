@@ -4,6 +4,7 @@ import esgi.ascl.training.domain.exception.TrainingNotFoundException;
 import esgi.ascl.training.domain.entitie.Training;
 import esgi.ascl.training.domain.entitie.TrainingCategory;
 import esgi.ascl.training.domain.mapper.TrainingMapper;
+import esgi.ascl.training.infastructure.repository.TrainingRegistrationRepository;
 import esgi.ascl.training.infastructure.repository.TrainingRepository;
 import esgi.ascl.training.infastructure.web.request.TrainingRequest;
 import esgi.ascl.utils.DateUtils;
@@ -11,20 +12,19 @@ import esgi.ascl.utils.Levenshtein;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class TrainingService {
+    private final Levenshtein levenshtein = new Levenshtein();
     private final TrainingRepository trainingRepository;
     private final TrainingCategoryService trainingCategoryService;
-    private final Levenshtein levenshtein = new Levenshtein();
+    private final TrainingRegistrationRepository trainingRegistrationRepository;
 
-    public TrainingService(TrainingRepository trainingRepository, TrainingCategoryService trainingCategoryService) {
+    public TrainingService(TrainingRepository trainingRepository, TrainingCategoryService trainingCategoryService, TrainingRegistrationRepository trainingRegistrationRepository) {
         this.trainingRepository = trainingRepository;
         this.trainingCategoryService = trainingCategoryService;
+        this.trainingRegistrationRepository = trainingRegistrationRepository;
     }
 
     public Training getById(Long id) {
@@ -122,9 +122,23 @@ public class TrainingService {
         });
     }
 
-    public void delete(Long id) {
-        if(trainingRepository.existsById(id))
-            trainingRepository.deleteById(id);
+    public void delete(Training training) {
+        var trainingRecurrences = trainingRepository.findAllByRecurrenceTraining(training);
+
+        var recurrenceWithMinimumDate = trainingRecurrences.stream()
+                .min(Comparator.comparing(Training::getDate));
+
+        recurrenceWithMinimumDate.ifPresent(value -> trainingRecurrences.forEach(training1 -> {
+            training1.setRecurrenceTraining(value);
+        }));
+
+
+        var trainingRegistrations = trainingRegistrationRepository.findAllByTrainingId(training.getId());
+        trainingRegistrations.forEach(trainingRegistration -> trainingRegistration.setPlayer(null));
+        trainingRegistrationRepository.deleteAll(trainingRegistrations);
+
+
+        trainingRepository.delete(training);
     }
 
     public List<Training> getAllByDate(Date date) {

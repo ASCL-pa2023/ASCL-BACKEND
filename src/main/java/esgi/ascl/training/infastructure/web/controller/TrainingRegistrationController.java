@@ -92,7 +92,7 @@ public class TrainingRegistrationController {
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
             var trainingRegistration = trainingRegistrationService.getById(id);
-            trainingRegistrationService.deleteById(trainingRegistration);
+            trainingRegistrationService.delete(trainingRegistration);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
