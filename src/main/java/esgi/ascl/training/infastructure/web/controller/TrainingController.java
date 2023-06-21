@@ -2,6 +2,7 @@ package esgi.ascl.training.infastructure.web.controller;
 
 import esgi.ascl.training.domain.mapper.TrainingMapper;
 import esgi.ascl.training.domain.service.TrainingService;
+import esgi.ascl.training.infastructure.web.request.DeleteTrainingRequest;
 import esgi.ascl.training.infastructure.web.request.TrainingRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -94,11 +95,11 @@ public class TrainingController {
     }
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    @DeleteMapping()
+    public ResponseEntity<?> delete(@RequestBody @NonNull
+                                    DeleteTrainingRequest deleteTrainingRequest) {
         try {
-            var training = trainingService.getById(id);
-            trainingService.delete(training);
+            trainingService.delete(deleteTrainingRequest);
             return ResponseEntity.ok().build();
         }catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -6,12 +6,14 @@ import esgi.ascl.training.domain.entitie.TrainingCategory;
 import esgi.ascl.training.domain.mapper.TrainingMapper;
 import esgi.ascl.training.infastructure.repository.TrainingRegistrationRepository;
 import esgi.ascl.training.infastructure.repository.TrainingRepository;
+import esgi.ascl.training.infastructure.web.request.DeleteTrainingRequest;
 import esgi.ascl.training.infastructure.web.request.TrainingRequest;
 import esgi.ascl.utils.DateUtils;
 import esgi.ascl.utils.Levenshtein;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -122,23 +124,63 @@ public class TrainingService {
         });
     }
 
-    public void delete(Training training) {
-        var trainingRecurrences = trainingRepository.findAllByRecurrenceTraining(training);
+    public void delete(DeleteTrainingRequest deleteTrainingRequest) {
+        var training = getById(deleteTrainingRequest.getTrainingId());
 
+        deleteRegistrations(training.getId());
+
+        if(deleteTrainingRequest.getWithRecurrence()){
+            deleteTrainingsRecurrences(training);
+        } else if(training.getRecurrenceTraining() != null){
+            rematchRecurrences(training);
+        }
+
+
+        training.setTrainingCategory(null);
+        trainingRepository.delete(training);
+    }
+
+
+    private void deleteTrainingsRecurrences(Training training){
+        List<Training> trainingRecurrences;
+
+        if(training.getRecurrenceTraining() == null){
+            trainingRecurrences = trainingRepository.findAllByRecurrenceTraining(training);
+            trainingRecurrences.forEach(training1 -> {
+                deleteRegistrations(training1.getId());
+                training1.setRecurrenceTraining(null).setTrainingCategory(null);
+            });
+        } else {
+            trainingRecurrences = trainingRepository.findAllByRecurrenceTraining(training.getRecurrenceTraining())
+                    .stream()
+                    .filter(t -> t.getDate().isAfter(training.getDate()))
+                    .toList();
+
+            trainingRecurrences.forEach(training1 -> {
+                deleteRegistrations(training1.getId());
+                training1.setRecurrenceTraining(null).setTrainingCategory(null);
+            });
+        }
+        trainingRepository.deleteAll(trainingRecurrences);
+    }
+
+    private void rematchRecurrences(Training training) {
+        var trainingRecurrences = trainingRepository.findAllByRecurrenceTraining(training);
         var recurrenceWithMinimumDate = trainingRecurrences.stream()
                 .min(Comparator.comparing(Training::getDate));
 
         recurrenceWithMinimumDate.ifPresent(value -> trainingRecurrences.forEach(training1 -> {
             training1.setRecurrenceTraining(value);
         }));
+    }
 
-
-        var trainingRegistrations = trainingRegistrationRepository.findAllByTrainingId(training.getId());
-        trainingRegistrations.forEach(trainingRegistration -> trainingRegistration.setPlayer(null));
+    private void deleteRegistrations(Long trainingId){
+        var trainingRegistrations = trainingRegistrationRepository.findAllByTrainingId(trainingId);
+        trainingRegistrations.forEach(trainingRegistration -> {
+            trainingRegistration.setPlayer(null);
+            trainingRegistration.setTraining(null);
+        });
         trainingRegistrationRepository.deleteAll(trainingRegistrations);
-
-
-        trainingRepository.delete(training);
     }
 
     public List<Training> getAllByDate(Date date) {
