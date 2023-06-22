@@ -11,14 +11,14 @@ public class DateUtils {
      * Get list of day occurrences between two dates
      * @param targetDay target day
      * @param startDate start date
-     * @param endDate end date
+     * @param endDate end date (included)
      * @return list of day occurrences
      */
     public static List<LocalDate> geListOfDayOccurrences(DayOfWeek targetDay, LocalDate startDate, LocalDate endDate) {
         var result = new ArrayList<LocalDate>();
         LocalDate currentDate = startDate;
 
-        while (currentDate.isBefore(endDate)) {
+        while (currentDate.isBefore(endDate) || currentDate.isEqual(endDate)) {
             if (currentDate.getDayOfWeek() == targetDay) {
                 result.add(currentDate);
             }
