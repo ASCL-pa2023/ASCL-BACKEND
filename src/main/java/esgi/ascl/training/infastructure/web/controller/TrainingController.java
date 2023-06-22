@@ -4,6 +4,7 @@ import esgi.ascl.training.domain.mapper.TrainingMapper;
 import esgi.ascl.training.domain.service.TrainingService;
 import esgi.ascl.training.infastructure.web.request.DeleteTrainingRequest;
 import esgi.ascl.training.infastructure.web.request.TrainingRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -92,6 +93,20 @@ public class TrainingController {
                 .map(TrainingMapper::entityToResponse)
                 .toList();
         return ResponseEntity.ok(trainingList);
+    }
+
+    @GetMapping("{id}/last-recurrence")
+    public ResponseEntity<?> getLastRecurrence(@PathVariable Long id) {
+        try {
+            var training = trainingService.getLastTrainingRecurrence(id);
+            return ResponseEntity.ok(
+                    TrainingMapper.entityToResponse(
+                            training
+                    )
+            );
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 

@@ -49,13 +49,19 @@ public class TrainingService {
         return result;
     }
 
+    public Training getLastTrainingRecurrence(Long trainingId) {
+        var training = getById(trainingId);
+        var trainings = getAllRecurrences(training);
+        trainings.sort(Comparator.comparing(Training::getDate));
+        return trainings.get(trainings.size() - 1);
+    }
+
     public Training create(TrainingRequest trainingRequest) {
         var trainingCategory = trainingCategoryService.getById(trainingRequest.getTrainingCategoryId());
 
         var training = trainingRepository.save(
                 TrainingMapper.requestToEntity(trainingRequest, trainingCategory)
         );
-
 
         if(trainingRequest.getIsRecurrent()){
             createRecurrences(trainingRequest, training);
