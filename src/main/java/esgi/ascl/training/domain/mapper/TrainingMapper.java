@@ -49,11 +49,14 @@ public class TrainingMapper {
                         trainingRequest.getIsRecurrent() == null ? training.getIsRecurrent() : trainingRequest.getIsRecurrent()
                 )
                 .setDayOfRecurrence(
-                        trainingRequest.getDayOfRecurrence() == null ? training.getDayOfRecurrence() : trainingRequest.getDayOfRecurrence())
+                        trainingRequest.getIsRecurrent() &&
+                        trainingRequest.getDayOfRecurrence() == null ? training.getDayOfRecurrence() : null)
                 .setNbPlayerMax(
                         trainingRequest.getNbPlayerMax() == null ? training.getNbPlayerMax() : trainingRequest.getNbPlayerMax()
                 )
-                .setRecurrenceTraining(null);
+                .setRecurrenceTraining(
+                        trainingRequest.getIsRecurrent() ? training : null
+                );
     }
 
     public static List<TrainingResponse> entityListToResponseList(List<Training> trainingList) {

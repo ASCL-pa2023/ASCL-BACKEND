@@ -97,7 +97,12 @@ public class TrainingService {
 
     public Training update(TrainingRequest trainingRequest, Long id) {
         var training = trainingRepository.findById(id).orElseThrow();
-        var trainingCategory = trainingCategoryService.getById(trainingRequest.getTrainingCategoryId());
+
+        TrainingCategory trainingCategory;
+        if(trainingRequest.getTrainingCategoryId() != null)
+            trainingCategory = trainingCategoryService.getById(trainingRequest.getTrainingCategoryId());
+        else
+            trainingCategory = training.getTrainingCategory();
 
         if(trainingRequest.getIsRecurrent()){
             var trainingsRecurrences = getAllRecurrences(training);
@@ -116,15 +121,8 @@ public class TrainingService {
     public void updateTrainingsRecurrences(List<Training> trainingRecurrences, TrainingRequest trainingRequest,
                                            TrainingCategory trainingCategory, Training training){
         trainingRecurrences.forEach(currTraining -> {
-            if(trainingRequest.getTimeSlot() != training.getTimeSlot())
-                currTraining.setTimeSlot(trainingRequest.getTimeSlot());
-
-            if(trainingRequest.getDayOfRecurrence() != training.getDayOfRecurrence())
-                currTraining.setDayOfRecurrence(trainingRequest.getDayOfRecurrence());
-
-            if(!Objects.equals(trainingRequest.getTrainingCategoryId(), training.getTrainingCategory().getId()))
-                currTraining.setTrainingCategory(trainingCategory);
-
+            currTraining = TrainingMapper.updateRequestToEntity(trainingRequest, currTraining, trainingCategory);
+            
             trainingRepository.save(currTraining);
         });
     }
