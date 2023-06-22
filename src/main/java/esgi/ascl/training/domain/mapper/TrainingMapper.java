@@ -59,6 +59,28 @@ public class TrainingMapper {
                 );
     }
 
+    public static Training recurrenceUpdateRequestToEntity(TrainingRequest trainingRequest, Training trainingRecurrence, Training initialTraining, TrainingCategory trainingCategory) {
+        return trainingRecurrence
+                .setTrainingCategory(
+                        trainingCategory == null ? trainingRecurrence.getTrainingCategory() : trainingCategory
+                )
+                .setDate(
+                        trainingRequest.getDate() == null ? trainingRecurrence.getDate() : trainingRequest.getDate()
+                )
+                .setTimeSlot(
+                        trainingRequest.getTimeSlot() == null ? trainingRecurrence.getTimeSlot() : trainingRequest.getTimeSlot()
+                )
+                .setIsRecurrent(
+                        trainingRequest.getIsRecurrent() == null ? trainingRecurrence.getIsRecurrent() : trainingRequest.getIsRecurrent()
+                )
+                .setDayOfRecurrence(
+                        trainingRequest.getIsRecurrent() &&
+                                trainingRequest.getDayOfRecurrence() == null ? trainingRecurrence.getDayOfRecurrence() : null)
+                .setNbPlayerMax(
+                        trainingRequest.getNbPlayerMax() == null ? trainingRecurrence.getNbPlayerMax() : trainingRequest.getNbPlayerMax()
+                );
+    }
+
     public static List<TrainingResponse> entityListToResponseList(List<Training> trainingList) {
         List<TrainingResponse> trainingResponseList = null;
         for (Training training : trainingList) {

@@ -11,4 +11,15 @@ public class DeleteTrainingRequest {
     public Boolean getWithRecurrences() {
         return withRecurrences;
     }
+
+    public DeleteTrainingRequest setTrainingId(Long trainingId) {
+        this.trainingId = trainingId;
+        return this;
+    }
+
+    public DeleteTrainingRequest setWithRecurrences(Boolean withRecurrences) {
+        this.withRecurrences = withRecurrences;
+        return this;
+    }
+
 }
