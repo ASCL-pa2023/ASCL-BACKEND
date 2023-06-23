@@ -1,6 +1,7 @@
 package esgi.ascl.news.domain.services;
 
 import esgi.ascl.User.domain.entities.User;
+import esgi.ascl.User.domain.service.FollowerService;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.news.domain.entities.NewsEntity;
 import esgi.ascl.news.domain.mapper.NewsMapper;
@@ -26,6 +27,7 @@ class NewsServiceTest {
     UserService userService;
     TagService tagService;
     NewsService newsService;
+    FollowerService followerService;
 
 
     NewsEntity newsEntity1 = new NewsEntity();
@@ -39,8 +41,9 @@ class NewsServiceTest {
         userLikeService = Mockito.mock(UserLikeService.class);
         userService = Mockito.mock(UserService.class);
         tagService = Mockito.mock(TagService.class);
+        followerService = Mockito.mock(FollowerService.class);
 
-        newsService = new NewsService(newsRepository, newsMapper, userLikeService, userService, tagService);
+        newsService = new NewsService(newsRepository, newsMapper, userLikeService, userService, tagService, followerService);
 
         user
             .setId(Long.parseLong("1"))

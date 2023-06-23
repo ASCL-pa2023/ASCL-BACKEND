@@ -66,6 +66,20 @@ public class NewsController {
         return new ResponseEntity<>(newsResponses, HttpStatus.OK);
     }
 
+    @GetMapping("/user/{userId}/subscribed")
+    public ResponseEntity<?> getAllSubscribedByUserId(@PathVariable Long userId) {
+        try {
+            userService.getById(userId);
+            var newsResponses = newsService.getAllSubscribed(userId)
+                    .stream()
+                    .map(newsMapper::entityToResponse);
+            return new ResponseEntity<>(newsResponses, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getAllByUserId(@PathVariable Long userId) {
         var user = userService.getById(userId);

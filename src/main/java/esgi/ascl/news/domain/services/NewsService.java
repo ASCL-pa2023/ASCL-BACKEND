@@ -1,6 +1,7 @@
 package esgi.ascl.news.domain.services;
 
 import esgi.ascl.User.domain.entities.User;
+import esgi.ascl.User.domain.service.FollowerService;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.news.domain.entities.NewsEntity;
 import esgi.ascl.news.domain.exceptions.TagExceptions;
@@ -20,13 +21,15 @@ public class NewsService {
     private final UserLikeService userLikeService;
     private final UserService userService;
     private final TagService tagService;
+    private final FollowerService followerService;
 
-    public NewsService(NewsRepository newsRepository, NewsMapper newsMapper, UserLikeService userLikeService, UserService userService, TagService tagService) {
+    public NewsService(NewsRepository newsRepository, NewsMapper newsMapper, UserLikeService userLikeService, UserService userService, TagService tagService, FollowerService followerService) {
         this.newsRepository = newsRepository;
         this.newsMapper = newsMapper;
         this.userLikeService = userLikeService;
         this.userService = userService;
         this.tagService = tagService;
+        this.followerService = followerService;
     }
 
     public NewsEntity create(NewsRequest newsRequest) throws TagExceptions {
@@ -58,6 +61,13 @@ public class NewsService {
 
     public List<NewsEntity> getAll() {
         return newsRepository.findAll();
+    }
+
+    public List<NewsEntity> getAllSubscribed(Long userId) {
+        var subscriptions = followerService.getSubscriptionsByUserId(userId);
+        var news = new ArrayList<NewsEntity>();
+        subscriptions.forEach(s -> news.addAll(getAllByUserId(s.getUser().getId())));
+        return news;
     }
 
     public List<NewsEntity> getAllByUserId(Long userId) {
