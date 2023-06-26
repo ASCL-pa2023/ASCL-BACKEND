@@ -65,6 +65,7 @@ public class FollowerController {
     @GetMapping("{userId}/followers")
     public ResponseEntity<?> getAllFollowers(@PathVariable Long userId){
 
+        System.out.println("Dans la route {userId}/followers");
         try {
             userService.getById(userId);
 
