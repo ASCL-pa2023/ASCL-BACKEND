@@ -102,4 +102,18 @@ public class FollowerController {
 
     }
 
+    @GetMapping("{userId}/isFollowed/{userId2}")
+    public ResponseEntity<?> isFollow(@PathVariable Long userId, @PathVariable Long userId2){
+        try {
+            userService.getById(userId);
+            userService.getById(userId2);
+
+            var isFollow = followerService.getByFollowerAndUser(userService.getById(userId), userService.getById(userId2));
+
+            return new ResponseEntity<>(isFollow != null, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
