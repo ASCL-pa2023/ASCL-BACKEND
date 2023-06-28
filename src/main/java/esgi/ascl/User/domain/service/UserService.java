@@ -109,4 +109,13 @@ public class UserService {
                 )
         ).toList();
     }
+
+    public List<DashboardUser> getDashboardByUsernameLevenshtein(String firstname) {
+        return getUsersDashboard()
+                .stream()
+                .filter(user ->
+                        levenshtein.calculate(firstname.toUpperCase(), user.getFirstname().toUpperCase()) < 3
+                )
+                .toList();
+    }
 }

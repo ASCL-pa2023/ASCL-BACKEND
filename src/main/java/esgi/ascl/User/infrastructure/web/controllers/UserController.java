@@ -68,6 +68,15 @@ public class UserController {
         return ResponseEntity.ok().body(users);
     }
 
+    @GetMapping("dashboard/firstname/{firstname}")
+    public ResponseEntity<?> getUsersDashboardByFirstname(@PathVariable String firstname) {
+        var users = userService.getDashboardByUsernameLevenshtein(firstname)
+                .stream()
+                .map(UserMapper::dashboardUserResponse)
+                .toList();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody UserRequest userRequest) {
         if(userService.getById(userRequest.getId()) == null) {
