@@ -50,6 +50,15 @@ public class UserController {
         return ResponseEntity.ok().body(UserMapper.entityToResponse(user.get()));
     }
 
+    @GetMapping("dashboard")
+    public ResponseEntity<?> getUsersDashboard() {
+        var users = userService.getUsersDashboard()
+                .stream()
+                .map(UserMapper::dashboardUserResponse)
+                .toList();
+        return ResponseEntity.ok().body(users);
+    }
+
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody UserRequest userRequest) {
         if(userService.getById(userRequest.getId()) == null) {

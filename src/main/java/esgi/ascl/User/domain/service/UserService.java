@@ -1,12 +1,16 @@
 package esgi.ascl.User.domain.service;
 
+import esgi.ascl.User.domain.entities.DashboardUser;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.User.domain.exceptions.UserNotFoundExceptions;
+import esgi.ascl.User.infrastructure.repositories.FollowerRepository;
 import esgi.ascl.User.infrastructure.repositories.UserRepository;
 import esgi.ascl.User.infrastructure.web.request.UserRequest;
-import esgi.ascl.User.infrastructure.web.response.UserResponse;
+import esgi.ascl.license.infrastructure.repositories.LicenseRepository;
+import esgi.ascl.news.infrastructure.repositories.NewsRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,9 +18,15 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final NewsRepository newsRepository;
+    private final FollowerRepository followerRepository;
+    private final LicenseRepository licenseRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, NewsRepository newsRepository, FollowerRepository followerRepository, LicenseRepository licenseRepository) {
         this.userRepository = userRepository;
+        this.newsRepository = newsRepository;
+        this.followerRepository = followerRepository;
+        this.licenseRepository = licenseRepository;
     }
 
     public User getById(Long id) {
@@ -73,5 +83,18 @@ public class UserService {
             );
 
         return userRepository.save(user);
+    }
+
+    public List<DashboardUser> getUsersDashboard() {
+        return  userRepository.findAll().stream().map(user ->
+                new DashboardUser(
+                    user.getId(),
+                    user.getFirstname(),
+                    user.getFirstname(),
+                    user.getRole(),
+                    followerRepository.findAllByUserId(user.getId()).size(),
+                    licenseRepository.findByUserId(user.getId())
+                )
+        ).toList();
     }
 }
