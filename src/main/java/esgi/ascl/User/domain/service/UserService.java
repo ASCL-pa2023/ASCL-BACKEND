@@ -41,6 +41,15 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<User> getByUsernameLevenshtein(String firstname) {
+        return userRepository.findAll()
+                .stream()
+                .filter(user ->
+                        levenshtein.calculate(firstname.toUpperCase(), user.getFirstname().toUpperCase()) < 3
+                )
+                .toList();
+    }
+
     public Optional<User> getByEmail(String userEmail) {
         return userRepository.findByEmail(userEmail);
     }
