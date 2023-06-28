@@ -8,6 +8,7 @@ import esgi.ascl.User.infrastructure.repositories.UserRepository;
 import esgi.ascl.User.infrastructure.web.request.UserRequest;
 import esgi.ascl.license.infrastructure.repositories.LicenseRepository;
 import esgi.ascl.news.infrastructure.repositories.NewsRepository;
+import esgi.ascl.utils.Levenshtein;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class UserService {
     private final NewsRepository newsRepository;
     private final FollowerRepository followerRepository;
     private final LicenseRepository licenseRepository;
+    private final Levenshtein levenshtein = new Levenshtein();
 
     public UserService(UserRepository userRepository, NewsRepository newsRepository, FollowerRepository followerRepository, LicenseRepository licenseRepository) {
         this.userRepository = userRepository;
@@ -93,6 +95,7 @@ public class UserService {
                     user.getFirstname(),
                     user.getRole(),
                     followerRepository.findAllByUserId(user.getId()).size(),
+                    newsRepository.findAllByUserId(user.getId()).size(),
                     licenseRepository.findByUserId(user.getId())
                 )
         ).toList();

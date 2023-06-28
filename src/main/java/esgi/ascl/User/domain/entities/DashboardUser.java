@@ -6,15 +6,17 @@ public class DashboardUser {
     public String lastname;
     public Role role;
     public Integer nbFollowers;
+    public Integer nbNews;
     public License license;
 
 
-    public DashboardUser(Long id, String firstname, String lastname, Role role, Integer nbFollowers, License license) {
+    public DashboardUser(Long id, String firstname, String lastname, Role role, Integer nbFollowers, Integer nbNews, License license) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.role = role;
         this.nbFollowers = nbFollowers;
+        this.nbNews = nbNews;
         this.license = license;
     }
 
@@ -61,6 +63,15 @@ public class DashboardUser {
 
     public DashboardUser setNbFollowers(Integer nbFollowers) {
         this.nbFollowers = nbFollowers;
+        return this;
+    }
+
+    public Integer getNbNews() {
+        return nbNews;
+    }
+
+    public DashboardUser setNbNews(Integer nbNews) {
+        this.nbNews = nbNews;
         return this;
     }
 

@@ -26,6 +26,7 @@ public class UserMapper {
                 .setLastname(dashboardUser.getLastname())
                 .setRole(dashboardUser.getRole())
                 .setNbFollowers(dashboardUser.getNbFollowers())
+                .setNbNews(dashboardUser.getNbNews())
                 .setLicense(
                         dashboardUser.getLicense() == null ?
                                 null:

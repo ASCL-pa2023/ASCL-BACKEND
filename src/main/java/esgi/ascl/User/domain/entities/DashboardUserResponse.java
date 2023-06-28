@@ -8,6 +8,7 @@ public class DashboardUserResponse {
     public String lastname;
     public Role role;
     public Integer nbFollowers;
+    public Integer nbNews;
     public LicenseResponse license;
 
 
@@ -33,6 +34,11 @@ public class DashboardUserResponse {
 
     public DashboardUserResponse setNbFollowers(Integer nbFollowers) {
         this.nbFollowers = nbFollowers;
+        return this;
+    }
+
+    public DashboardUserResponse setNbNews(Integer nbNews) {
+        this.nbNews = nbNews;
         return this;
     }
 
