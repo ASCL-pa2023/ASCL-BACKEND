@@ -43,7 +43,7 @@ public class NewsImageService {
         newsImageEntities.forEach(newsImage -> {
             newsImage.setNews(null);
             newsImageRepository.delete(newsImage);
-            fileService.deleteFile(newsImage.getFilename());
+            //fileService.deleteFile(newsImage.getFilename());
         });
     }
 

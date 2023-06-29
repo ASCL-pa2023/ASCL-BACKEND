@@ -9,6 +9,7 @@ import esgi.ascl.news.domain.mapper.NewsMapper;
 import esgi.ascl.news.infrastructure.repositories.CommentRepository;
 import esgi.ascl.news.infrastructure.repositories.NewsRepository;
 import esgi.ascl.news.infrastructure.web.requests.NewsRequest;
+import esgi.ascl.utils.Levenshtein;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ public class NewsService {
     private final TagService tagService;
     private final FollowerService followerService;
     private final CommentRepository commentRepository;
+    private final Levenshtein levenshtein = new Levenshtein();
 
     public NewsService(NewsRepository newsRepository, NewsMapper newsMapper, UserLikeService userLikeService, UserService userService, TagService tagService, FollowerService followerService, CommentRepository commentRepository) {
         this.newsRepository = newsRepository;
@@ -60,6 +62,12 @@ public class NewsService {
 
     public NewsEntity getById(Long id) {
         return newsRepository.findById(id).orElse(null);
+    }
+
+    public List<NewsEntity> getAllByTitleLevenshtein(String title) {
+        return getAll().stream()
+                .filter(newsEntity -> levenshtein.calculate(newsEntity.getTitle().toUpperCase(), title.toUpperCase()) <= 3)
+                .toList();
     }
 
     public List<NewsEntity> getAll() {

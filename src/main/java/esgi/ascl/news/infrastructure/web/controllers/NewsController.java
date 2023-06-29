@@ -56,6 +56,15 @@ public class NewsController {
         return new ResponseEntity<>(newsMapper.entityToResponse(news), HttpStatus.OK);
     }
 
+    @GetMapping("/title/{title}")
+    public ResponseEntity<?> getByTitle(@PathVariable String title) {
+        var news = newsService.getAllByTitleLevenshtein(title)
+                .stream()
+                .map(newsMapper::entityToResponse)
+                .toList();
+        return new ResponseEntity<>(news, HttpStatus.OK);
+    }
+
 
     @GetMapping("/all")
     public ResponseEntity<List<NewsResponse>> getAll() {
