@@ -5,6 +5,7 @@ import esgi.ascl.User.domain.service.FollowerService;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.news.domain.entities.NewsEntity;
 import esgi.ascl.news.domain.mapper.NewsMapper;
+import esgi.ascl.news.infrastructure.repositories.CommentRepository;
 import esgi.ascl.news.infrastructure.repositories.NewsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ class NewsServiceTest {
     TagService tagService;
     NewsService newsService;
     FollowerService followerService;
+    CommentRepository commentRepository;
 
 
     NewsEntity newsEntity1 = new NewsEntity();
@@ -42,8 +44,9 @@ class NewsServiceTest {
         userService = Mockito.mock(UserService.class);
         tagService = Mockito.mock(TagService.class);
         followerService = Mockito.mock(FollowerService.class);
+        commentRepository = Mockito.mock(CommentRepository.class);
 
-        newsService = new NewsService(newsRepository, newsMapper, userLikeService, userService, tagService, followerService);
+        newsService = new NewsService(newsRepository, newsMapper, userLikeService, userService, tagService, followerService, commentRepository);
 
         user
             .setId(Long.parseLong("1"))

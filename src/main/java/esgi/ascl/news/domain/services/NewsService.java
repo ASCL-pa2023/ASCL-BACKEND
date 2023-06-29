@@ -6,6 +6,7 @@ import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.news.domain.entities.NewsEntity;
 import esgi.ascl.news.domain.exceptions.TagExceptions;
 import esgi.ascl.news.domain.mapper.NewsMapper;
+import esgi.ascl.news.infrastructure.repositories.CommentRepository;
 import esgi.ascl.news.infrastructure.repositories.NewsRepository;
 import esgi.ascl.news.infrastructure.web.requests.NewsRequest;
 import org.springframework.stereotype.Service;
@@ -22,14 +23,16 @@ public class NewsService {
     private final UserService userService;
     private final TagService tagService;
     private final FollowerService followerService;
+    private final CommentRepository commentRepository;
 
-    public NewsService(NewsRepository newsRepository, NewsMapper newsMapper, UserLikeService userLikeService, UserService userService, TagService tagService, FollowerService followerService) {
+    public NewsService(NewsRepository newsRepository, NewsMapper newsMapper, UserLikeService userLikeService, UserService userService, TagService tagService, FollowerService followerService, CommentRepository commentRepository) {
         this.newsRepository = newsRepository;
         this.newsMapper = newsMapper;
         this.userLikeService = userLikeService;
         this.userService = userService;
         this.tagService = tagService;
         this.followerService = followerService;
+        this.commentRepository = commentRepository;
     }
 
     public NewsEntity create(NewsRequest newsRequest) throws TagExceptions {
@@ -106,7 +109,13 @@ public class NewsService {
     @Transactional
     public void delete(NewsEntity newsEntity) {
         newsEntity.setUser(null);
+        commentRepository.findByNewsId(newsEntity.getId()).forEach(commentEntity -> {
+            commentEntity.setUser(null);
+            commentEntity.setNews(null);
+            commentRepository.delete(commentEntity);
+        });
         tagService.deleteAllByNewsId(newsEntity.getId());
+        userLikeService.deleteAllByNewsId(newsEntity.getId());
         newsRepository.delete(newsEntity);
     }
 }

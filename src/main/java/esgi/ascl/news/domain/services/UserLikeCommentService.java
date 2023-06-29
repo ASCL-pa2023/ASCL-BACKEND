@@ -43,4 +43,8 @@ public class UserLikeCommentService {
         userLikeCommentEntity.setUser(null);
         userLikeCommentRepository.delete(userLikeCommentEntity);
     }
+
+    public void deleteAllByCommentId(Long commentId){
+        userLikeCommentRepository.deleteAll(getAllByCommentId(commentId));
+    }
 }

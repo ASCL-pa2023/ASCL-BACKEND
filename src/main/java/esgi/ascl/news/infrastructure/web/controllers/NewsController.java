@@ -123,8 +123,8 @@ public class NewsController {
         if(news == null) {
             return new ResponseEntity<>("News not found", HttpStatus.NOT_FOUND);
         }
-        newsService.delete(news);
         newsImageService.deleteAllByNewsId(id);
+        newsService.delete(news);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

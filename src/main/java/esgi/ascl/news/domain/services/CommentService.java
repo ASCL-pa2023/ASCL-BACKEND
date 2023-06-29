@@ -64,6 +64,12 @@ public class CommentService {
     public void delete(CommentEntity commentEntity){
         commentEntity.setNews(null);
         commentEntity.setUser(null);
+        userLikeCommentService.deleteAllByCommentId(commentEntity.getId());
         commentRepository.delete(commentEntity);
+    }
+
+    @Transactional
+    public void deleteAllByNewsId(Long newsId){
+        commentRepository.deleteAll(getAllByNewsId(newsId));
     }
 }

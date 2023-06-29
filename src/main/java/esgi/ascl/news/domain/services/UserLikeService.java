@@ -6,6 +6,7 @@ import esgi.ascl.news.domain.entities.UserLikeEntity;
 import esgi.ascl.news.infrastructure.repositories.UserLikeRepository;
 import esgi.ascl.news.infrastructure.web.requests.UserLikeRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,5 +43,16 @@ public class UserLikeService {
         userLikeEntity.setNews(null);
         userLikeEntity.setUser(null);
         userLikeRepository.delete(userLikeEntity);
+    }
+
+    @Transactional
+    public void deleteAllByNewsId(Long newsId){
+        var userLikeEntities = getAllByNewsId(newsId);
+
+        userLikeEntities.forEach(userLikeEntity -> {
+            userLikeEntity.setNews(null);
+            userLikeEntity.setUser(null);
+        });
+        userLikeRepository.deleteAll(userLikeEntities);
     }
 }

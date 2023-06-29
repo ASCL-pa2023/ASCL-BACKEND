@@ -4,6 +4,7 @@ import esgi.ascl.news.domain.entities.NewsEntity;
 import esgi.ascl.news.domain.entities.TagEntity;
 import esgi.ascl.news.infrastructure.repositories.TagRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,10 @@ public class TagService {
         return tagRepository.findAllByNewsId(newsId);
     }
 
+    @Transactional
     public void deleteAllByNewsId(Long newsId){
-        tagRepository.deleteAllByNewsId(newsId);
+        var tagEntities = getAllByNewsId(newsId);
+        tagEntities.forEach(tagEntity -> tagEntity.setNews(null));
+        tagRepository.deleteAll(tagEntities);
     }
 }

@@ -37,8 +37,14 @@ public class NewsImageService {
     }
 
     public void deleteAllByNewsId(Long newsId) {
-        //TODO : Supprimer les images du bucket
-        newsImageRepository.removeAllByNewsId(newsId);
+        var newsImageEntities = getAllByNewsId(newsId);
+        if(newsImageEntities.isEmpty()) return;
+
+        newsImageEntities.forEach(newsImage -> {
+            newsImage.setNews(null);
+            newsImageRepository.delete(newsImage);
+            fileService.deleteFile(newsImage.getFilename());
+        });
     }
 
     public void uploadImage(Long newsId, MultipartFile file) {
