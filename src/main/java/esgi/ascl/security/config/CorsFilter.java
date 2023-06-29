@@ -14,7 +14,10 @@ import java.util.List;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
 
-    private final List<String> allowedOrigins = List.of("http://localhost:4200");
+    private final List<String> allowedOrigins = List.of(
+            "http://localhost:4200",
+            "https://ascl-frontend-9edb0656ce52.herokuapp.com"
+    );
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
