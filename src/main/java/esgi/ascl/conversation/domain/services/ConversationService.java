@@ -3,6 +3,7 @@ package esgi.ascl.conversation.domain.services;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.User.infrastructure.repositories.UserRepository;
 import esgi.ascl.conversation.domain.entities.ConversationEntity;
+import esgi.ascl.conversation.domain.exeptions.ConversationException;
 import esgi.ascl.conversation.infrastructure.repositories.ConversationRepository;
 import esgi.ascl.conversation.infrastructure.repositories.MessageRepository;
 import esgi.ascl.conversation.infrastructure.web.requests.ConversationRequest;
@@ -47,7 +48,8 @@ public class ConversationService {
     }
 
     public ConversationEntity getById(Long id) {
-        return conversationRepository.findById(id).orElse(null);
+        return conversationRepository.findById(id)
+                .orElseThrow(() -> new ConversationException("Conversation not found"));
     }
 
     public ConversationEntity getByTitle(ConversationRequest conversationRequest) {
@@ -75,7 +77,14 @@ public class ConversationService {
 
     @Transactional
     public void delete(ConversationEntity conversationEntity) {
-        messageRepository.deleteAllByConversationId(conversationEntity.getId());
+        messageRepository
+                .findAllByConversationId(conversationEntity.getId())
+                .forEach(message -> {
+                    message.setConversation(null);
+                    message.setUser(null);
+                    messageRepository.delete(message);
+                });
+
         userConversationService.deleteAllByConversationId(conversationEntity.getId());
         conversationRepository.delete(conversationEntity);
     }

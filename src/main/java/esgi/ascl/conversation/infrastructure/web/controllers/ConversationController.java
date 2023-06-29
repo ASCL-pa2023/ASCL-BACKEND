@@ -1,6 +1,7 @@
 package esgi.ascl.conversation.infrastructure.web.controllers;
 
 import esgi.ascl.User.domain.service.UserService;
+import esgi.ascl.conversation.domain.entities.ConversationEntity;
 import esgi.ascl.conversation.domain.services.ConversationService;
 import esgi.ascl.conversation.domain.services.UserConversationService;
 import esgi.ascl.conversation.infrastructure.web.requests.AddPersonRequest;
@@ -75,9 +76,14 @@ public class ConversationController {
 
     @DeleteMapping("/{conversationId}/{creatorId}")
     public ResponseEntity<?> deleteById(@PathVariable Long conversationId, @PathVariable Long creatorId) {
-        var conversation = conversationService.getById(conversationId);
-        if(conversation == null)
+
+        ConversationEntity conversation;
+        try {
+            conversation = conversationService.getById(conversationId);
+        } catch (Exception e) {
             return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
+        }
+
 
         if(!Objects.equals(conversation.getCreatorId(), creatorId))
             return new ResponseEntity<>("You are not the creator of this conversation", HttpStatus.BAD_REQUEST);

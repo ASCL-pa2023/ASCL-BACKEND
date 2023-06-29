@@ -51,8 +51,7 @@ public class UserConversationService {
 
         userConversations.forEach(userConversation -> {
             userConversation.setConversation(null).setUser(null);
-            userConversationRepository.save(userConversation);
-            userConversationRepository.deleteById(userConversation.getId());
+            userConversationRepository.delete(userConversation);
         });
     }
 
