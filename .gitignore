@@ -26,3 +26,4 @@ buildNumber.properties
 /target/maven-status/
 /target/surefire-reports/
 /target/test-classes/
+*.class
