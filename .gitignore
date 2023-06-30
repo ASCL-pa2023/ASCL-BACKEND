@@ -49,3 +49,4 @@ target/surefire-reports/TEST-esgi.ascl.conversation.domain.services.Conversation
 target/surefire-reports/TEST-esgi.ascl.conversation.domain.services.MessageServiceTest.xml
 target/surefire-reports/TEST-esgi.ascl.news.domain.services.NewsServiceTest.xml
 target/surefire-reports/TEST-esgi.ascl.news.domain.services.TagServiceTest.xml
+target/ASCL-0.0.1-SNAPSHOT.jar.original
