@@ -99,8 +99,12 @@ public class ConversationController {
      */
     @PostMapping("/addPerson")
     public ResponseEntity<?> addPerson(@RequestBody AddPersonRequest addPersonRequest){
-        var conversation = conversationService.getById(addPersonRequest.conversationId);
-        if(conversation == null) return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
+        ConversationEntity conversation;
+        try{
+            conversation = conversationService.getById(addPersonRequest.conversationId);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
+        }
 
         if(!Objects.equals(conversation.getCreatorId(), addPersonRequest.getConversationCreatorId()))
             return new ResponseEntity<>("You are not the creator of this conversation", HttpStatus.BAD_REQUEST);
@@ -166,5 +170,15 @@ public class ConversationController {
         var persons = conversationService.getAllUserInConversation(conversationId);
         //TODO : map to user response
         return new ResponseEntity<>(persons, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{conversationId}")
+    public ResponseEntity<?> changerTitle(@PathVariable Long conversationId, @RequestBody ConversationRequest conversationRequest) {
+        try{conversationService.getById(conversationId);}
+        catch (Exception e) {
+            return new ResponseEntity<>("Conversation not found", HttpStatus.NOT_FOUND);
+        }
+        conversationService.changeTitle(conversationId, conversationRequest.title);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -75,6 +75,11 @@ public class ConversationService {
         return res;
     }
 
+    public ConversationEntity changeTitle(Long conversationId, String newTitle) {
+        var conversation = getById(conversationId).setTitle(newTitle);
+        return conversationRepository.save(conversation);
+    }
+
     @Transactional
     public void delete(ConversationEntity conversationEntity) {
         messageRepository
