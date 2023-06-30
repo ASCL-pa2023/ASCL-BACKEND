@@ -38,6 +38,9 @@ public class Tournament {
     @Column(name = "winner_id")
     private Long winner_id;
 
+    @Column(name = "is_started")
+    private boolean is_started;
+
 
     public long getId() {
         return id;
@@ -108,6 +111,15 @@ public class Tournament {
 
     public Tournament setWinner_id(Long winner_id) {
         this.winner_id = winner_id;
+        return this;
+    }
+
+    public boolean getIs_started() {
+        return is_started;
+    }
+
+    public Tournament setIs_started(boolean is_started) {
+        this.is_started = is_started;
         return this;
     }
 }

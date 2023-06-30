@@ -19,6 +19,7 @@ public class TournamentMapper {
                 .tournamentType(tournament.getType().toString())
                 .places_number(tournament.getPlaces_number())
                 .winner_id(tournament.getWinner_id())
+                .is_started(tournament.getIs_started())
                 .build();
     }
 

@@ -52,7 +52,7 @@ public class TournamentController {
         }
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<TournamentResponse> getTournament(@PathVariable long id) {
         System.out.println("/api/v1/tournament/get/{id}" + id);
 
@@ -72,7 +72,7 @@ public class TournamentController {
         }
     }
 
-    @GetMapping("/get-all")
+    @GetMapping()
     public ResponseEntity<List<TournamentResponse>> getAllTournament() {
         System.out.println("/api/v1/tournament/get-all");
 
@@ -159,7 +159,7 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         );
     }
 
-    @GetMapping("{id}/ratio")
+    @GetMapping("/{id}/ratio")
     public ResponseEntity<?> getRatio(@PathVariable Long id) {
         try {
             tournamentService.getById(id);
