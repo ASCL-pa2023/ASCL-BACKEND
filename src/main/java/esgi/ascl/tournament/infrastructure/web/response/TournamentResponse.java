@@ -31,4 +31,6 @@ public class TournamentResponse {
     private Long winner_id;
     @JsonProperty("is_started")
     private boolean is_started;
+    @JsonProperty("status")
+    private String status;
 }

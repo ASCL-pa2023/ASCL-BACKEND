@@ -1,6 +1,7 @@
 package esgi.ascl.tournament.domain.mapper;
 
 import esgi.ascl.tournament.domain.entities.Tournament;
+import esgi.ascl.tournament.domain.entities.TournamentStatus;
 import esgi.ascl.tournament.domain.entities.TournamentType;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentRequest;
 import esgi.ascl.tournament.infrastructure.web.response.TournamentResponse;
@@ -20,6 +21,7 @@ public class TournamentMapper {
                 .places_number(tournament.getPlaces_number())
                 .winner_id(tournament.getWinner_id())
                 .is_started(tournament.getIs_started())
+                .status(tournament.getStatus().toString())
                 .build();
     }
 
@@ -30,7 +32,8 @@ public class TournamentMapper {
                 .setEnd_date(request.getEnd_date())
                 .setStart_date(request.getStart_date())
                 .setType(TournamentType.valueOf(request.getTournamentType()))
-                .setPlaces_number(request.getPlaces_number());
+                .setPlaces_number(request.getPlaces_number())
+                .setStatus(TournamentStatus.NOT_STARTED);
     }
 
     public static List<TournamentResponse> listEntityToListResponse(List<Tournament> tournaments) {

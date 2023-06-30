@@ -25,4 +25,6 @@ public class TournamentRequest {
     private String tournamentType;
     @JsonProperty("places_number")
     private int places_number;
+    @JsonProperty("status")
+    private String status;
 }

@@ -74,10 +74,12 @@ public class FinalPhaseService {
             teamsQualified.addAll(withoutTeamAlreadyQualified.subList(0, nbTeamsToAdd));
         }
         createFinalPhaseGame(tournament, teamsQualified);
+
+        tournamentService.updateStatus(tournament.getId(), "FINAL_PHASE");
     }
 
 
-    public List<Game> createFinalPhaseGame(Tournament tournament, List<Long> teamsQualified){
+    private List<Game> createFinalPhaseGame(Tournament tournament, List<Long> teamsQualified){
         if(teamsQualified.size() == 2){
             var game = gameService.create(tournament, GameType.FINAL);
             playService.playGame(game, teamService.getById(teamsQualified.get(0)));

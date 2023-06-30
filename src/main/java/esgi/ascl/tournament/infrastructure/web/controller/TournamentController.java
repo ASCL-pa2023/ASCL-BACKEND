@@ -159,6 +159,24 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         );
     }
 
+
+    @PatchMapping("/{id}/status/{status}")
+    public ResponseEntity<?> updateStatus(@PathVariable Long id, @PathVariable String status) {
+        try {
+            tournamentService.getById(id);
+        } catch (TournamentNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            tournamentService.updateStatus(id, status);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{id}/ratio")
     public ResponseEntity<?> getRatio(@PathVariable Long id) {
         try {

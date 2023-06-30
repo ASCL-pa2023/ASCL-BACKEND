@@ -19,3 +19,10 @@ buildNumber.properties
 /.idea/codeStyles/Project.xml
 /.idea/vcs.xml
 *.properties
+/target/classes/
+/target/generated-sources/
+/target/generated-test-sources/
+/target/maven-archiver/
+/target/maven-status/
+/target/surefire-reports/
+/target/test-classes/

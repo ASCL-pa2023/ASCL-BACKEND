@@ -8,6 +8,7 @@ import esgi.ascl.game.domain.service.PlayService;
 import esgi.ascl.pool.domain.service.PoolService;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.entities.TournamentInscription;
+import esgi.ascl.tournament.domain.entities.TournamentStatus;
 import esgi.ascl.tournament.domain.entities.TournamentType;
 import esgi.ascl.tournament.domain.exceptions.TournamentException;
 import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
@@ -100,9 +101,18 @@ public class TournamentService {
                 .setEnd_date(request.getEnd_date() != null ? request.getEnd_date() : tournament.getEnd_date())
                 .setDeadline_inscription_date(request.getDeadline_inscription_date() != null ? request.getDeadline_inscription_date() : tournament.getDeadline_inscription_date())
                 .setType(request.getTournamentType() != null ? TournamentType.valueOf(request.getTournamentType().toUpperCase()) : tournament.getType())
-                .setPlaces_number(request.getPlaces_number() == 0 ? tournament.getPlaces_number() : request.getPlaces_number());
+                .setPlaces_number(request.getPlaces_number() == 0 ? tournament.getPlaces_number() : request.getPlaces_number())
+                .setStatus(request.getStatus() != null ? TournamentStatus.valueOf(request.getStatus().toUpperCase()) : tournament.getStatus());
         return tournamentRepository.save(tournament);
     }
+
+    public Tournament updateStatus(Long id, String status) {
+        var tournament = tournamentRepository.getTournamentById(id);
+        tournament.setStatus(TournamentStatus.valueOf(status.toUpperCase()));
+        return tournamentRepository.save(tournament);
+    }
+
+
 
     public void start(Long tournamentId) {
         var pools = poolService.getAllByTournament(tournamentId);
@@ -111,6 +121,8 @@ public class TournamentService {
 
         try {gameService.createGamesPool(pools);}
         catch (Exception e){throw new RuntimeException("Tournament already started");}
+
+        updateStatus(tournamentId, "STARTED");
     }
 
     public HashMap<Long, Double> poolRatio(Long tournamentId){
