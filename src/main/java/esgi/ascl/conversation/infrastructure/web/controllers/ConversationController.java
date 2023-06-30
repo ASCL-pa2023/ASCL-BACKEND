@@ -116,7 +116,7 @@ public class ConversationController {
         if (alreadyInConversation != null) return new ResponseEntity<>("User already in conversation", HttpStatus.BAD_REQUEST);
         userConversationService.addPerson(conversation, user.get());
 
-        return new ResponseEntity<>("Person added to conversation", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -136,7 +136,7 @@ public class ConversationController {
 
         userConversationService.deletePerson(conversation.getId(), user.get().getId());
 
-        return new ResponseEntity<>("Person deleted from conversation", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
