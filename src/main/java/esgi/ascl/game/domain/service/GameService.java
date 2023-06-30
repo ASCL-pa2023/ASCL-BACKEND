@@ -1,5 +1,6 @@
 package esgi.ascl.game.domain.service;
 
+import esgi.ascl.User.domain.entities.Role;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.game.domain.entities.Game;
@@ -9,6 +10,7 @@ import esgi.ascl.game.domain.exeptions.GameException;
 import esgi.ascl.game.domain.exeptions.GameNotFoundException;
 import esgi.ascl.game.domain.exeptions.RefereeIsPlayerException;
 import esgi.ascl.game.infra.repository.GameRepository;
+import esgi.ascl.game.infra.web.request.SetRequest;
 import esgi.ascl.pool.domain.entity.Pool;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import org.springframework.stereotype.Service;
@@ -26,13 +28,15 @@ public class GameService {
     private final TeamService teamService;
     private final UserTeamService userTeamService;
     private final GameRepository gameRepository;
+    private final SetService setService;
 
-    public GameService(UserService userService, PlayService playService, TeamService teamService, UserTeamService userTeamService, GameRepository gameRepository) {
+    public GameService(UserService userService, PlayService playService, TeamService teamService, UserTeamService userTeamService, GameRepository gameRepository, SetService setService) {
         this.userService = userService;
         this.playService = playService;
         this.teamService = teamService;
         this.userTeamService = userTeamService;
         this.gameRepository = gameRepository;
+        this.setService = setService;
     }
 
     public Game create(Tournament tournament, GameType gameType){
@@ -53,9 +57,7 @@ public class GameService {
             throw new GameException("Games already created");
         }
 
-
         pools.forEach(pool -> {
-            //List<Game> poolGames = new ArrayList<>();
             var poolsTeams = pool.getTeams();
 
             if(poolsTeams.size() > 1){
@@ -65,13 +67,13 @@ public class GameService {
 
                         var play1 = playService.playGame(game, poolsTeams.get(i));
                         var play2 = playService.playGame(game, poolsTeams.get(j));
-                        //gameRepository.save(game);
+
+                        setService.createSet(new SetRequest().setGameId(game.getId()));
+
                         pool.getGames().add(game);
-                        //poolGames.add(game);
                     }
                 }
             }
-            //pool.setGames(poolGames);
         });
     }
 
@@ -88,7 +90,10 @@ public class GameService {
 
     public void assignReferee(Long gameId, Long refereeId) {
         User referee = userService.getById(refereeId);
-        //TODO: check if referee has referee role
+
+        if(referee.getRole() != Role.REFEREE && referee.getRole() != Role.ADMIN){
+            throw new GameException("User is not a referee");
+        }
 
         if(userPlayingGame(refereeId, gameId)){
             throw new RefereeIsPlayerException();
@@ -96,13 +101,13 @@ public class GameService {
         gameRepository
                 .findById(gameId)
                 .ifPresentOrElse(
-                    game -> {
-                        game.setReferee(referee);
-                        gameRepository.save(game);
-                    },
-                    () -> {
-                        throw new GameNotFoundException("Game not found");
-                    }
+                        game -> {
+                            game.setReferee(referee);
+                            gameRepository.save(game);
+                        },
+                        () -> {
+                            throw new GameNotFoundException("Game not found");
+                        }
                 );
     }
 

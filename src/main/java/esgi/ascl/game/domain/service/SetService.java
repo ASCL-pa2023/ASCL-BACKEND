@@ -1,7 +1,9 @@
 package esgi.ascl.game.domain.service;
 
 import esgi.ascl.game.domain.entities.Set;
+import esgi.ascl.game.domain.exeptions.GameNotFoundException;
 import esgi.ascl.game.domain.exeptions.SetNotFoundException;
+import esgi.ascl.game.infra.repository.GameRepository;
 import esgi.ascl.game.infra.repository.SetRepository;
 import esgi.ascl.game.infra.web.request.ScoreRequest;
 import esgi.ascl.game.infra.web.request.SetRequest;
@@ -13,14 +15,14 @@ import java.util.List;
 @Service
 public class SetService {
     private final SetRepository setRepository;
-    private final GameService gameService;
+    private final GameRepository gameRepository;
     private final ScoreService scoreService;
     private final PlayService playService;
     private final TeamService teamService;
 
-    public SetService(SetRepository setRepository, GameService gameService, ScoreService scoreService, PlayService playService, TeamService teamService) {
+    public SetService(SetRepository setRepository, GameRepository gameRepository, ScoreService scoreService, PlayService playService, TeamService teamService) {
         this.setRepository = setRepository;
-        this.gameService = gameService;
+        this.gameRepository = gameRepository;
         this.scoreService = scoreService;
         this.playService = playService;
         this.teamService = teamService;
@@ -28,7 +30,7 @@ public class SetService {
 
 
     public Set createSet(SetRequest setRequest) {
-        var game = gameService.getById(setRequest.getGameId());
+        var game = gameRepository.findById(setRequest.getGameId()).orElseThrow(()-> new GameNotFoundException("Game not found"));
         var set = new Set()
                 .setGame(game)
                 .setScores(new ArrayList<>());
