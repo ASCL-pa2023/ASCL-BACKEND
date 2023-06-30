@@ -1,6 +1,0 @@
-esgi\ascl\conversation\domain\services\MessageServiceTest.class
-esgi\ascl\conversation\domain\services\ConversationServiceTest.class
-esgi\ascl\news\infrastructure\repositories\NewsRepositoryTest.class
-esgi\ascl\AsclApplicationTests.class
-esgi\ascl\news\domain\services\NewsServiceTest.class
-esgi\ascl\news\domain\services\TagServiceTest.class
