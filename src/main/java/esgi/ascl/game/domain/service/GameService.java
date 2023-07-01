@@ -47,6 +47,13 @@ public class GameService {
         );
     }
 
+    public void initGame(Game game, Team team1, Team team2){
+        playService.playGame(game, team1);
+        playService.playGame(game, team2);
+
+        setService.createSet(new SetRequest().setGameId(game.getId()));
+    }
+
 
     /**
      * Create games for each pool
