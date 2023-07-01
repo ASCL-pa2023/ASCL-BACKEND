@@ -14,6 +14,7 @@ esgi\ascl\game\domain\entities\Set.class
 esgi\ascl\tournament\domain\service\NombreDePoules$Poule.class
 esgi\ascl\game\domain\entities\Team.class
 esgi\ascl\User\infrastructure\repositories\FollowerRepository.class
+esgi\ascl\tournament\infrastructure\web\response\TournamentStatsResponse$TournamentStatsResponseBuilder.class
 esgi\ascl\news\infrastructure\web\requests\UserLikeRequest.class
 esgi\ascl\pool\infrastructure\web\PoolController.class
 esgi\ascl\game\infra\web\controller\GameLogController.class
@@ -45,6 +46,7 @@ esgi\ascl\training\infastructure\web\request\TrainingRecurrenceRequest.class
 esgi\ascl\User\domain\entities\DashboardUserResponse.class
 esgi\ascl\news\domain\services\NewsImageService.class
 esgi\ascl\news\domain\mapper\NewsMapper.class
+esgi\ascl\tournament\domain\entities\TeamStats.class
 esgi\ascl\tournament\domain\exceptions\PartnerCandidacyNotFound.class
 esgi\ascl\tournament\infrastructure\web\controller\SurveyControllers.class
 esgi\ascl\training\domain\exception\TrainingRegistrationException.class
@@ -81,6 +83,7 @@ esgi\ascl\security\token\TokenType.class
 esgi\ascl\training\domain\entitie\TrainingRegistration.class
 esgi\ascl\tournament\domain\mapper\SurveyMapper.class
 esgi\ascl\game\domain\exeptions\GameNotFoundException.class
+esgi\ascl\tournament\domain\service\StatisticsService.class
 esgi\ascl\conversation\infrastructure\web\controllers\MessageController.class
 esgi\ascl\game\domain\service\TeamService.class
 esgi\ascl\news\infrastructure\web\responses\CommentResponse.class
@@ -186,6 +189,7 @@ esgi\ascl\news\domain\services\CommentService.class
 esgi\ascl\game\infra\web\request\GameLogRequest.class
 esgi\ascl\image\service\AWSService.class
 esgi\ascl\tournament\infrastructure\web\response\TournamentInscriptionResponse.class
+esgi\ascl\tournament\domain\mapper\TournamentStatsMapper.class
 esgi\ascl\news\domain\exceptions\LikeException.class
 esgi\ascl\pool\infrastructure\PoolRepository.class
 esgi\ascl\security\config\JwtAuthenticationFilter.class
@@ -221,6 +225,7 @@ esgi\ascl\tournament\domain\exceptions\SurveyNotFoundException.class
 esgi\ascl\security\token\TokenRepository.class
 esgi\ascl\news\infrastructure\web\requests\NewsImageRequest.class
 esgi\ascl\pool\domain\mapper\PoolMapper.class
+esgi\ascl\tournament\domain\entities\ScoreDifference.class
 esgi\ascl\tournament\infrastructure\web\response\TournamentResponse.class
 esgi\ascl\game\domain\exeptions\TeamNotFoundException.class
 esgi\ascl\news\infrastructure\web\responses\ConversationResponse.class
@@ -229,6 +234,7 @@ esgi\ascl\training\infastructure\web\response\TrainingRegistrationResponse.class
 esgi\ascl\conversation\infrastructure\web\controllers\ChatController.class
 esgi\ascl\tournament\infrastructure\web\request\TournamentTypeRequest.class
 esgi\ascl\game\infra\web\request\StartGameRequest.class
+esgi\ascl\tournament\domain\entities\TournamentStats.class
 esgi\ascl\game\domain\exeptions\SetNotFoundException.class
 esgi\ascl\User\domain\entities\DashboardUser.class
 esgi\ascl\game\infra\web\controller\GameController.class
@@ -238,6 +244,7 @@ esgi\ascl\game\domain\service\ScoreService.class
 esgi\ascl\image\controller\FileController.class
 esgi\ascl\news\infrastructure\web\responses\TagResponse.class
 esgi\ascl\news\infrastructure\web\controllers\CommentController.class
+esgi\ascl\tournament\infrastructure\web\response\TournamentStatsResponse.class
 esgi\ascl\security\authentification\AuthenticationResponse$AuthenticationResponseBuilder.class
 esgi\ascl\tournament\domain\service\PartnerCandidateService.class
 esgi\ascl\game\infra\web\request\AssignRefereeRequest.class

@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: esgi.ascl.conversation.domain.services.ConversationServiceTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.974 s - in esgi.ascl.conversation.domain.services.ConversationServiceTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.229 s - in esgi.ascl.conversation.domain.services.ConversationServiceTest

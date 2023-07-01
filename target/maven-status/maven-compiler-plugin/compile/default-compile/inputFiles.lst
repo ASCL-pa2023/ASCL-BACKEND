@@ -16,6 +16,7 @@ C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\jav
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\tournament\infrastructure\web\controller\PartnerCandidacyController.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\AsclApplication.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\tournament\domain\entities\PartnerCandidacy.java
+C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\tournament\domain\service\StatisticsService.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\news\domain\entities\NewsImageEntity.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\security\token\Token.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\game\domain\service\GameService.java
@@ -70,6 +71,7 @@ C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\jav
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\User\domain\entities\ProfilePicture.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\security\config\ApplicationConfig.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\license\infrastructure\web\response\LicenseResponse.java
+C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\tournament\domain\mapper\TournamentStatsMapper.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\training\domain\exception\TrainingCategoryException.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\news\domain\entities\UserLikeEntity.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\training\domain\entitie\TrainingRegistration.java
@@ -147,6 +149,7 @@ C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\jav
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\conversation\infrastructure\web\controllers\ConversationController.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\tournament\domain\service\SurveyService.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\tournament\domain\mapper\TournamentMapper.java
+C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\tournament\domain\entities\TeamStats.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\news\domain\exceptions\NewsImageException.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\pool\domain\exception\PoolException.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\conversation\domain\services\UserConversationService.java
@@ -165,6 +168,7 @@ C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\jav
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\game\infra\repository\PlayRepository.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\security\config\JwtAuthenticationFilter.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\conversation\domain\services\MessageService.java
+C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\tournament\domain\entities\TournamentStats.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\tournament\infrastructure\web\response\SurveyResponse.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\news\infrastructure\repositories\NewsImageRepository.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\tournament\infrastructure\web\response\TournamentInscriptionResponse.java
@@ -193,6 +197,7 @@ C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\jav
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\User\domain\entities\DashboardUserResponse.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\security\authentification\RegisterResponse.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\image\controller\FileController.java
+C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\tournament\domain\entities\ScoreDifference.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\game\domain\exeptions\ScoreNotFoundException.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\license\infrastructure\repositories\LicenseRepository.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\license\domain\service\LicenseNumberGenerator.java
@@ -225,6 +230,7 @@ C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\jav
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\game\domain\entities\GameLog.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\game\infra\web\response\TeamResponse.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\training\domain\service\TrainingRegistrationService.java
+C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\tournament\infrastructure\web\response\TournamentStatsResponse.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\conversation\domain\mapper\ConversationMapper.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\training\domain\entitie\TrainingCategory.java
 C:\Users\kekeb\Documents\ESGI\5eme_annee\projet_annuel\ASCL-BACKEND\src\main\java\esgi\ascl\news\domain\entities\UserLikeCommentEntity.java
