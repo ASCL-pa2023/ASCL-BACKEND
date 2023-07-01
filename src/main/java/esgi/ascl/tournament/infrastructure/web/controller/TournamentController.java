@@ -5,7 +5,9 @@ import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
 import esgi.ascl.tournament.domain.mapper.TeamRatioMapper;
 import esgi.ascl.tournament.domain.mapper.TournamentMapper;
+import esgi.ascl.tournament.domain.mapper.TournamentStatsMapper;
 import esgi.ascl.tournament.domain.service.FinalPhaseService;
+import esgi.ascl.tournament.domain.service.StatisticsService;
 import esgi.ascl.tournament.domain.service.TournamentService;
 import esgi.ascl.tournament.infrastructure.web.request.TournamentRequest;
 import esgi.ascl.tournament.infrastructure.web.response.TournamentResponse;
@@ -26,11 +28,15 @@ public class TournamentController {
     private final TournamentService tournamentService;
     private final FinalPhaseService finalPhaseService;
     private final TeamRatioMapper teamRatioMapper;
+    private final StatisticsService statisticsService;
+    private final TournamentStatsMapper tournamentStatsMapper;
 
-    public TournamentController(TournamentService tournamentService, FinalPhaseService finalPhaseService, TeamRatioMapper teamRatioMapper) {
+    public TournamentController(TournamentService tournamentService, FinalPhaseService finalPhaseService, TeamRatioMapper teamRatioMapper, StatisticsService statisticsService, TournamentStatsMapper tournamentStatsMapper) {
         this.tournamentService = tournamentService;
         this.finalPhaseService = finalPhaseService;
         this.teamRatioMapper = teamRatioMapper;
+        this.statisticsService = statisticsService;
+        this.tournamentStatsMapper = tournamentStatsMapper;
     }
 
     @PostMapping("/create")
@@ -276,6 +282,34 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+    @GetMapping("/{id}/stats")
+    public ResponseEntity<?> getStats(@PathVariable Long id) {
+        try {
+            var tournament = tournamentService.getById(id);
+
+            var stats = statisticsService.tournamentStats(tournament);
+
+            return ResponseEntity.ok(tournamentStatsMapper.toResponse(stats));
+        } catch (TournamentNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/{id}/stats/players")
+    public ResponseEntity<?> getPlayersStats(@PathVariable Long id) {
+        try {
+            var tournament = tournamentService.getById(id);
+
+            var stats = statisticsService.tournamentTeamsStats(tournament);
+
+            return ResponseEntity.ok(stats);
+        } catch (TournamentNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
