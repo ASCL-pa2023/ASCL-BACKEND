@@ -6,10 +6,8 @@ import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.mapper.TeamMapper;
 import esgi.ascl.game.domain.service.GameService;
 import esgi.ascl.game.domain.service.PlayService;
-import esgi.ascl.game.domain.service.SetService;
 import esgi.ascl.game.domain.service.TeamService;
-import esgi.ascl.game.infra.web.request.SetRequest;
-import esgi.ascl.pool.domain.entity.Pool;
+import esgi.ascl.game.infra.web.response.TeamResponse;
 import esgi.ascl.pool.domain.service.PoolService;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.utils.NumberUtils;
@@ -26,13 +24,15 @@ public class FinalPhaseService {
     private final PlayService playService;
     private final PoolService poolService;
     private final TournamentService tournamentService;
+    private final TeamMapper teamMapper;
 
-    public FinalPhaseService(GameService gameService, TeamService teamService, PlayService playService, PoolService poolService, TournamentService tournamentService) {
+    public FinalPhaseService(GameService gameService, TeamService teamService, PlayService playService, PoolService poolService, TournamentService tournamentService, TeamMapper teamMapper) {
         this.gameService = gameService;
         this.teamService = teamService;
         this.playService = playService;
         this.poolService = poolService;
         this.tournamentService = tournamentService;
+        this.teamMapper = teamMapper;
     }
 
     public Tournament nextRound(Tournament tournament){
@@ -55,23 +55,8 @@ public class FinalPhaseService {
     public void startFinalPhase(Tournament tournament){
         var pools = poolService.getAllByTournament(tournament.getId());
 
-        var allMatchFinished = pools.stream()
-                .map(Pool::getGames)
-                .anyMatch(games -> games.stream().allMatch(game -> game.getWinner_id() != null));
-
-        if(!allMatchFinished) throw new RuntimeException("Il y a encore des matchs en cours");
-
-
         //Récupérer les équipes qualifiés
-        //List<Long> teamsQualified = getQualifiedTeams(tournament).stream().map(Team::getId).toList();
-
-        List<Long> teamsQualified = new ArrayList<>();
-
-        pools.forEach((pool -> {
-            teamsQualified.add(poolService.getFirstOfPool(pool));
-        }));
-
-
+        List<Long> teamsQualified = getQualifiedTeams(tournament).stream().map(Team::getId).toList();
 
         //if(!NumberUtils.isPowerOfTwo(pools.size())){
         if(!NumberUtils.isPowerOfTwo(teamsQualified.size())){
@@ -97,25 +82,17 @@ public class FinalPhaseService {
     private List<Game> createFinalPhaseGame(Tournament tournament, List<Long> teamsQualified){
         if(teamsQualified.size() == 2){
             var game = gameService.create(tournament, GameType.FINAL);
-
-            gameService.initGame(
-                    game,
-                    teamService.getById(teamsQualified.get(0)),
-                    teamService.getById(teamsQualified.get(1))
-            );
-
+            playService.playGame(game, teamService.getById(teamsQualified.get(0)));
+            playService.playGame(game, teamService.getById(teamsQualified.get(1)));
             return List.of(game);
         }
 
         List<Game> games = new ArrayList<>();
-        for(int i = 0; i < teamsQualified.size(); i+=2){
+        int nbGames = teamsQualified.size() / 2;
+        for(int i = 0; i < nbGames; i++){
             var game = gameService.create(tournament, GameType.correctType(teamsQualified.size()));
-
-            gameService.initGame(
-                    game,
-                    teamService.getById(teamsQualified.get(i)),
-                    teamService.getById(teamsQualified.get(i+1))
-            );
+            playService.playGame(game, teamService.getById(teamsQualified.get(i)));
+            playService.playGame(game, teamService.getById(teamsQualified.get(i+1)));
             games.add(game);
         }
         return games;
@@ -135,14 +112,8 @@ public class FinalPhaseService {
                 .filter(game -> game.getType().equals(currFinalPhase))
                 .toList();
 
-        var allMatchFinished = gameFiltered.stream().allMatch(game -> game.getWinner_id() != null);
-        if(!allMatchFinished) throw new RuntimeException("Il y a encore des matchs en cours");
-
         return gameService.getWinners(gameFiltered);
     }
-
-
-
 
     public HashMap<Team, Double> ratio(Tournament tournament){
         var tournamentGames = gameService.getAllByTournamentId(tournament.getId());
