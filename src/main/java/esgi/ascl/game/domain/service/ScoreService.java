@@ -7,6 +7,8 @@ import esgi.ascl.game.infra.repository.SetRepository;
 import esgi.ascl.game.infra.web.request.ScoreRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ScoreService {
     private static final int MAX_SCORE = 21;
@@ -46,6 +48,11 @@ public class ScoreService {
         return scoreRepository
                 .findBySetIdAndTeamId(setId, teamId)
                 .orElseThrow(() -> new ScoreNotFoundException("Score not found"));
+    }
+
+    public List<Score> getAllBySetId(Long setId) {
+        return scoreRepository
+                .findAllBySetId(setId);
     }
 
     public void updateValue(Long scoreId, int newValue){

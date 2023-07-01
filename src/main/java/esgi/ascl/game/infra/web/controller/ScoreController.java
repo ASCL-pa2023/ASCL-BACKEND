@@ -77,4 +77,16 @@ public class ScoreController {
 
         return new ResponseEntity<>(ScoreMapper.toResponse(score), HttpStatus.OK);
     }
+
+    @GetMapping("set/{setId}")
+    public ResponseEntity<?> getAllBySetId(@PathVariable Long setId){
+        try {setService.getById(setId);
+        } catch (SetNotFoundException e){return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);}
+
+        var scores = scoreService.getAllBySetId(setId)
+                .stream()
+                .map(ScoreMapper::toResponse)
+                .toList();
+        return new ResponseEntity<>(scores, HttpStatus.OK);
+    }
 }

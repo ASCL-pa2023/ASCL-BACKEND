@@ -173,4 +173,11 @@ public class GameService {
                 .toList();
     }
 
+    public List<Game> getGamesPlayByTeamInTournament(Long teamId, Long tournamentId){
+        return gameRepository.findAllByTournamentId(tournamentId)
+                .stream()
+                .filter(game -> getTeams(game.getId()).contains(teamService.getById(teamId)))
+                .toList();
+    }
+
 }
