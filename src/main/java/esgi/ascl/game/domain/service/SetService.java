@@ -51,6 +51,10 @@ public class SetService {
         return setCreated;
     }
 
+    public Set save(Set set) {
+        return setRepository.save(set);
+    }
+
 
     public Set getById(Long id) {
         return setRepository

@@ -197,6 +197,15 @@ public class GameService {
                 .findFirst()
                 .orElseThrow();
 
+        var sets = setService.getAllSetByGameId(game.getId())
+                .stream()
+                .filter(set -> set.getWinnerId() == null)
+                .map(set -> {
+                    set.setWinnerId(opponent.getId());
+                    return setService.save(set);
+                });
+
+
         game.setWinner_id(opponent.getId());
         return gameRepository.save(game);
     }
