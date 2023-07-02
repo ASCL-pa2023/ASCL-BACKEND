@@ -186,4 +186,19 @@ public class GameService {
                 .toList();
     }
 
+    public Game forfeitGame(Game game, Team team){
+        var teams = getTeams(game.getId());
+        if(!teams.contains(team)){
+            throw new GameException("Team not in game");
+        }
+
+        var opponent = teams.stream()
+                .filter(t -> !Objects.equals(t.getId(), team.getId()))
+                .findFirst()
+                .orElseThrow();
+
+        game.setWinner_id(opponent.getId());
+        return gameRepository.save(game);
+    }
+
 }

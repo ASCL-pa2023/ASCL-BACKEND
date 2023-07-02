@@ -127,4 +127,18 @@ public class GameController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PutMapping("{gameId}/forfeit/{teamId}")
+    public ResponseEntity<?> forfeitGame(@PathVariable Long gameId, @PathVariable Long teamId){
+        try {
+            var game = gameService.getById(gameId);
+            var team = teamService.getById(teamId);
+            gameService.forfeitGame(game, team);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
