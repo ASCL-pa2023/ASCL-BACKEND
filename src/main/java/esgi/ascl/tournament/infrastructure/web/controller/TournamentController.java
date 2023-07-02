@@ -1,5 +1,7 @@
 package esgi.ascl.tournament.infrastructure.web.controller;
 
+import com.google.gson.Gson;
+import esgi.ascl.game.domain.service.TeamService;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.exceptions.TournamentNotFoundException;
 import esgi.ascl.tournament.domain.mapper.TeamRatioMapper;
@@ -23,18 +25,21 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/tournament")
 public class TournamentController {
+    private static final Gson gson = new Gson();
     private final TournamentService tournamentService;
     private final FinalPhaseService finalPhaseService;
     private final TeamRatioMapper teamRatioMapper;
     private final StatisticsService statisticsService;
     private final TournamentStatsMapper tournamentStatsMapper;
+    private final TeamService teamService;
 
-    public TournamentController(TournamentService tournamentService, FinalPhaseService finalPhaseService, TeamRatioMapper teamRatioMapper, StatisticsService statisticsService, TournamentStatsMapper tournamentStatsMapper) {
+    public TournamentController(TournamentService tournamentService, FinalPhaseService finalPhaseService, TeamRatioMapper teamRatioMapper, StatisticsService statisticsService, TournamentStatsMapper tournamentStatsMapper, TeamService teamService) {
         this.tournamentService = tournamentService;
         this.finalPhaseService = finalPhaseService;
         this.teamRatioMapper = teamRatioMapper;
         this.statisticsService = statisticsService;
         this.tournamentStatsMapper = tournamentStatsMapper;
+        this.teamService = teamService;
     }
 
     @PostMapping("/create")
@@ -171,13 +176,13 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         try {
             tournamentService.getById(id);
         } catch (TournamentNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.NOT_FOUND);
         }
 
         try {
             tournamentService.updateStatus(id, status);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
 
         return ResponseEntity.ok().build();
@@ -188,7 +193,7 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         try {
             tournamentService.getById(id);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(tournamentService.tournamentRatio(id));
     }
@@ -199,7 +204,7 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         try {
             tournament = tournamentService.getById(id);
         } catch (TournamentNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.NOT_FOUND);
         }
 
         var ratio = finalPhaseService.ratio(tournament);
@@ -211,7 +216,7 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         try {
             tournamentService.getById(id);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.NOT_FOUND);
         }
 
         var poolRatio = tournamentService.poolRatio(id);
@@ -230,7 +235,7 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         try {
             tournamentService.start(id);
         }catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok().build();
     }
@@ -238,13 +243,15 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
     @PostMapping("/start-final-phase/{id}")
     public ResponseEntity<?> finalPhase(@PathVariable Long id) {
         Tournament tournament;
-        try {
-            tournament = tournamentService.getById(id);
+        try {tournament = tournamentService.getById(id);
         } catch (TournamentNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.NOT_FOUND);
         }
 
-        finalPhaseService.startFinalPhase(tournament);
+        try {finalPhaseService.startFinalPhase(tournament);}
+        catch (Exception e) {
+            return new ResponseEntity<>(gson.toJson(gson.toJson(e.getMessage())), HttpStatus.BAD_REQUEST);
+        }
 
         return ResponseEntity.ok().build();
     }
@@ -255,12 +262,16 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
         try {
             tournament = tournamentService.getById(id);
         } catch (TournamentNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.NOT_FOUND);
         }
 
-        var tournamentUpdated = finalPhaseService.nextRound(tournament);
-        if (tournamentUpdated.getWinner_id() != null) {
-            return new ResponseEntity<>(TournamentMapper.entityToResponse(tournamentUpdated), HttpStatus.OK);
+        try {
+            var tournamentUpdated = finalPhaseService.nextRound(tournament);
+            if (tournamentUpdated.getWinner_id() != null) {
+                return new ResponseEntity<>(TournamentMapper.entityToResponse(tournamentUpdated), HttpStatus.OK);
+            }
+        }catch (Exception e) {
+            return new ResponseEntity<>(gson.toJson(gson.toJson(e.getMessage())), HttpStatus.BAD_REQUEST);
         }
 
         return ResponseEntity.ok().build();
@@ -273,8 +284,23 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
             tournamentService.delete(tournament);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PatchMapping("{tournamentId}/winner/{winnerId}")
+    public ResponseEntity<?> setWinner(@PathVariable Long tournamentId, @PathVariable Long winnerId) {
+        Tournament tournament;
+        try {
+            tournament = tournamentService.getById(tournamentId);
+            teamService.getById(winnerId);
+
+            tournamentService.setWinner(tournament, winnerId);
+        } catch (Exception e) {
+            return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok().build();
     }
 
 
@@ -288,7 +314,7 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
 
             return ResponseEntity.ok(tournamentStatsMapper.toResponse(stats));
         } catch (TournamentNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -301,7 +327,7 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
 
             return ResponseEntity.ok(stats);
         } catch (TournamentNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(gson.toJson(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 }

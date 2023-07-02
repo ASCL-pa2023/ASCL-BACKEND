@@ -88,6 +88,16 @@ public class TournamentService {
         return tournamentRepository.save(TournamentMapper.requestToEntity(request));
     }
 
+    public Tournament save(Tournament tournament) {
+        return tournamentRepository.save(tournament);
+    }
+
+    public Tournament setWinner(Tournament tournament, Long teamId){
+        tournament.setWinner_id(teamId);
+        return tournamentRepository.save(tournament);
+    }
+
+
     public List<Tournament> getAll() {
         return tournamentRepository.findAll();
     }

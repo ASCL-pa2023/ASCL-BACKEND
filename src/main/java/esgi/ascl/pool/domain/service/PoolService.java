@@ -1,8 +1,12 @@
 package esgi.ascl.pool.domain.service;
 
 import esgi.ascl.game.domain.entities.Game;
+import esgi.ascl.game.domain.entities.Set;
 import esgi.ascl.game.domain.entities.Team;
+import esgi.ascl.game.domain.exeptions.TeamNotFoundException;
 import esgi.ascl.game.domain.service.PlayService;
+import esgi.ascl.game.domain.service.ScoreService;
+import esgi.ascl.game.domain.service.SetService;
 import esgi.ascl.game.domain.service.TeamService;
 import esgi.ascl.pool.domain.entity.Pool;
 import esgi.ascl.pool.domain.exception.PoolException;
@@ -19,12 +23,16 @@ public class PoolService {
     private final TournamentInscriptionService tournamentInscriptionService;
     private final PlayService playService;
     private final TeamService teamService;
+    private final SetService setService;
+    private final ScoreService scoreService;
 
-    public PoolService(PoolRepository poolRepository, TournamentInscriptionService tournamentInscriptionService, PlayService playService, TeamService teamService) {
+    public PoolService(PoolRepository poolRepository, TournamentInscriptionService tournamentInscriptionService, PlayService playService, TeamService teamService, SetService setService, ScoreService scoreService) {
         this.poolRepository = poolRepository;
         this.tournamentInscriptionService = tournamentInscriptionService;
         this.playService = playService;
         this.teamService = teamService;
+        this.setService = setService;
+        this.scoreService = scoreService;
     }
 
 
@@ -123,7 +131,13 @@ public class PoolService {
                 .toList();
     }
 
-    public List<Team> getFirstsOfPool(Pool pool){
+
+    /**
+     * Id's team of the first of the pool
+     * @param pool Pool
+     * @return Long id of the team
+     */
+    public Long getFirstOfPool(Pool pool){
         List<Team> firsts = new ArrayList<>();
         Map<Long, Integer> poolRecap = poolRecap(pool);
         int max = Collections.max(poolRecap.values());
@@ -132,7 +146,11 @@ public class PoolService {
                 firsts.add(teamService.getById(teamId));
             }
         });
-        return firsts;
+
+        if(firsts.size() != 1)
+            return teamWithMostDifferencePointsInPool(pool, firsts).getId();
+
+        return firsts.get(0).getId();
     }
 
 
@@ -148,6 +166,12 @@ public class PoolService {
         return seconds;
     }
 
+
+    /**
+     * Return map with team id as key and nb games won as value
+     * @param pool:pool to recap
+     * @return poolRecap:Map<Long, Integer>
+     */
     public Map<Long, Integer> poolRecap(Pool pool){
         SortedMap<Long, Integer> poolRecap = new TreeMap<>();
         var teams = pool.getTeams();
@@ -156,6 +180,59 @@ public class PoolService {
             poolRecap.put(team.getId(), nbGamesWon);
         });
         return poolRecap;
+    }
+
+    //Récuperer les matchs gagnés par une équipe dans une poule
+    // Comparer le nombre de points d'écart entre les deux équipes
+    // Prendre l'équipe qui a le plus de points d'écart
+    // Si égalité, prendre au hasard
+
+    /**
+     * Return team who have the most points of difference
+     * @param pool:pool to recap
+     * @param teams : teams to compare
+     * @return winner:Team
+     */
+    private Team teamWithMostDifferencePointsInPool(Pool pool, List<Team> teams){
+        var map = new HashMap<Team, Integer>();
+        teams.forEach(team -> map.put(team, 0));
+
+        for (Team team : teams) {
+            var gamesWonByTeam = getGamesWonByTeamInPool(pool, team.getId());
+            for (Game game : gamesWonByTeam) {
+                var gameSets = setService.getAllSetByGameId(game.getId());
+                for (Set set : gameSets) {
+                    var currTeamScore = scoreService.getBySetIdAndTeamId(set.getId(), team.getId());
+                    var plays = playService.getPlaysByGameId(game.getId());
+                    var opponent = plays
+                            .stream()
+                            .filter(play -> !play.getTeam().getId().equals(team.getId()))
+                            .findFirst()
+                            .orElseThrow(() -> new TeamNotFoundException("Opponent not found"))
+                            .getTeam();
+
+                    var opponentScore = scoreService.getBySetIdAndTeamId(set.getId(), opponent.getId());
+
+                    Integer scoreDiff = currTeamScore.getValue() - opponentScore.getValue();
+
+                    map.put(team, map.get(team) + scoreDiff);
+                }
+            }
+        }
+
+        var maxDifference = Collections.max(map.values());
+        var result = new ArrayList<Team>();
+        map.forEach((team, score) -> {
+            if (Objects.equals(score, maxDifference)) {
+                result.add(team);
+            }
+        });
+
+
+        if (result.size() != 1)
+            return result.get(new Random().nextInt(result.size()));
+
+        return result.get(0);
     }
 
     public SortedMap<Long, Double> teamsRecapRatio(Pool pool){
@@ -174,13 +251,6 @@ public class PoolService {
             poolRecap.put(team.getId(), ratio);
         });
         return poolRecap;
-    }
-
-    public List<Long> getIdsTeamQualified(Pool pool){
-        return getFirstsOfPool(pool)
-                .stream()
-                .map(Team::getId)
-                .toList();
     }
 
 
