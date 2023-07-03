@@ -1,5 +1,7 @@
 package esgi.ascl.tournament.infrastructure.web.controller;
 
+import esgi.ascl.file.ExcelFileMapper;
+import esgi.ascl.file.TournamentRegistrationWriter;
 import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.exeptions.TeamNotFoundException;
 import esgi.ascl.game.infra.web.response.TeamResponse;
@@ -28,12 +30,14 @@ public class TournamentInscriptionController {
     private final TournamentInscriptionVerification tournamentInscriptionVerification;
     private final TournamentService tournamentService;
     private final TeamService teamService;
+    private final TournamentRegistrationWriter tournamentRegistrationWriter;
 
-    public TournamentInscriptionController(TournamentInscriptionService tournamentInscriptionService, TournamentInscriptionVerification tournamentInscriptionVerification, TournamentService tournamentService, TeamService teamService) {
+    public TournamentInscriptionController(TournamentInscriptionService tournamentInscriptionService, TournamentInscriptionVerification tournamentInscriptionVerification, TournamentService tournamentService, TeamService teamService, TournamentRegistrationWriter tournamentRegistrationWriter) {
         this.tournamentInscriptionService = tournamentInscriptionService;
         this.tournamentInscriptionVerification = tournamentInscriptionVerification;
         this.tournamentService = tournamentService;
         this.teamService = teamService;
+        this.tournamentRegistrationWriter = tournamentRegistrationWriter;
     }
 
 
@@ -147,6 +151,19 @@ public class TournamentInscriptionController {
     public ResponseEntity<?> deleteByTournamentIdAndTeamId(@PathVariable Long tournamentId, @PathVariable Long teamId){
         tournamentInscriptionService.deleteByTournamentIdAndTeamId(tournamentId, teamId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("tournament/{tournamentId}/file")
+    public ResponseEntity<?> fillExcel(@PathVariable Long tournamentId){
+        try {
+            var tournament = tournamentService.getById(tournamentId);
+            var file = tournamentRegistrationWriter.excelReview(tournament);
+
+            return new ResponseEntity<>(ExcelFileMapper.toResponse(file), HttpStatus.OK);
+        } catch (TournamentNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
     }
 
 }
