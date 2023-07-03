@@ -15,6 +15,7 @@ public class UserMapper {
                 .setPhone(user.getPhone())
                 .setFirstname(user.getFirstname())
                 .setLastname(user.getLastname())
+                .setBio(user.getBio())
                 .setBirthday(user.getBirthday())
                 .setRole(user.getRole());
     }
