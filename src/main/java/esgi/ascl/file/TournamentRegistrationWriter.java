@@ -21,7 +21,10 @@ import java.util.List;
 
 @Service
 public class TournamentRegistrationWriter {
-    
+
+    private final static String templateFilePath = "src/main/resources/template.xlsx";
+private final static String outputFilePath = "src/main/resources/output.xlsx";
+
     private final TournamentInscriptionService tournamentInscriptionService;
     private final TeamService teamService;
 
@@ -33,8 +36,6 @@ public class TournamentRegistrationWriter {
 
     public void fillExcel(Tournament tournament){
         var tournamentInscriptionList = tournamentInscriptionService.getAllByTournamentId(tournament.getId());
-        String templateFilePath = "src/main/resources/template.xlsx";
-        String outputFilePath = "src/main/resources/output.xlsx";
 
         try {
             FileInputStream templateFile = new FileInputStream(templateFilePath);
@@ -46,10 +47,15 @@ public class TournamentRegistrationWriter {
             Cell cell2 = locationRow.createCell(1);
             cell2.setCellValue(tournament.getLocation());
 
-            /******* Nombre de places *******/
+            /******* Type de tournois *******/
             Row typeRow = recapSheet.getRow(1);
             Cell typeCell = typeRow.createCell(1);
-            typeCell.setCellValue(tournament.getPlaces_number());
+            typeCell.setCellValue(tournament.getType().toString());
+
+            /******* Nombre de places *******/
+            Row placesNumberRow = recapSheet.getRow(2);
+            Cell placesNumberCell = placesNumberRow.createCell(1);
+            placesNumberCell.setCellValue(tournament.getPlaces_number());
 
             /******* Nombre de participants *******/
             Row nbParticipantsRow = recapSheet.getRow(3);
@@ -59,19 +65,17 @@ public class TournamentRegistrationWriter {
             /******* Fin des inscriptions *******/
             Row deadlineRow = recapSheet.getRow(4);
             Cell deadlineCell = deadlineRow.createCell(1);
-            deadlineCell.setCellValue(tournament.getDeadline_inscription_date());
+            deadlineCell.setCellValue(tournament.getDeadline_inscription_date().toString().split(" ")[0]);
 
             /******* Début du tournois *******/
             Row startRow = recapSheet.getRow(5);
             Cell startCell = startRow.createCell(1);
-            startCell.setCellValue(tournament.getStart_date());
-
+            startCell.setCellValue(tournament.getStart_date().toString().split(" ")[0]);
 
             /******* Fin du tournois *******/
             Row endRow = recapSheet.getRow(6);
             Cell endCell = endRow.createCell(1);
-            endCell.setCellValue(tournament.getEnd_date());
-
+            endCell.setCellValue(tournament.getEnd_date().toString().split(" ")[0]);
 
             Sheet registrationSheet = workbook.getSheetAt(1);
             for (int i = 1; i < tournamentInscriptionList.size(); i++) {
@@ -105,9 +109,9 @@ public class TournamentRegistrationWriter {
 
     }
 
-    private byte[] fileToByteArray(String path){
+    private byte[] fileToByteArray(){
         try {
-            File file = new File(path);
+            File file = new File(outputFilePath);
             return Files.readAllBytes(file.toPath());
         } catch (IOException e){
             throw new RuntimeException(e);
@@ -117,6 +121,6 @@ public class TournamentRegistrationWriter {
 
     public byte[] excelReview(Tournament tournament){
         fillExcel(tournament);
-        return fileToByteArray("src/main/resources/output.xlsx");
+        return fileToByteArray();
     }
 }
