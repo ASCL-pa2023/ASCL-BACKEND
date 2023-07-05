@@ -112,6 +112,7 @@ public class TournamentService {
                 .setDeadline_inscription_date(request.getDeadline_inscription_date() != null ? request.getDeadline_inscription_date() : tournament.getDeadline_inscription_date())
                 .setType(request.getTournamentType() != null ? TournamentType.valueOf(request.getTournamentType().toUpperCase()) : tournament.getType())
                 .setPlaces_number(request.getPlaces_number() == 0 ? tournament.getPlaces_number() : request.getPlaces_number())
+                .setDescription(request.getDescription() != null ? request.getDescription() : tournament.getDescription())
                 .setStatus(request.getStatus() != null ? TournamentStatus.valueOf(request.getStatus().toUpperCase()) : tournament.getStatus());
         return tournamentRepository.save(tournament);
     }

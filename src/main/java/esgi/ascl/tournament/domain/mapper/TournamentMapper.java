@@ -21,6 +21,7 @@ public class TournamentMapper {
                 .places_number(tournament.getPlaces_number())
                 .winner_id(tournament.getWinner_id())
                 .is_started(tournament.getIs_started())
+                .description(tournament.getDescription())
                 .status(tournament.getStatus().toString())
                 .build();
     }
@@ -33,6 +34,7 @@ public class TournamentMapper {
                 .setStart_date(request.getStart_date())
                 .setType(TournamentType.valueOf(request.getTournamentType()))
                 .setPlaces_number(request.getPlaces_number())
+                .setDescription(request.getDescription())
                 .setStatus(TournamentStatus.NOT_STARTED);
     }
 

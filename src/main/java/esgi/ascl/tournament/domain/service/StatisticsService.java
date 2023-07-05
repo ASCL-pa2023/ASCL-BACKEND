@@ -7,6 +7,7 @@ import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.exeptions.TeamNotFoundException;
 import esgi.ascl.game.domain.service.*;
 import esgi.ascl.tournament.domain.entities.*;
+import esgi.ascl.tournament.domain.exceptions.TournamentException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -32,6 +33,9 @@ public class StatisticsService {
 
 
     public TournamentStats tournamentStats(Tournament tournament){
+        if(tournament.getStatus() == TournamentStatus.NOT_STARTED)
+            return null;
+
         var tournamentStats = new TournamentStats()
                 .setTournamentId(tournament.getId());
 
@@ -43,7 +47,10 @@ public class StatisticsService {
         var allTournamentScore = getAllScore(tournament);
         tournamentStats.setNbPointsScored(nbPointsScored(allTournamentScore));
 
-        tournamentStats.setPercentageOfPointsScored((tournamentStats.getNbPointsScored() * 100) / tournamentStats.getNbPossiblePoints());
+        if(tournamentStats.getNbPointsScored() == 0 || tournamentStats.getNbPossiblePoints() == 0)
+            tournamentStats.setPercentageOfPointsScored(0);
+        else
+            tournamentStats.setPercentageOfPointsScored((tournamentStats.getNbPointsScored() * 100) / tournamentStats.getNbPossiblePoints());
 
         tournamentStats.setTeamWithMostPointsDifference(teamWithMostPointsDifference(tournament));
 

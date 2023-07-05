@@ -41,6 +41,9 @@ public class Tournament {
     @Column(name = "is_started")
     private boolean is_started;
 
+    @Column(name = "description")
+    private String description;
+
     @Enumerated(EnumType.STRING)
     private TournamentStatus status;
 
@@ -123,6 +126,15 @@ public class Tournament {
 
     public Tournament setIs_started(boolean is_started) {
         this.is_started = is_started;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Tournament setDescription(String description) {
+        this.description = description;
         return this;
     }
 

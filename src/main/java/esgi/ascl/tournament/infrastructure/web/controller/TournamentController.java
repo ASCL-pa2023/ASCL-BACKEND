@@ -311,6 +311,9 @@ public ResponseEntity<List<TournamentResponse>> getTournamentByDate(@RequestBody
             var tournament = tournamentService.getById(id);
 
             var stats = statisticsService.tournamentStats(tournament);
+            if(stats == null)
+                return ResponseEntity.ok().build();
+
 
             return ResponseEntity.ok(tournamentStatsMapper.toResponse(stats));
         } catch (TournamentNotFoundException e) {
