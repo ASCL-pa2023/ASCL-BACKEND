@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -18,11 +18,11 @@ public class TournamentResponse {
     @JsonProperty("location")
     private String location;
     @JsonProperty("start_date")
-    private Date start_date;
+    private LocalDateTime start_date;
     @JsonProperty("end_date")
-    private Date end_date;
+    private LocalDateTime end_date;
     @JsonProperty("deadline_inscription_date")
-    private Date deadline_inscription_date;
+    private LocalDateTime deadline_inscription_date;
     @JsonProperty("tournament_type")
     private String tournamentType;
     @JsonProperty("places_number")

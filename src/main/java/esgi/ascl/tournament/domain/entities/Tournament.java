@@ -5,6 +5,7 @@ import esgi.ascl.game.domain.entities.GameType;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -21,13 +22,13 @@ public class Tournament {
     private String location;
 
     @Column(name = "start_date")
-    private Date start_date;
+    private LocalDateTime start_date;
 
     @Column(name = "end_date")
-    private Date end_date;
+    private LocalDateTime end_date;
 
     @Column(name = "deadline_inscription_date")
-    private Date deadline_inscription_date;
+    private LocalDateTime deadline_inscription_date;
 
     @Enumerated(EnumType.STRING)
     private TournamentType type;
@@ -37,9 +38,6 @@ public class Tournament {
 
     @Column(name = "winner_id")
     private Long winner_id;
-
-    @Column(name = "is_started")
-    private boolean is_started;
 
     @Column(name = "description")
     private String description;
@@ -66,29 +64,29 @@ public class Tournament {
         return this;
     }
 
-    public Date getStart_date() {
+    public LocalDateTime getStart_date() {
         return start_date;
     }
 
-    public Tournament setStart_date(Date start_date) {
+    public Tournament setStart_date(LocalDateTime start_date) {
         this.start_date = start_date;
         return this;
     }
 
-    public Date getEnd_date() {
+    public LocalDateTime getEnd_date() {
         return end_date;
     }
 
-    public Tournament setEnd_date(Date end_date) {
+    public Tournament setEnd_date(LocalDateTime end_date) {
         this.end_date = end_date;
         return this;
     }
 
-    public Date getDeadline_inscription_date() {
+    public LocalDateTime getDeadline_inscription_date() {
         return deadline_inscription_date;
     }
 
-    public Tournament setDeadline_inscription_date(Date deadline_inscription_date) {
+    public Tournament setDeadline_inscription_date(LocalDateTime deadline_inscription_date) {
         this.deadline_inscription_date = deadline_inscription_date;
         return this;
     }
@@ -120,14 +118,6 @@ public class Tournament {
         return this;
     }
 
-    public boolean getIs_started() {
-        return is_started;
-    }
-
-    public Tournament setIs_started(boolean is_started) {
-        this.is_started = is_started;
-        return this;
-    }
 
     public String getDescription() {
         return description;

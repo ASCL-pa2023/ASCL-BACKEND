@@ -18,6 +18,8 @@ import esgi.ascl.tournament.infrastructure.web.request.TournamentRequest;
 import esgi.ascl.utils.Levenshtein;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -71,9 +73,18 @@ public class TournamentService {
         List<Tournament> tournamentsByDate = null;
 
         tournaments.forEach(tournament -> {
+            /*
             if(tournament.getStart_date().after(dateLess2Days) && tournament.getEnd_date().before(datePlus2Days)){
                 tournamentsByDate.add(tournament);
             }
+             */
+            var dateLess2DaysParsed = dateLess2Days.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            var datePlus2DaysParsed = datePlus2Days.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+            if(tournament.getStart_date().isAfter(dateLess2DaysParsed) && tournament.getEnd_date().isBefore(datePlus2DaysParsed)){
+                tournamentsByDate.add(tournament);
+            }
+
         });
 
         return tournamentsByDate;
@@ -107,9 +118,9 @@ public class TournamentService {
 
         tournament
                 .setLocation(request.getLocation() != null ? request.getLocation() : tournament.getLocation())
-                .setStart_date(request.getStart_date() != null ? request.getStart_date() : tournament.getStart_date())
-                .setEnd_date(request.getEnd_date() != null ? request.getEnd_date() : tournament.getEnd_date())
-                .setDeadline_inscription_date(request.getDeadline_inscription_date() != null ? request.getDeadline_inscription_date() : tournament.getDeadline_inscription_date())
+                .setStart_date(request.getStart_date() != null ? LocalDateTime.parse(request.getStart_date()) : tournament.getStart_date())
+                .setEnd_date(request.getEnd_date() != null ? LocalDateTime.parse(request.getEnd_date()) : tournament.getEnd_date())
+                .setDeadline_inscription_date(request.getDeadline_inscription_date() != null ? LocalDateTime.parse(request.getDeadline_inscription_date()) : tournament.getDeadline_inscription_date())
                 .setType(request.getTournamentType() != null ? TournamentType.valueOf(request.getTournamentType().toUpperCase()) : tournament.getType())
                 .setPlaces_number(request.getPlaces_number() == 0 ? tournament.getPlaces_number() : request.getPlaces_number())
                 .setDescription(request.getDescription() != null ? request.getDescription() : tournament.getDescription())
