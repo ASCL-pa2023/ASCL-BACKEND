@@ -41,6 +41,7 @@ public class AuthenticationService {
     var user = User.builder()
         .firstname(request.getFirstname())
         .lastname(request.getLastname())
+        .birthday(request.getBirthday())
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
         .role(request.getRole() == null ? Role.USER : Role.valueOf(request.getRole()))
