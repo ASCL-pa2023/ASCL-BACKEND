@@ -65,17 +65,17 @@ private final static String outputFilePath = "src/main/resources/output.xlsx";
             /******* Fin des inscriptions *******/
             Row deadlineRow = recapSheet.getRow(4);
             Cell deadlineCell = deadlineRow.createCell(1);
-            deadlineCell.setCellValue(tournament.getDeadline_inscription_date().toString().split(" ")[0]);
+            deadlineCell.setCellValue(tournament.getDeadline_inscription_date().toString());
 
             /******* Début du tournois *******/
             Row startRow = recapSheet.getRow(5);
             Cell startCell = startRow.createCell(1);
-            startCell.setCellValue(tournament.getStart_date().toString().split(" ")[0]);
+            startCell.setCellValue(tournament.getStart_date().toString());
 
             /******* Fin du tournois *******/
             Row endRow = recapSheet.getRow(6);
             Cell endCell = endRow.createCell(1);
-            endCell.setCellValue(tournament.getEnd_date().toString().split(" ")[0]);
+            endCell.setCellValue(tournament.getEnd_date().toString());
 
             Sheet registrationSheet = workbook.getSheetAt(1);
             for (int i = 1; i < tournamentInscriptionList.size(); i++) {
@@ -102,7 +102,6 @@ private final static String outputFilePath = "src/main/resources/output.xlsx";
             outputFile.close();
             templateFile.close();
 
-            System.out.println("Le fichier Excel a été créé avec succès.");
         } catch (IOException e) {
             e.printStackTrace();
         }
