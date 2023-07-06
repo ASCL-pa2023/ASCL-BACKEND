@@ -35,17 +35,30 @@ public class TournamentRegistrationWriter {
         this.fileService = fileService;
     }
 
-    public Workbook getTemplate() {
+    private Workbook getTemplate() {
         byte[] template = this.fileService.getFile("template.xlsx");
         Workbook result = null;
-
         try {
             result = new XSSFWorkbook(new ByteArrayInputStream(template));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return result;
+    }
+
+    private Workbook getExcelOutput() {
+        byte[] template = this.fileService.getFile("output.xlsx");
+        Workbook result = null;
+        try {
+            result = new XSSFWorkbook(new ByteArrayInputStream(template));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public byte[] getExcelOutputBytes() {
+        return this.fileService.getFile("output.xlsx");
     }
 
 
@@ -120,7 +133,11 @@ public class TournamentRegistrationWriter {
 
             // Enregistrez les modifications dans le fichier de sortie
             FileOutputStream outputFile = new FileOutputStream(outputFilePath);
-            workbook.write(outputFile);
+            //workbook.write(outputFile);
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            byteArrayOutputStream.write(getExcelOutputBytes());
+            workbook.write(byteArrayOutputStream);
 
             // Fermez les flux
             outputFile.close();
