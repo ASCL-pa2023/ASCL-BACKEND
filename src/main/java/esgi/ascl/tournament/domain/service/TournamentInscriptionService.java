@@ -1,5 +1,6 @@
 package esgi.ascl.tournament.domain.service;
 
+import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.game.domain.mapper.TeamMapper;
 import esgi.ascl.game.domain.service.TeamService;
 import esgi.ascl.game.infra.web.response.TeamResponse;
@@ -63,11 +64,20 @@ public class TournamentInscriptionService {
 
         getAllByTournamentId(tournamentId)
                 .forEach(registration -> {
-                    //var users = teamService.getAllUserByTeam(registration.getTeam().getId())
-                     //       .stream().map(UserMapper::entityToResponse).toList();
                     res.add(teamMapper.toResponse(registration.getTeam()));
                 });
 
+        return res;
+    }
+
+    public List<User> getAllUsersByTournamentId(Long tournamentId){
+        var res = new ArrayList<User>();
+
+        getAllByTournamentId(tournamentId)
+                .forEach(registration -> {
+                    var users = teamService.getAllUserByTeam(registration.getTeam().getId());
+                    res.addAll(users);
+                });
         return res;
     }
 

@@ -1,5 +1,6 @@
 package esgi.ascl.tournament.infrastructure.web.controller;
 
+import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.file.ExcelFileMapper;
 import esgi.ascl.file.TournamentRegistrationWriter;
 import esgi.ascl.game.domain.entities.Team;
@@ -116,6 +117,21 @@ public class TournamentInscriptionController {
 
         List<TeamResponse> teams = tournamentInscriptionService.getAllTeamsByTournamentId(tournamentId);
         return new ResponseEntity<>(teams, HttpStatus.OK);
+    }
+
+    @GetMapping("tournament/{tournamentId}/users")
+    public ResponseEntity<?> getUsersRegisteredByTournament(@PathVariable Long tournamentId){
+        try {
+            tournamentService.getById(tournamentId);
+        } catch (TournamentNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+        var users = tournamentInscriptionService.getAllUsersByTournamentId(tournamentId)
+                .stream()
+                .map(UserMapper::entityToResponse)
+                .toList();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("team/{teamId}")
