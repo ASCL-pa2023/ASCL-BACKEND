@@ -154,7 +154,7 @@ public class StatisticsService {
         for (Game game : gamePlayed){
             var setsWon = setService.getAllSetByGameId(game.getId())
                     .stream()
-                    .filter(set -> set.getWinnerId().equals(team.getId()))
+                    .filter(set -> set.getWinnerId() != null && set.getWinnerId().equals(team.getId()))
                     .toList()
                     .size();
             nbSetsWon += setsWon;
