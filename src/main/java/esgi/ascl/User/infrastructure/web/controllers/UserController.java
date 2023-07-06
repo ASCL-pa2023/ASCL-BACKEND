@@ -107,7 +107,7 @@ public class UserController {
         var profilePictureResponse = profilePictureService.download(userId);
         if (profilePictureResponse == null) return new ResponseEntity<>(null, HttpStatus.OK);
 
-        return new ResponseEntity<>(profilePictureService.download(userId), HttpStatus.OK);
+        return new ResponseEntity<>(profilePictureResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("{userId}/profilePicture/delete")
