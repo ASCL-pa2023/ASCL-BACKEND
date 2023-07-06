@@ -62,7 +62,7 @@ public class TournamentRegistrationWriter {
     }
 
 
-    public void fillExcel(Tournament tournament){
+    public Workbook fillExcel(Tournament tournament){
         var tournamentInscriptionList = tournamentInscriptionService.getAllByTournamentId(tournament.getId());
 
         try {
@@ -143,11 +143,26 @@ public class TournamentRegistrationWriter {
             //outputFile.close();
             //templateFile.close();
 
+            return workbook;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        return null;
     }
+
+    private byte[] workbookToByteArray(Workbook workbook){
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            workbook.write(byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
     private byte[] fileToByteArray(){
         try {
@@ -160,7 +175,8 @@ public class TournamentRegistrationWriter {
 
 
     public byte[] excelReview(Tournament tournament){
-        fillExcel(tournament);
-        return fileToByteArray();
+        var a = fillExcel(tournament);
+        //return fileToByteArray();
+        return workbookToByteArray(a);
     }
 }
