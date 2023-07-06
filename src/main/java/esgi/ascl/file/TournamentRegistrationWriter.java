@@ -57,12 +57,14 @@ public class TournamentRegistrationWriter {
             var b = Objects.requireNonNull(getClass().getResource("/excel/template.xlsx")).getFile();
             var fileStream = getClass().getClassLoader().getResourceAsStream("excel/template.xlsx");
 
+            InputStream in = getClass().getResourceAsStream("excel/file.txt");
+            if (in == null) {
+                throw new IllegalArgumentException("excel/file.txt" + " is not found");
+            }
 
             //FileInputStream templateFile = new FileInputStream(templateFilePath);
-            //FileInputStream templateFile = new FileInputStream(b);
-            //Workbook workbook = new XSSFWorkbook(templateFile);
-            assert fileStream != null;
-            Workbook workbook = new XSSFWorkbook(fileStream);
+            FileInputStream templateFile = new FileInputStream(b);
+            Workbook workbook = new XSSFWorkbook(in);
             Sheet recapSheet = workbook.getSheetAt(0);
 
             /******* Lieux du tournois *******/
