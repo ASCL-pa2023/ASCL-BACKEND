@@ -66,16 +66,6 @@ public class TournamentRegistrationWriter {
         var tournamentInscriptionList = tournamentInscriptionService.getAllByTournamentId(tournament.getId());
 
         try {
-            var a = Paths.get(templateFilePath).toFile();
-            var b = Objects.requireNonNull(getClass().getResource("/template.xlsx")).getFile();
-            var fileStream = getClass().getClassLoader().getResourceAsStream("template.xlsx");
-
-            InputStream in = getClass().getClassLoader().getResourceAsStream("/template.xlsx");
-
-
-            //FileInputStream templateFile = new FileInputStream(templateFilePath);
-            //FileInputStream templateFile = new FileInputStream(b);
-            //Workbook workbook = new XSSFWorkbook(in);
             Workbook workbook = getTemplate();
             Sheet recapSheet = workbook.getSheetAt(0);
 
@@ -102,17 +92,21 @@ public class TournamentRegistrationWriter {
             /******* Fin des inscriptions *******/
             Row deadlineRow = recapSheet.getRow(4);
             Cell deadlineCell = deadlineRow.createCell(1);
-            deadlineCell.setCellValue(tournament.getDeadline_inscription_date().toString());
+
+            var deadlineDateSplit = tournament.getDeadline_inscription_date().toString().split("T");
+            deadlineCell.setCellValue(deadlineDateSplit[0] + " " + deadlineDateSplit[1]);
 
             /******* Début du tournois *******/
             Row startRow = recapSheet.getRow(5);
             Cell startCell = startRow.createCell(1);
-            startCell.setCellValue(tournament.getStart_date().toString());
+            var startDateSplit = tournament.getDeadline_inscription_date().toString().split("T");
+            startCell.setCellValue(startDateSplit[0] + " " + startDateSplit[1]);
 
             /******* Fin du tournois *******/
             Row endRow = recapSheet.getRow(6);
             Cell endCell = endRow.createCell(1);
-            endCell.setCellValue(tournament.getEnd_date().toString());
+            var endDateSplit = tournament.getEnd_date().toString().split("T");
+            endCell.setCellValue(endDateSplit[0] + " " + endDateSplit[1]);
 
             Sheet registrationSheet = workbook.getSheetAt(1);
             for (int i = 1; i < tournamentInscriptionList.size(); i++) {
@@ -131,24 +125,15 @@ public class TournamentRegistrationWriter {
                 }
             }
 
-            // Enregistrez les modifications dans le fichier de sortie
-            //FileOutputStream outputFile = new FileOutputStream(outputFilePath);
-            //workbook.write(outputFile);
-
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             byteArrayOutputStream.write(getExcelOutputBytes());
             workbook.write(byteArrayOutputStream);
-
-            // Fermez les flux
-            //outputFile.close();
-            //templateFile.close();
 
             return workbook;
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -163,7 +148,6 @@ public class TournamentRegistrationWriter {
     }
 
 
-
     private byte[] fileToByteArray(){
         try {
             File file = new File(outputFilePath);
@@ -176,7 +160,6 @@ public class TournamentRegistrationWriter {
 
     public byte[] excelReview(Tournament tournament){
         var a = fillExcel(tournament);
-        //return fileToByteArray();
         return workbookToByteArray(a);
     }
 }
