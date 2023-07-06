@@ -36,7 +36,7 @@ public class TournamentRegistrationWriter {
     }
 
     public Workbook getTemplate() {
-        byte[] template = this.fileService.getFile("template.xlsx");
+        byte[] template = this.fileService.getFile("excel/template.xlsx");
         Workbook result = null;
 
         try {
@@ -54,12 +54,14 @@ public class TournamentRegistrationWriter {
 
         try {
             var a = Paths.get(templateFilePath).toFile();
-            var b = Objects.requireNonNull(getClass().getResource("/template.xlsx")).getFile();
-            var fileStream = getClass().getClassLoader().getResourceAsStream("template.xlsx");
+            var b = Objects.requireNonNull(getClass().getResource("/excel/template.xlsx")).getFile();
+            var fileStream = getClass().getClassLoader().getResourceAsStream("excel/template.xlsx");
+
 
             //FileInputStream templateFile = new FileInputStream(templateFilePath);
             //FileInputStream templateFile = new FileInputStream(b);
             //Workbook workbook = new XSSFWorkbook(templateFile);
+            assert fileStream != null;
             Workbook workbook = new XSSFWorkbook(fileStream);
             Sheet recapSheet = workbook.getSheetAt(0);
 
