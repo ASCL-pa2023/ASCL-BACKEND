@@ -4,6 +4,7 @@ import esgi.ascl.User.domain.entities.Role;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.game.domain.entities.Game;
+import esgi.ascl.game.domain.entities.GameStatus;
 import esgi.ascl.game.domain.entities.GameType;
 import esgi.ascl.game.domain.entities.Team;
 import esgi.ascl.game.domain.exeptions.GameException;
@@ -44,7 +45,14 @@ public class GameService {
                 new Game()
                         .setTournament(tournament)
                         .setType(gameType)
+                        .setStatus(GameStatus.NOT_STARTED)
         );
+    }
+
+    public Game changeStatus(Long id, GameStatus status){
+        var game = getById(id);
+        game.setStatus(status);
+        return gameRepository.save(game);
     }
 
     public void initGame(Game game, Team team1, Team team2){
@@ -168,6 +176,7 @@ public class GameService {
             throw new GameException("Team not in game");
         }
 
+        game.setStatus(GameStatus.FINISHED);
         game.setWinner_id(team.getId());
         return gameRepository.save(game);
     }

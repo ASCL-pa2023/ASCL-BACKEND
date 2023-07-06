@@ -29,6 +29,8 @@ public class Game {
 
     @Enumerated(EnumType.STRING)
     private GameType type;
+    @Enumerated(EnumType.STRING)
+    private GameStatus status;
 
 
     public Long getId() {
@@ -77,6 +79,15 @@ public class Game {
 
     public Game setType(GameType type) {
         this.type = type;
+        return this;
+    }
+
+    public GameStatus getStatus() {
+        return status;
+    }
+
+    public Game setStatus(GameStatus status) {
+        this.status = status;
         return this;
     }
 }

@@ -25,6 +25,7 @@ public class GameMapper {
                 .setHourly(game.getHourly())
                 .setWinner_id(game.getWinner_id())
                 .setType(game.getType())
+                .setStatus(game.getStatus())
                 .setTeams(
                         gameService.getTeams(game.getId())
                                 .stream()

@@ -5,6 +5,7 @@ import esgi.ascl.User.domain.mapper.UserMapper;
 import esgi.ascl.User.domain.service.UserService;
 import esgi.ascl.User.infrastructure.web.response.GameResponse;
 import esgi.ascl.game.domain.entities.Game;
+import esgi.ascl.game.domain.entities.GameStatus;
 import esgi.ascl.game.domain.exeptions.GameNotFoundException;
 import esgi.ascl.game.domain.mapper.GameMapper;
 import esgi.ascl.game.domain.service.GameService;
@@ -80,6 +81,16 @@ public class GameController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("{gameId}/status/{status}")
+    public ResponseEntity<?> updateStatus(@PathVariable Long gameId, @PathVariable String status){
+        try {
+            var game = gameService.changeStatus(gameId, GameStatus.valueOf(status.toUpperCase()));
+            return new ResponseEntity<>(GameMapper.entityToResponse(game), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package esgi.ascl.User.infrastructure.web.response;
 
+import esgi.ascl.game.domain.entities.GameStatus;
 import esgi.ascl.game.domain.entities.GameType;
 import esgi.ascl.game.infra.web.response.TeamResponse;
 import org.joda.time.DateTime;
@@ -14,6 +15,7 @@ public class GameResponse {
     public DateTime hourly;
     public Long winner_id;
     public GameType type;
+    public GameStatus status;
     public List<TeamResponse> teams;
 
 
@@ -68,6 +70,15 @@ public class GameResponse {
 
     public GameResponse setType(GameType type) {
         this.type = type;
+        return this;
+    }
+
+    public GameStatus getStatus() {
+        return status;
+    }
+
+    public GameResponse setStatus(GameStatus status) {
+        this.status = status;
         return this;
     }
 
