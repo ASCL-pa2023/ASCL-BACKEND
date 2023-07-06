@@ -57,9 +57,9 @@ public class TournamentRegistrationWriter {
             var b = Objects.requireNonNull(getClass().getResource("/excel/template.xlsx")).getFile();
             var fileStream = getClass().getClassLoader().getResourceAsStream("excel/template.xlsx");
 
-            InputStream in = getClass().getResourceAsStream("excel/file.txt");
+            InputStream in = getClass().getResourceAsStream("excel/template.xlsx");
             if (in == null) {
-                throw new IllegalArgumentException("excel/file.txt" + " is not found");
+                throw new IllegalArgumentException("excel/template.xlsx" + " is not found");
             }
 
             //FileInputStream templateFile = new FileInputStream(templateFilePath);
