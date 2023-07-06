@@ -132,7 +132,7 @@ public class TournamentRegistrationWriter {
             }
 
             // Enregistrez les modifications dans le fichier de sortie
-            FileOutputStream outputFile = new FileOutputStream(outputFilePath);
+            //FileOutputStream outputFile = new FileOutputStream(outputFilePath);
             //workbook.write(outputFile);
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -140,7 +140,7 @@ public class TournamentRegistrationWriter {
             workbook.write(byteArrayOutputStream);
 
             // Fermez les flux
-            outputFile.close();
+            //outputFile.close();
             //templateFile.close();
 
         } catch (IOException e) {
