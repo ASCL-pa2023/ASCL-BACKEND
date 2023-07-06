@@ -17,6 +17,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class TournamentRegistrationWriter {
@@ -53,10 +54,13 @@ public class TournamentRegistrationWriter {
 
         try {
             var a = Paths.get(templateFilePath).toFile();
+            var b = Objects.requireNonNull(getClass().getResource("/template.xlsx")).getFile();
+            var fileStream = getClass().getClassLoader().getResourceAsStream("template.xlsx");
 
             //FileInputStream templateFile = new FileInputStream(templateFilePath);
-            FileInputStream templateFile = new FileInputStream(a);
-            Workbook workbook = new XSSFWorkbook(templateFile);
+            //FileInputStream templateFile = new FileInputStream(b);
+            //Workbook workbook = new XSSFWorkbook(templateFile);
+            Workbook workbook = new XSSFWorkbook(fileStream);
             Sheet recapSheet = workbook.getSheetAt(0);
 
             /******* Lieux du tournois *******/
@@ -117,7 +121,7 @@ public class TournamentRegistrationWriter {
 
             // Fermez les flux
             outputFile.close();
-            templateFile.close();
+            //templateFile.close();
 
         } catch (IOException e) {
             e.printStackTrace();
