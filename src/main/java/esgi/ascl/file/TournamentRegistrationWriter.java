@@ -2,6 +2,7 @@ package esgi.ascl.file;
 
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.game.domain.service.TeamService;
+import esgi.ascl.image.service.FileService;
 import esgi.ascl.tournament.domain.entities.Tournament;
 import esgi.ascl.tournament.domain.entities.TournamentInscription;
 import esgi.ascl.tournament.domain.service.TournamentInscriptionService;
@@ -12,25 +13,38 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
 public class TournamentRegistrationWriter {
 
     private final static String templateFilePath = "src/main/resources/template.xlsx";
-private final static String outputFilePath = "src/main/resources/output.xlsx";
+    private final static String outputFilePath = "src/main/resources/output.xlsx";
 
     private final TournamentInscriptionService tournamentInscriptionService;
     private final TeamService teamService;
+    private final FileService fileService;
 
-    public TournamentRegistrationWriter(TournamentInscriptionService tournamentInscriptionService, TeamService teamService) {
+    public TournamentRegistrationWriter(TournamentInscriptionService tournamentInscriptionService, TeamService teamService, FileService fileService) {
         this.tournamentInscriptionService = tournamentInscriptionService;
         this.teamService = teamService;
+        this.fileService = fileService;
+    }
+
+    public Workbook getTemplate() {
+        byte[] template = this.fileService.getFile("template.xlsx");
+        Workbook result = null;
+
+        try {
+            result = new XSSFWorkbook(new ByteArrayInputStream(template));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 
@@ -38,7 +52,10 @@ private final static String outputFilePath = "src/main/resources/output.xlsx";
         var tournamentInscriptionList = tournamentInscriptionService.getAllByTournamentId(tournament.getId());
 
         try {
-            FileInputStream templateFile = new FileInputStream(templateFilePath);
+            var a = Paths.get(templateFilePath).toFile();
+
+            //FileInputStream templateFile = new FileInputStream(templateFilePath);
+            FileInputStream templateFile = new FileInputStream(a);
             Workbook workbook = new XSSFWorkbook(templateFile);
             Sheet recapSheet = workbook.getSheetAt(0);
 
@@ -79,7 +96,7 @@ private final static String outputFilePath = "src/main/resources/output.xlsx";
 
             Sheet registrationSheet = workbook.getSheetAt(1);
             for (int i = 1; i < tournamentInscriptionList.size(); i++) {
-                TournamentInscription currentInscription = tournamentInscriptionList.get(i);
+                TournamentInscription currentInscription = tournamentInscriptionList.get(i-1);
 
                 Row teamRow = registrationSheet.createRow(i);
                 Cell teamId = teamRow.createCell(0);
