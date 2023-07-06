@@ -36,7 +36,7 @@ public class TournamentRegistrationWriter {
     }
 
     public Workbook getTemplate() {
-        byte[] template = this.fileService.getFile("excel/template.xlsx");
+        byte[] template = this.fileService.getFile("template.xlsx");
         Workbook result = null;
 
         try {
@@ -54,13 +54,15 @@ public class TournamentRegistrationWriter {
 
         try {
             var a = Paths.get(templateFilePath).toFile();
-            var b = Objects.requireNonNull(getClass().getResource("/excel/template.xlsx")).getFile();
-            var fileStream = getClass().getClassLoader().getResourceAsStream("excel/template.xlsx");
+            var b = Objects.requireNonNull(getClass().getResource("/template.xlsx")).getFile();
+            var fileStream = getClass().getClassLoader().getResourceAsStream("template.xlsx");
 
-            InputStream in = getClass().getClassLoader().getResourceAsStream("excel/template.xlsx");
+            InputStream in = getClass().getClassLoader().getResourceAsStream("/template.xlsx");
             if (in == null) {
-                throw new IllegalArgumentException("excel/template.xlsx" + " is not found");
+                throw new IllegalArgumentException("template.xlsx" + " is not found");
             }
+
+
 
             //FileInputStream templateFile = new FileInputStream(templateFilePath);
             FileInputStream templateFile = new FileInputStream(b);
