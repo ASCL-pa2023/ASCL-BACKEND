@@ -58,15 +58,12 @@ public class TournamentRegistrationWriter {
             var fileStream = getClass().getClassLoader().getResourceAsStream("template.xlsx");
 
             InputStream in = getClass().getClassLoader().getResourceAsStream("/template.xlsx");
-            if (in == null) {
-                throw new IllegalArgumentException("template.xlsx" + " is not found");
-            }
-
 
 
             //FileInputStream templateFile = new FileInputStream(templateFilePath);
-            FileInputStream templateFile = new FileInputStream(b);
-            Workbook workbook = new XSSFWorkbook(in);
+            //FileInputStream templateFile = new FileInputStream(b);
+            //Workbook workbook = new XSSFWorkbook(in);
+            Workbook workbook = getTemplate();
             Sheet recapSheet = workbook.getSheetAt(0);
 
             /******* Lieux du tournois *******/
