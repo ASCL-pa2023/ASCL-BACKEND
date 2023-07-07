@@ -216,6 +216,7 @@ public class GameService {
 
 
         game.setWinner_id(opponent.getId());
+        game.setStatus(GameStatus.FINISHED);
         return gameRepository.save(game);
     }
 
