@@ -32,6 +32,10 @@ public class TrainingCategoryService {
     public TrainingCategory create(TrainingCategoryRequest trainingCategoryRequest) {
         if(trainingCategoryRequest.getName() == null || trainingCategoryRequest.getName().isEmpty())
             return null;
+
+        if(trainingCategoryRequest.getAgeMin() > trainingCategoryRequest.getAgeMax())
+            return null;
+
         return trainingCategoryRepository.save(
                 TrainingCategoryMapper.requestToEntity(
                         trainingCategoryRequest

@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TrainingCategoryRequest {
     private String name;
+    private Integer ageMin;
+    private Integer ageMax;
 }

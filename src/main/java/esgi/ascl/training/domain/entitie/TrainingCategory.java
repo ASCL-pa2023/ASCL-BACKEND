@@ -21,6 +21,9 @@ public class TrainingCategory {
 
     private String name;
 
+    private Integer ageMin;
+    private Integer ageMax;
+
     public TrainingCategory setId(Long id) {
         this.id = id;
         return this;
@@ -28,6 +31,16 @@ public class TrainingCategory {
 
     public TrainingCategory setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public TrainingCategory setAgeMin(Integer ageMin) {
+        this.ageMin = ageMin;
+        return this;
+    }
+
+    public TrainingCategory setAgeMax(Integer ageMax) {
+        this.ageMax = ageMax;
         return this;
     }
 }

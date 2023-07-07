@@ -11,6 +11,8 @@ public class TrainingCategoryMapper {
         return TrainingCategoryResponse.builder()
                 .id(trainingCategory.getId())
                 .name(trainingCategory.getName())
+                .ageMin(trainingCategory.getAgeMin())
+                .ageMax(trainingCategory.getAgeMax())
                 .build();
     }
 

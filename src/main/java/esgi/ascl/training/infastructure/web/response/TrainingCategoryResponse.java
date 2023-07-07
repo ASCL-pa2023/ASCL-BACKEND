@@ -15,5 +15,8 @@ public class TrainingCategoryResponse {
     private long id;
     @JsonProperty("name")
     private String name;
-
+    @JsonProperty("ageMin")
+    private int ageMin;
+    @JsonProperty("ageMax")
+    private int ageMax;
 }
