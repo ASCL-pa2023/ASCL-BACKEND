@@ -87,6 +87,17 @@ public class UserController {
         return new ResponseEntity<>(UserMapper.entityToResponse(userResponse), HttpStatus.OK);
     }
 
+    @PatchMapping("/{userId}/role/{role}")
+    public ResponseEntity<?> updateRole(@PathVariable Long userId, @PathVariable String role) {
+        try {
+            var user = userService.getById(userId);
+            var userResponse = userService.changeRole(userId, role);
+            return new ResponseEntity<>(UserMapper.entityToResponse(userResponse), HttpStatus.OK);
+        } catch (UserNotFoundExceptions e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @PostMapping("{userId}/profilePicture/upload")
     public ResponseEntity<?> uploadProfilePicture(@PathVariable Long userId, @RequestParam("image") MultipartFile file) {

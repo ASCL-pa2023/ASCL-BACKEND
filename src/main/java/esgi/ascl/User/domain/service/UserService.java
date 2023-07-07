@@ -1,6 +1,7 @@
 package esgi.ascl.User.domain.service;
 
 import esgi.ascl.User.domain.entities.DashboardUser;
+import esgi.ascl.User.domain.entities.Role;
 import esgi.ascl.User.domain.entities.User;
 import esgi.ascl.User.domain.exceptions.UserNotFoundExceptions;
 import esgi.ascl.User.infrastructure.repositories.FollowerRepository;
@@ -93,6 +94,12 @@ public class UserService {
                             userRequest.getProfilePicture()
             );
 
+        return userRepository.save(user);
+    }
+
+    public User changeRole(Long id, String role) {
+        var user = userRepository.getUserById(id);
+        user.setRole(Role.valueOf(role.toUpperCase()));
         return userRepository.save(user);
     }
 
