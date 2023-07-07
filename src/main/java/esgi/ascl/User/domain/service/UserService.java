@@ -108,7 +108,7 @@ public class UserService {
                 new DashboardUser(
                     user.getId(),
                     user.getFirstname(),
-                    user.getFirstname(),
+                    user.getLastname(),
                     user.getRole(),
                     followerRepository.findAllByUserId(user.getId()).size(),
                     newsRepository.findAllByUserId(user.getId()).size(),
